@@ -1,0 +1,1180 @@
+﻿@{
+    var UniqueId = Program.GetUniqueId();
+}
+
+<div class="control-section">
+    <div class="content-wrapper">
+        <div id="Grid_@UniqueId">
+        </div>
+    </div>
+</div>
+<style>
+    .fabric .empimg{
+        background-color:#0078d6;
+    }
+    .material .empimg{
+        background-color:#e3165b;
+    }
+    .highcontrast .empimg{
+        background-color:#ffd939;
+    }
+    .tailwind .empimg{
+        background-color:#4f46e5;
+    }
+    _:-ms-fullscreen, :root .highcontrast .e-userimg.sf-icon-Male::before,
+    _:-ms-fullscreen, :root .highcontrast .e-userimg.sf-icon-FeMale::before{
+        color: black;
+    }
+    .highcontrast .e-userimg.sf-icon-Male::before,
+    .highcontrast .e-userimg.sf-icon-FeMale::before{
+        color: black;
+    }
+    .bootstrap .empimg{
+        background-color:#0078d6;
+    }
+
+    .bootstrap4 .empimg{
+        background-color:#0078d6;
+    }
+
+    #Emptext{
+    top: -12px;
+    left: 41px;
+    position: relative;
+    }
+
+    .e-grid.e-rtl #Emptext{
+    top: -12px;
+    left: -41px;
+    position: relative;
+    }
+
+    .empimg{
+    height: 27px;
+    width: 29px;
+    border-radius: 14px;
+    }
+
+
+    .e-userimg.sf-icon-Male::before,
+    .e-userimg.sf-icon-FeMale::before{
+        font-size: 13px;
+    }
+    .e-userimg.sf-icon-Male, .e-userimg.sf-icon-FeMale {
+        margin: 0px 8px;
+        line-height: 26px;
+        color: white;
+        font-size: 13px;
+    }
+
+    .e-userimg.sf-icon-Male::before{
+        content: '\e700';
+    }
+    .e-userimg.sf-icon-FeMale::before{
+        content: '\e701';
+    }
+
+
+    .highcontrast .e-grid td.e-rowcell.e-selectionbackground.e-active {
+        background-color: transparent;
+        color: white;
+    }
+
+    .e-bigger .e-grid .statustxt{
+        position: relative;
+        top:-2px;
+    }
+
+    .rating .star {
+        font-size: 132%;
+        color: lightgrey;
+    }
+
+    .rating .star.checked {
+        color: #ffa600;
+    }
+
+    .rating .star:before {
+        content: '★';
+    }
+
+    td.e-rowcell.e-selectionbackground.e-active {
+        background-color: transparent;
+    }
+
+    .e-image {
+        height: 13px;
+        width: 14px;
+    }
+
+    td.e-rowcell .statustxt.e-activecolor {
+        color: #00cc00;
+        position: relative;
+        top: 9px;
+    }
+
+    td.e-rowcell .statustxt.e-inactivecolor {
+        color: #e60000;
+        position: relative;
+        top: 9px;
+    }
+
+    .statustemp.e-inactivecolor {
+        background-color: #ffd7cc;
+        width: 64px;
+    }
+
+    .statustemp.e-activecolor {
+        background-color: #ccffcc;
+        width: 57px;
+    }
+
+    .statustxt.e-activecolor {
+        color: #00cc00;
+    }
+
+    .statustxt.e-inactivecolor {
+        color: #e60000;
+    }
+
+    .statustemp {
+        position: relative;
+        height: 19px;
+        border-radius: 5px;
+        text-align: center
+    }
+
+    .highcontrast #msg {
+        color: #FFFFFF
+    }
+
+    #msg {
+        font-family: "Segoe UI", "GeezaPro", "DejaVu Serif", sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        opacity: 0.95;
+        color: #333;
+        float: right;
+        margin-top: 3px;
+    }
+
+    @@media only screen and (max-width: 370px) {
+        #msg {
+            float: left;
+            margin-top: 3px;
+        }
+        #Grid{
+            margin-top:36px;
+        }
+    }
+
+    #samplecontainer {
+        padding-top: 5px;
+    }
+
+    #myProgress {
+        position: relative;
+        height: 18px;
+        width: 10em;
+        text-align: left;
+        background-color: white;
+      }
+      .highcontrast .e-grid #myProgress{
+        background-color: black;
+      }
+
+      #myBar {
+        position: absolute;
+        width: 10%;
+        height: 100%;
+        background-color: #00b300;
+      }
+      #myBar.progressdisable {
+        background-color: #df2222;
+      }
+      #label {
+        position: relative;
+        left:10px;
+        line-height: 18px;
+        font-size: 10px;
+        color: white;
+      }
+    .e-content{
+        overflow:hidden!important;
+        
+    }
+</style>
+
+<script type="text/x-jsrender" id="progessTemplate">
+    <div id="myProgress" class="pbar">
+        <div id="myBar" class="bar">
+            <div id="label" class="barlabel"></div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-jsrender" id="ratingTemplate">
+
+    <div class="rating">
+        <span class="star"></span>
+        <span class="star"></span>
+        <span class="star"></span>
+        <span class="star"></span>
+        <span class="star"></span>
+    </div>
+
+</script>
+
+<script type="text/x-jsrender" id="empTemplate">
+    <div>
+        <div class="empimg">
+            <span class="e-userimg">
+            </span>
+        </div>
+        <span id="Emptext">${Employees}</span>
+    </div>
+</script>
+
+<script type="text/x-jsrender" id="trustTemplate">
+    <img style="width: 31px; height: 24px" src="src/grid/images/${Trustworthiness}.png" />
+    <span id="Trusttext">${Trustworthiness}</span>
+</script>
+
+<script type="text/x-jsrender" id="statusTemplate">
+    <div id="status" class="statustemp">
+        <span class="statustxt">${Status}</span>
+    </div>
+</script>
+
+<script type="text/x-jsrender" id="StatusItemTemp">
+    ${statusDetail(data)}
+</script>
+
+<script id="coltemplate" type="text/x-template">
+    <div class="image">
+        <img src="src/grid/images/Map.png" class="e-image" alt="${Location}" /> &nbsp
+        <span id="locationtext">${Location}</span>
+    </div>
+</script>
+
+<script>
+
+    var data = [
+        {
+            "check": true,
+            "EmployeeID": 10001,
+            "Employees": "Margaret Peacock",
+            "Designation": "Designer",
+            "Location": "USA",
+            "Status": "Inactive",
+            "Trustworthiness": "Sufficient",
+            "Rating": 0,
+            "Software": 86,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 96826,
+            "Address": "Torikatu 38",
+            "Mail": "margaret95@jourrapide.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10002,
+            "Employees": "Buchanan Leverling",
+            "Designation": "System Analyst",
+            "Location": "Germany",
+            "Status": "Active",
+            "Trustworthiness": "Sufficient",
+            "Rating": 2,
+            "Software": 43,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 22012,
+            "Address": "Starenweg 5",
+            "Mail": "buchanan69@rpy.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10003,
+            "Employees": "King Anne",
+            "Designation": "Project Lead",
+            "Location": "Canada",
+            "Status": "Inactive",
+            "Trustworthiness": "Sufficient",
+            "Rating": 2,
+            "Software": 8,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 5590,
+            "Address": "Avda. Azteca 123",
+            "Mail": "king65@jourrapide.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10004,
+            "Employees": "Callahan Michael",
+            "Designation": "System Analyst",
+            "Location": "USA",
+            "Status": "Active",
+            "Trustworthiness": "Insufficient",
+            "Rating": 1,
+            "Software": 18,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 22362,
+            "Address": "Magazinweg 7",
+            "Mail": "callahan42@mail.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10005,
+            "Employees": "Andrew Jack",
+            "Designation": "Project Lead",
+            "Location": "UK",
+            "Status": "Active",
+            "Trustworthiness": "Sufficient",
+            "Rating": 0,
+            "Software": 52,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 30723,
+            "Address": "Avda. Azteca 123",
+            "Mail": "andrew51@rpy.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10006,
+            "Employees": "Laura Michael",
+            "Designation": "Program Directory",
+            "Location": "France",
+            "Status": "Inactive",
+            "Trustworthiness": "Sufficient",
+            "Rating": 3,
+            "Software": 18,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 65214,
+            "Address": "Fauntleroy Circus",
+            "Mail": "laura87@jourrapide.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10007,
+            "Employees": "Van Davolio",
+            "Designation": "CFO",
+            "Location": "Canada",
+            "Status": "Active",
+            "Trustworthiness": "Perfect",
+            "Rating": 3,
+            "Software": 1,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 59367,
+            "Address": "Boulevard Tirou, 255",
+            "Mail": "van56@jourrapide.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10008,
+            "Employees": "Callahan Callahan",
+            "Designation": "System Analyst",
+            "Location": "Mexico",
+            "Status": "Active",
+            "Trustworthiness": "Insufficient",
+            "Rating": 0,
+            "Software": 15,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 68000,
+            "Address": "Fauntleroy Circus",
+            "Mail": "callahan61@jourrapide.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10009,
+            "Employees": "Leverling King",
+            "Designation": "Project Lead",
+            "Location": "Germany",
+            "Status": "Inactive",
+            "Trustworthiness": "Sufficient",
+            "Rating": 2,
+            "Software": 22,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 58574,
+            "Address": "Gran Vía, 1",
+            "Mail": "leverling90@sample.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10010,
+            "Employees": "Anne Anton",
+            "Designation": "Developer",
+            "Location": "Austria",
+            "Status": "Inactive",
+            "Trustworthiness": "Perfect",
+            "Rating": 3,
+            "Software": 74,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 54513,
+            "Address": "Boulevard Tirou, 255",
+            "Mail": "anne96@rpy.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10011,
+            "Employees": "Kathryn Buchanan",
+            "Designation": "Program Directory",
+            "Location": "Sweden",
+            "Status": "Active",
+            "Trustworthiness": "Perfect",
+            "Rating": 2,
+            "Software": 42,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 42755,
+            "Address": "P.O. Box 555",
+            "Mail": "kathryn82@sample.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10012,
+            "Employees": "King Kathryn",
+            "Designation": "System Analyst",
+            "Location": "Germany",
+            "Status": "Inactive",
+            "Trustworthiness": "Perfect",
+            "Rating": 0,
+            "Software": 95,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 10519,
+            "Address": "Heerstr. 22",
+            "Mail": "king78@arpy.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10013,
+            "Employees": "Callahan King",
+            "Designation": "Manager",
+            "Location": "Germany",
+            "Status": "Inactive",
+            "Trustworthiness": "Insufficient",
+            "Rating": 2,
+            "Software": 77,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 8624,
+            "Address": "Rua da Panificadora, 12",
+            "Mail": "callahan11@rpy.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10014,
+            "Employees": "Kathryn Michael",
+            "Designation": "CFO",
+            "Location": "Argentina",
+            "Status": "Inactive",
+            "Trustworthiness": "Sufficient",
+            "Rating": 3,
+            "Software": 95,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 15121,
+            "Address": "Rua do Mercado, 12",
+            "Mail": "kathryn47@arpy.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10015,
+            "Employees": "Anne Fuller",
+            "Designation": "Program Directory",
+            "Location": "Austria",
+            "Status": "Inactive",
+            "Trustworthiness": "Insufficient",
+            "Rating": 1,
+            "Software": 40,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 21118,
+            "Address": "Torikatu 38",
+            "Mail": "anne37@rpy.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10016,
+            "Employees": "Anne Andrew",
+            "Designation": "Project Lead",
+            "Location": "Argentina",
+            "Status": "Active",
+            "Trustworthiness": "Sufficient",
+            "Rating": 1,
+            "Software": 60,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 68831,
+            "Address": "Carrera 22 con Ave. Carlos Soublette #8-35",
+            "Mail": "anne103@jourrapide.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10017,
+            "Employees": "Martin Fleet",
+            "Designation": "Designer",
+            "Location": "Canada",
+            "Status": "Inactive",
+            "Trustworthiness": "Insufficient",
+            "Rating": 4,
+            "Software": 19,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 99910,
+            "Address": "Avda. Azteca 123",
+            "Mail": "martin19@mail.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10018,
+            "Employees": "Peacock Michael",
+            "Designation": "System Analyst",
+            "Location": "Mexico",
+            "Status": "Inactive",
+            "Trustworthiness": "Sufficient",
+            "Rating": 0,
+            "Software": 70,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 22845,
+            "Address": "Via Ludovico il Moro 22",
+            "Mail": "peacock78@jourrapide.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10019,
+            "Employees": "Van Buchanan",
+            "Designation": "Program Directory",
+            "Location": "Canada",
+            "Status": "Inactive",
+            "Trustworthiness": "Perfect",
+            "Rating": 2,
+            "Software": 55,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 46875,
+            "Address": "P.O. Box 555",
+            "Mail": "van26@sample.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10020,
+            "Employees": "Buchanan Fleet",
+            "Designation": "Designer",
+            "Location": "Austria",
+            "Status": "Active",
+            "Trustworthiness": "Sufficient",
+            "Rating": 1,
+            "Software": 58,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 26186,
+            "Address": "Av. Inês de Castro, 414",
+            "Mail": "buchanan68@jourrapide.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10021,
+            "Employees": "Martin Jack",
+            "Designation": "CFO",
+            "Location": "Sweden",
+            "Status": "Active",
+            "Trustworthiness": "Insufficient",
+            "Rating": 3,
+            "Software": 53,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 97033,
+            "Address": "Berguvsvägen  8",
+            "Mail": "martin29@arpy.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10022,
+            "Employees": "Zachery Martin",
+            "Designation": "Program Directory",
+            "Location": "Argentina",
+            "Status": "Inactive",
+            "Trustworthiness": "Perfect",
+            "Rating": 0,
+            "Software": 5,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 56078,
+            "Address": "2, rue du Commerce",
+            "Mail": "zachery40@arpy.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10023,
+            "Employees": "Peacock Callahan",
+            "Designation": "Designer",
+            "Location": "Germany",
+            "Status": "Inactive",
+            "Trustworthiness": "Insufficient",
+            "Rating": 3,
+            "Software": 18,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 19946,
+            "Address": "59 rue de l'Abbaye",
+            "Mail": "peacock30@mail.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10024,
+            "Employees": "Bergs Vinet",
+            "Designation": "Developer",
+            "Location": "Canada",
+            "Status": "Active",
+            "Trustworthiness": "Insufficient",
+            "Rating": 0,
+            "Software": 84,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 99166,
+            "Address": "Rua da Panificadora, 12",
+            "Mail": "bergs19@mail.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10025,
+            "Employees": "Anton Tamer",
+            "Designation": "Project Lead",
+            "Location": "France",
+            "Status": "Inactive",
+            "Trustworthiness": "Sufficient",
+            "Rating": 2,
+            "Software": 55,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 21725,
+            "Address": "Torikatu 38",
+            "Mail": "anton51@mail.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10026,
+            "Employees": "Nancy Michael",
+            "Designation": "Program Directory",
+            "Location": "Sweden",
+            "Status": "Inactive",
+            "Trustworthiness": "Perfect",
+            "Rating": 0,
+            "Software": 56,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 85394,
+            "Address": "Av. Inês de Castro, 414",
+            "Mail": "nancy23@mail.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10027,
+            "Employees": "Fleet Michael",
+            "Designation": "Project Lead",
+            "Location": "Canada",
+            "Status": "Active",
+            "Trustworthiness": "Sufficient",
+            "Rating": 3,
+            "Software": 82,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 63401,
+            "Address": "Rua da Panificadora, 12",
+            "Mail": "fleet70@jourrapide.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10028,
+            "Employees": "Anne Dodsworth",
+            "Designation": "CFO",
+            "Location": "Sweden",
+            "Status": "Inactive",
+            "Trustworthiness": "Perfect",
+            "Rating": 1,
+            "Software": 92,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 57614,
+            "Address": "Av. dos Lusíadas, 23",
+            "Mail": "anne49@arpy.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10029,
+            "Employees": "Buchanan Kathryn",
+            "Designation": "Project Lead",
+            "Location": "Argentina",
+            "Status": "Inactive",
+            "Trustworthiness": "Perfect",
+            "Rating": 3,
+            "Software": 17,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 65519,
+            "Address": "Avda. Azteca 123",
+            "Mail": "buchanan58@rpy.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10030,
+            "Employees": "Kathryn Anne",
+            "Designation": "Developer",
+            "Location": "Sweden",
+            "Status": "Active",
+            "Trustworthiness": "Perfect",
+            "Rating": 3,
+            "Software": 23,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 96752,
+            "Address": "Sierras de Granada 9993",
+            "Mail": "kathryn43@arpy.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10031,
+            "Employees": "Michael Janet",
+            "Designation": "Program Directory",
+            "Location": "Austria",
+            "Status": "Inactive",
+            "Trustworthiness": "Sufficient",
+            "Rating": 2,
+            "Software": 79,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 34406,
+            "Address": "Rua da Panificadora, 12",
+            "Mail": "michael85@mail.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10032,
+            "Employees": "Martin Jack",
+            "Designation": "Developer",
+            "Location": "Germany",
+            "Status": "Inactive",
+            "Trustworthiness": "Perfect",
+            "Rating": 3,
+            "Software": 93,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 17087,
+            "Address": "1029 - 12th Ave. S.",
+            "Mail": "martin16@arpy.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10033,
+            "Employees": "Margaret Margaret",
+            "Designation": "CFO",
+            "Location": "Argentina",
+            "Status": "Inactive",
+            "Trustworthiness": "Insufficient",
+            "Rating": 4,
+            "Software": 48,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 8813,
+            "Address": "Rua da Panificadora, 12",
+            "Mail": "margaret82@mail.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10034,
+            "Employees": "Andrew Leverling",
+            "Designation": "Developer",
+            "Location": "France",
+            "Status": "Inactive",
+            "Trustworthiness": "Insufficient",
+            "Rating": 0,
+            "Software": 33,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 7163,
+            "Address": "Av. dos Lusíadas, 23",
+            "Mail": "andrew73@jourrapide.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10035,
+            "Employees": "Tamer Nancy",
+            "Designation": "Program Directory",
+            "Location": "Canada",
+            "Status": "Inactive",
+            "Trustworthiness": "Perfect",
+            "Rating": 1,
+            "Software": 14,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 77229,
+            "Address": "Fauntleroy Circus",
+            "Mail": "tamer51@rpy.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10036,
+            "Employees": "Zachery Anton",
+            "Designation": "Developer",
+            "Location": "USA",
+            "Status": "Inactive",
+            "Trustworthiness": "Sufficient",
+            "Rating": 2,
+            "Software": 47,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 28135,
+            "Address": "Via Ludovico il Moro 22",
+            "Mail": "zachery108@jourrapide.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10037,
+            "Employees": "Michael Anton",
+            "Designation": "CFO",
+            "Location": "UK",
+            "Status": "Inactive",
+            "Trustworthiness": "Insufficient",
+            "Rating": 0,
+            "Software": 83,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 82972,
+            "Address": "Taucherstraße 10",
+            "Mail": "michael103@sample.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10038,
+            "Employees": "Nancy Leverling",
+            "Designation": "Manager",
+            "Location": "Canada",
+            "Status": "Inactive",
+            "Trustworthiness": "Sufficient",
+            "Rating": 0,
+            "Software": 93,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 20929,
+            "Address": "Av. Inês de Castro, 414",
+            "Mail": "nancy108@arpy.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10039,
+            "Employees": "Dodsworth Davolio",
+            "Designation": "System Analyst",
+            "Location": "Canada",
+            "Status": "Inactive",
+            "Trustworthiness": "Insufficient",
+            "Rating": 3,
+            "Software": 42,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 46204,
+            "Address": "Kirchgasse 6",
+            "Mail": "dodsworth88@arpy.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10040,
+            "Employees": "Michael King",
+            "Designation": "CFO",
+            "Location": "USA",
+            "Status": "Active",
+            "Trustworthiness": "Sufficient",
+            "Rating": 4,
+            "Software": 33,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 72221,
+            "Address": "Luisenstr. 48",
+            "Mail": "michael22@rpy.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10041,
+            "Employees": "Zachery King",
+            "Designation": "CFO",
+            "Location": "France",
+            "Status": "Active",
+            "Trustworthiness": "Insufficient",
+            "Rating": 3,
+            "Software": 91,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 98240,
+            "Address": "Gran Vía, 1",
+            "Mail": "zachery51@jourrapide.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10042,
+            "Employees": "Leverling Vinet",
+            "Designation": "CFO",
+            "Location": "UK",
+            "Status": "Active",
+            "Trustworthiness": "Insufficient",
+            "Rating": 0,
+            "Software": 77,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 90890,
+            "Address": "Luisenstr. 48",
+            "Mail": "leverling104@sample.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10043,
+            "Employees": "Buchanan Andrew",
+            "Designation": "CFO",
+            "Location": "Austria",
+            "Status": "Inactive",
+            "Trustworthiness": "Sufficient",
+            "Rating": 0,
+            "Software": 90,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 52975,
+            "Address": "Carrera 22 con Ave. Carlos Soublette #8-35",
+            "Mail": "buchanan34@mail.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10044,
+            "Employees": "Nancy Janet",
+            "Designation": "Manager",
+            "Location": "USA",
+            "Status": "Active",
+            "Trustworthiness": "Insufficient",
+            "Rating": 2,
+            "Software": 50,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 13761,
+            "Address": "59 rue de l'Abbaye",
+            "Mail": "nancy60@jourrapide.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10045,
+            "Employees": "Tamer Fuller",
+            "Designation": "CFO",
+            "Location": "Canada",
+            "Status": "Active",
+            "Trustworthiness": "Insufficient",
+            "Rating": 0,
+            "Software": 29,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 80772,
+            "Address": "2817 Milton Dr.",
+            "Mail": "tamer52@rpy.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10046,
+            "Employees": "Dodsworth Martin",
+            "Designation": "Project Lead",
+            "Location": "UK",
+            "Status": "Inactive",
+            "Trustworthiness": "Perfect",
+            "Rating": 4,
+            "Software": 87,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 75332,
+            "Address": "Gran Vía, 1",
+            "Mail": "dodsworth74@rpy.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10047,
+            "Employees": "Margaret Callahan",
+            "Designation": "Developer",
+            "Location": "Argentina",
+            "Status": "Active",
+            "Trustworthiness": "Insufficient",
+            "Rating": 1,
+            "Software": 92,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 28678,
+            "Address": "Åkergatan 24",
+            "Mail": "margaret11@rpy.com"
+        },
+        {
+            "check": false,
+            "EmployeeID": 10048,
+            "Employees": "Kathryn Anne",
+            "Designation": "Developer",
+            "Location": "Argentina",
+            "Status": "Inactive",
+            "Trustworthiness": "Sufficient",
+            "Rating": 4,
+            "Software": 26,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 52246,
+            "Address": "5ª Ave. Los Palos Grandes",
+            "Mail": "kathryn49@rpy.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10049,
+            "Employees": "Callahan Laura",
+            "Designation": "Program Directory",
+            "Location": "Germany",
+            "Status": "Inactive",
+            "Trustworthiness": "Insufficient",
+            "Rating": 1,
+            "Software": 9,
+            "EmployeeImg": "usermale",
+            "CurrentSalary": 97919,
+            "Address": "Taucherstraße 10",
+            "Mail": "callahan70@arpy.com"
+        },
+        {
+            "check": true,
+            "EmployeeID": 10050,
+            "Employees": "Laura Zachery",
+            "Designation": "CFO",
+            "Location": "France",
+            "Status": "Active",
+            "Trustworthiness": "Insufficient",
+            "Rating": 2,
+            "Software": 28,
+            "EmployeeImg": "userfemale",
+            "CurrentSalary": 59964,
+            "Address": "Berguvsvägen  8",
+            "Mail": "laura73@mail.com"
+        }
+    ];
+     var grid = new ej.grids.Grid({
+         dataSource: data,
+        allowSelection: true,
+        allowFiltering: true,
+        allowSorting: true,
+        enableVirtualization: true,
+        filterSettings: { type: 'Menu' },
+        selectionSettings: { persistSelection: true, type: "Multiple", checkboxOnly: true },
+        enableHover: false,
+        height: 600,
+        rowHeight: 38,
+        columns: [
+            { type: "checkbox", field: "", allowFiltering: false, allowSorting: false, width: '60' },
+            { field: 'EmployeeID', visible: false, headerText: 'Employee ID', isPrimaryKey: true, width: '130' },
+            {
+                field: 'Employees', headerText: 'Employee Name', width: '200', clipMode: 'EllipsisWithTooltip',
+                template: '#empTemplate',
+                filter: { type: 'CheckBox' }
+            },
+            { field: 'Designation', headerText: 'Designation', width: '170', filter: { type: 'CheckBox' }, clipMode: 'EllipsisWithTooltip' },
+            { field: 'Mail', headerText: 'Mail', width: '230', filter: { type: 'Menu' } },
+            {
+                field: 'Location', width: '140', headerText: 'Location', filter: { type: 'CheckBox' },
+                template: '#coltemplate'
+            },
+            { field: 'Status', headerText: 'Status', filter: { type: 'CheckBox', itemTemplate: '#StatusItemTemp' }, width: '150', template: "#statusTemplate" },
+            { field: 'Trustworthiness', headerText: 'Trustworthiness', filter: { type: 'CheckBox', itemTemplate: '${ trustTemp(data)}' }, width: '200', template: "#trustTemplate" },
+            { field: 'Rating', filter: { type: 'CheckBox', itemTemplate: '<div>${ratingDetail(data)}</div>' }, headerText: 'Rating', width: '160', template: '#ratingTemplate' },
+            { field: 'Software', allowFiltering: false, allowSorting: false, headerText: 'Software Proficiency', width: '180', template: '#progessTemplate' },
+            { field: 'CurrentSalary', headerText: 'Current Salary', format: "C2", filter: { type: 'Menu' }, textAlign: 'Right', width: '160' },
+            { field: 'Address', headerText: 'Address', width: '240', filter: { type: 'Menu' }, clipMode: 'EllipsisWithTooltip' },
+        ],
+        queryCellInfo: queryCellInfo,
+        dataBound: startTimer,
+        actionComplete: complete
+    });
+    var dReady = false;
+    var dtTime = false;
+    var isDataBound = false;
+    var isDataChanged = true;
+    var intervalFun;
+    var clrIntervalFun;
+    var clrIntervalFun1;
+    var clrIntervalFun2;
+    var ddObj;
+    var dropSlectedIndex = null;
+    var stTime;
+    stTime = performance.now();
+    grid.appendTo('#Grid_@UniqueId');
+    grid.on('data-ready', function () {
+        dReady = true;
+    });
+     
+    function complete(args) {
+        if (args.requestType === "filterchoicerequest") {
+            if (args.filterModel.options.field === "Trustworthiness" || args.filterModel.options.field === "Rating" || args.filterModel.options.field === "Status") {
+                var span = args.filterModel.dialogObj.element.querySelectorAll('.e-selectall')[0];
+                if(!ej.base.isNullOrUndefined(span)) {
+                    ej.base.closest(span, '.e-ftrchk').classList.add("e-hide");
+                }
+            }
+        }
+    }
+    window.trustTemp = function (e) {
+        if (e.Trustworthiness === "Select All") {
+            return '';
+        }
+        return '<img style="width: 31px; height: 24px" src="src/grid/images/' + e.Trustworthiness + '.png" /> <span id="Trusttext">' + e.Trustworthiness + '</span>';
+    };
+    window.ratingDetail = function (e) {
+        var grid = document.querySelector(".e-grid").ej2_instances[0];
+        var div = document.createElement('div');
+        div.className = 'rating';
+        var span;
+        if (e.Rating === "Select All") {
+            return '';
+        }
+        for (var i = 0; i < 5; i++) {
+            if (i < e.Rating) {
+                span = document.createElement('span');
+                span.className = 'star checked';
+                div.appendChild(span);
+            } else {
+                span = document.createElement('span');
+                span.className = 'star';
+                div.appendChild(span);
+            }
+        }
+        return div.outerHTML;
+    };
+    window.statusDetail = function (e) {
+        var grid = document.querySelector(".e-grid").ej2_instances[0];
+        var div = document.createElement('div');
+        var span;
+        if (e.Status === "Select All") {
+            return 'Select All';
+        }
+        span = document.createElement('span');
+        if (e.Status === "Active") {
+            span.className = 'statustxt e-activecolor';
+            span.textContent = "Active";
+            div.className = 'statustemp e-activecolor';
+        }
+        if (e.Status === "Inactive") {
+            span = document.createElement('span');
+            span.className = 'statustxt e-inactivecolor';
+            span.textContent = "Inactive";
+            div.className = 'statustemp e-inactivecolor';
+        }
+        div.appendChild(span);
+        return div.outerHTML;
+    };
+    function queryCellInfo(args) {
+        if (args.column.field === 'Employees') {
+            if (args.data.EmployeeImg === 'usermale') {
+                args.cell.querySelector('.e-userimg').classList.add("sf-icon-Male");
+            } else {
+                args.cell.querySelector('.e-userimg').classList.add("sf-icon-FeMale");
+            }
+        }
+        if (args.column.field === 'Status') {
+            if (args.cell.textContent === "Active") {
+                args.cell.querySelector(".statustxt").classList.add("e-activecolor");
+                args.cell.querySelector(".statustemp").classList.add("e-activecolor");
+            }
+            if (args.cell.textContent === "Inactive") {
+                args.cell.querySelector(".statustxt").classList.add("e-inactivecolor");
+                args.cell.querySelector(".statustemp").classList.add("e-inactivecolor");
+            }
+        }
+        if (args.column.field === 'Rating') {
+            if (args.column.field === 'Rating') {
+                for (var i = 0; i < args.data.Rating; i++) {
+                    args.cell.querySelectorAll("span")[i].classList.add("checked");
+                }
+            }
+        }
+        if (args.column.field === "Software") {
+            if (args.data.Software <= 20) {
+                args.data.Software = args.data.Software + 30;
+            }
+            args.cell.querySelector(".bar").style.width = args.data.Software + "%";
+            args.cell.querySelector(".barlabel").textContent = args.data.Software + "%";
+            if (args.data.Status === "Inactive") {
+                args.cell.querySelector(".bar").classList.add("progressdisable");
+            }
+        }
+    }
+    function startTimer(args) {
+        clearTimeout(clrIntervalFun);
+        clearInterval(intervalFun);
+        dtTime = true;
+    }
+    
+    document.getElementById('Grid_@UniqueId').addEventListener('DOMSubtreeModified', function () {
+        if (dReady && stTime && isDataChanged) {
+            var msgEle = document.getElementById('msg');
+            var val = (performance.now() - stTime).toFixed(0);
+            stTime = null;
+            dtTime = false;
+            dReady = false;
+            isDataChanged = false;
+            msgEle.innerHTML = 'Load Time: ' + "<b>" + val + "</b>" + '<b>ms</b>';
+            msgEle.classList.remove('e-hide');
+        }
+    });
+</script>
