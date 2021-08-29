@@ -1,0 +1,13 @@
+﻿@{ var UniqueId = Program.GetUniqueId(); }
+
+
+<div class="col-lg-12 control-section">
+    <div id="wrapper">
+        <input id="daterangepicker_@UniqueId" type="text" /><br /><br />
+    </div>
+</div>
+
+<script>
+    var daterangepicker = new ej.calendars.DateRangePicker();
+    daterangepicker.appendTo('#daterangepicker_@UniqueId');
+</script>
