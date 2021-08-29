@@ -1,0 +1,15 @@
+﻿@{ var UniqueId = Program.GetUniqueId(); }
+<div class="col-lg-12 control-section">
+    <div class="control_wrapper" style="overflow:auto">
+        <div id="container_@UniqueId">
+            <div id="calendar_@UniqueId"></div>
+          </div>
+    </div>
+</div>
+
+<script>
+    var calendar = new ej.calendars.Calendar({
+       
+    });
+    calendar.appendTo('#calendar_@UniqueId');
+</script>
