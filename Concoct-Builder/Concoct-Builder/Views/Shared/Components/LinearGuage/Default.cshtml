@@ -1,0 +1,45 @@
+﻿@{ var UniqueId = Program.GetUniqueId(); }
+
+<script id='frame' type="text/x-template">
+    <div id='linearFrame'>
+        <img src='./images/Gauge_linear_light.jpg'>
+    </div>
+</script>
+<div class="control-section">
+    <div id="defaultContainer_@UniqueId">
+    </div>
+</div>
+
+<script>
+    var gauge = new ej.lineargauge.LinearGauge({
+        orientation: 'Horizontal',
+        axes: [{
+            pointers: [{
+                value: 10,
+                height: 15,
+                width: 15,
+                placement: 'Near',
+                offset: -50,
+                markerType: 'Triangle'
+            }],
+            majorTicks: {
+                interval: 10
+            },
+            minorTicks: {
+                interval: 2
+            },
+            labelStyle: {
+                offset: 48
+            }
+        }],
+        annotations: [{
+            content: '<div id="pointer" style="width:70px"><h1 style="font-size:14px;">10 MPH</h1></div>',
+            axisIndex: 0,
+            axisValue: 10,
+            x: 10,
+            y: -70, zIndex: '1'
+        }],
+
+    });
+    gauge.appendTo('#defaultContainer_@UniqueId');
+</script>

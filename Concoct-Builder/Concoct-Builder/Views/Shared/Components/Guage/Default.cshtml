@@ -1,0 +1,37 @@
+﻿@{ var UniqueId = Program.GetUniqueId(); }
+
+
+<div class="col-md-8 control-section">
+    <div class="content-wrapper">
+        <div id="range-container_@UniqueId"></div>
+    </div>
+</div>
+
+<script>
+    var circulargauge = new ej.circulargauge.CircularGauge({
+        axes: [{
+            lineStyle: { width: 10, color: 'transparent' },
+            labelStyle: {
+                position: 'Inside', useRangeColor: false,
+                font: { size: '12px', fontFamily: 'Roboto', fontStyle: 'Regular' }
+            }, majorTicks: { height: 10, width: 0.5, offset: 10 }, minorTicks: { height: 0, width: 0.5 },
+            annotations: [{
+                content: '<div><span style="font-size:14px; color:#9E9E9E; font-family:Regular">Speedometer</span></div>',
+                radius: '30%', angle: 0, zIndex: 1
+            }, {
+                content: '<div><span style="font-size:20px; color:#424242; font-family:Regular">65 MPH</span></div>',
+                radius: '40%', angle: 180, zIndex: 1
+            }],
+            startAngle: 210, endAngle: 150, minimum: 0, maximum: 120, radius: '100%',
+            ranges: [{ start: 0, end: 40, color: '#30B32D' }, { start: 40, end: 80, color: '#FFDD00' },
+            { start: 80, end: 120, color: '#F03E3E' }],
+            pointers: [{
+                value: 65, radius: '100%', pointerWidth: 8,
+                cap: { radius: 7 }, needleTail: { length: '18%' }
+            }]
+        }],
+
+    });
+    circulargauge.appendTo('#range-container_@UniqueId');
+
+</script>
