@@ -1,6 +1,6 @@
 ﻿@{ 
- 
-    
+    var Widgets = ViewData["Components"] as List<Widget>;
+
 }
 
 <!doctype html>
@@ -15,8 +15,72 @@
     <script src="~/js/DataHandlers.js" type="text/javascript"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="~/css/Shared/Light/_LayoutDashboard.css" id="themeAdjustments" rel="stylesheet" />
+    <link href="~/css/font-awesome.css" rel="stylesheet" />
+    <style>
 
+        .widgetText {
+            text-align: center;
+            font-family: 'Roboto';
+            font-size: 22px;
+        }
 
+        .icon
+        {
+            color: #ff7979;
+            width: 100% !important;
+            font-size: 60px;
+            text-align:center;
+        }
+
+        .IconContainer
+        {
+            margin-top:20px;
+            cursor:pointer;
+            z-index:55;
+        }
+
+        #outer-dropzone {
+            height: 140px;
+        }
+
+        #inner-dropzone {
+            height: 80px;
+        }
+
+        .dropzone {
+            border: dashed 4px transparent;
+            border-radius: 4px;
+            margin: 10px auto 30px;
+            padding: 10px;
+            width: 80%;
+            transition: background-color 0.3s;
+        }
+
+        .drop-active {
+            border-color: #aaa;
+        }
+
+        .drop-target {
+            border-color: #fff;
+            border-style: solid;
+        }
+
+        .drag-drop {
+            display: inline-block;
+            min-width: 40px;
+            padding: 2em 0.5em;
+            margin: 1rem 0 0 1rem;
+            color: #fff;
+            background-color: #29e;
+            border: solid 2px #fff;
+            touch-action: none;
+            transform: translate(0px, 0px);
+         }
+
+            .drag-drop.can-drop {
+                color: #000;
+             }
+    </style>
 </head>
 <body>
     <div class="stackblitz-container material">
@@ -29,7 +93,7 @@
                 <div class="main-header" id="header-section">
                     <ul class="header-list">
                         <li class="float-left header-style icon-menu" id="hamburger"></li>
-                 
+
 
                         <li class="header-style float-right support border-left" onclick="CallUrl(https://platform.concoctcloud.com/OutboundDetails/RelatedProject?projectId=5012)"><b>Support</b></li>
                         <li class="header-style float-right support border-left" onclick="ChatToggle(1)"><b>Open Chat</b></li>
@@ -48,30 +112,42 @@
                     <aside id="sidebar-treeview" style="overflow-x:hidden;">
                         <div class="main-menu">
                             <div class="table-content" style="padding:0;">
-                                
+                                @*//   class="IconContainer drag-drop" id="yes-drop"*@
+                                @foreach (var widget in Widgets)
+                                {
+                                    <div class="IconContainer">
+                                        <i class="@widget.Icon" aria-hidden="true" onclick="GenerateWidget('@widget.Icon')"></i>
+
+                                        <p class="widgetText">
+                                            @widget.DisplayName
+                                        </p>
+                                    </div>
+                                }
+
 
                             </div>
                         </div>
                     </aside>
 
                     <div class="main-content" id="main-text" style="min-height: 94vh;">
-                        <div class="sidebar-content">
- 
+                        <div class="sidebar-content dropzone" id="outer-dropzone" >
                             @RenderBody()
                         </div>
                     </div>
                 </div>
-              
- 
+
+
             </div>
 
 
         </div>
 
     </div>
-      <script>
-    var storage = window.localStorage;
- 
+    <script src="~/js/Interact.js"></script>
+    <script>
+        var storage = window.localStorage;
+
+
     var IsOpen = 0;
     var cThemeToggle = new ejs.buttons.Switch({ checked: false });
     cThemeToggle.appendTo('#ChangeTheme');
@@ -101,7 +177,6 @@
 
 
     function ChangeTheme(args) {
-
         cThemeToggle.click();
 
         if (cThemeToggle.checked === true)
@@ -121,7 +196,6 @@
             storage.setItem("Theme", false);
 
         }
-
     }
 
     function SetTheme(type)
@@ -177,7 +251,88 @@
         var token = '@Html.AntiForgeryToken()';
         token = $(token).val();
         return token;
-   }
+    }
+
+    function GenerateWidget(target)
+    {
+
+        var getElement =  document.createElement("i");
+        getElement.setAttribute("id", "draggable");
+        getElement.classList.add(target.split(" "));
+        dragElement(getElement);
+    }
+
+
+          /* The dragging code forwidgIconconetdraggable' from the demo above
+        * applies to this demo as well so it doesn't have to be repeated. */
+
+          // enable draggables to be dropped into this
+          interact('.dropzone').dropzone({
+              // only accept elements matching this CSS selector
+              accept: '#yes-drop',
+              // Require a 75% element overlap for a drop to be possible
+              overlap: 0.75,
+
+              // listen for drop related events:
+
+              ondropactivate: function (event) {
+                  // add active dropzone feedback
+                  event.target.classList.add('drop-active')
+              },
+              ondragenter: function (event) {
+                  var draggableElement = event.relatedTarget
+                  var dropzoneElement = event.target
+
+                  // feedback the possibility of a drop
+                  dropzoneElement.classList.add('drop-target')
+                  draggableElement.classList.add('can-drop')
+                  draggableElement.textContent = 'Dragged in'
+              },
+              ondragleave: function (event) {
+                  // remove the drop feedback style
+                  event.target.classList.remove('drop-target')
+                  event.relatedTarget.classList.remove('can-drop')
+                  event.relatedTarget.textContent = 'Dragged out'
+              },
+              ondrop: function (event) {
+                  event.relatedTarget.textContent = 'Dropped'
+              },
+              ondropdeactivate: function (event) {
+                  // remove active dropzone feedback
+                  event.target.classList.remove('drop-active')
+                  event.target.classList.remove('drop-target')
+              }
+          })
+
+          interact('.drag-drop')
+              .draggable({
+                  inertia: true,
+                  modifiers: [
+                      interact.modifiers.restrictRect({
+                          restriction: 'parent',
+                          endOnly: true
+                      })
+                  ],
+                  autoScroll: true,
+                  // dragMoveListener from the dragging demo above
+                  listeners: { move: dragMoveListener }
+              })
+
+        function dragMoveListener(event) {
+            var target = event.target,
+                // keep the dragged position in the data-x/data-y attributes
+                x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+                y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+            // translate the element
+            target.style.webkitTransform =
+                target.style.transform =
+                'translate(' + x + 'px, ' + y + 'px)';
+
+            // update the posiion attributes
+            target.setAttribute('data-x', x);
+            target.setAttribute('data-y', y);
+        }
     </script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
