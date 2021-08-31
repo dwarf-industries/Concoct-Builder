@@ -2,6 +2,7 @@ namespace Concoct_Builder
 {
 
     using ElectronNET.API;
+    using ElectronNET.API.Entities;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -52,8 +53,13 @@ namespace Concoct_Builder
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            Task.Run(async () => await Electron.WindowManager.CreateWindowAsync());
+            var options = new BrowserWindowOptions();
+            options.AutoHideMenuBar = true;
+            options.DarkTheme = true;
+            options.Fullscreen = true;
+            options.Title = "Concoct Builder V 0.1";
+            options.TitleBarStyle = TitleBarStyle.hidden;
+            Task.Run(async () => await Electron.WindowManager.CreateWindowAsync(options));
 
         }
     }

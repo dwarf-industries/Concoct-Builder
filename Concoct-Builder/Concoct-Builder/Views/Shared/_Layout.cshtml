@@ -101,13 +101,10 @@
                         <li class="float-left header-style icon-menu" id="hamburger"></li>
 
 
-                        <li class="header-style float-right support border-left" onclick="CallUrl(https://platform.concoctcloud.com/OutboundDetails/RelatedProject?projectId=5012)"><b>Support</b></li>
-                        <li class="header-style float-right support border-left" onclick="ChatToggle(1)"><b>Open Chat</b></li>
+                        <li class="header-style float-right support border-left" onclick="LoadLayout()"><b>Load Layout</b></li>
+                        <li class="header-style float-right support border-left" onclick="SaveChanges()"><b>Save</b></li>
 
-                        <li class="header-style float-right support border-left" onclick="ChangeTheme()">
-                            <label for="ChangeTheme" id="themeLabel">Light</label>
-                            <input id="ChangeTheme" type="checkbox" />
-                        </li>
+                    
 
 
                     </ul>
@@ -151,9 +148,11 @@
     </div>
     <script src="~/js/Interact.js"></script>
     <script>
-        var storage = window.localStorage;
+   
 
-
+     var storage = window.localStorage;
+     var ActiveList = {};
+     var draggedElement = 0;
     var IsOpen = 0;
     var cThemeToggle = new ejs.buttons.Switch({ checked: false });
     cThemeToggle.appendTo('#ChangeTheme');
@@ -263,7 +262,10 @@
     {
         debugger
         var getElement =  document.createElement("div");
-        getElement.setAttribute("id", "yes-drop");
+        getElement.setAttribute("id", "yes-drop_" + draggedElement);
+        getElement.setAttribute("data-value", componentName);
+
+        
         getElement.classList.add("resize-drag");
         getElement.style.setProperty("top", "20");
         getElement.style.setProperty("left", "20");
@@ -274,8 +276,9 @@
             success: function (data) {
                 debugger
                 
- 
-                $("#yes-drop").html(data)
+                getElement.onmouseup = ElementReleased;
+                $("#yes-drop_" + draggedElement).html(data)
+                draggedElement++;
             }
         });
         $("#outer-dropzone").append(getElement);
@@ -332,6 +335,21 @@
                 })
             ]
         })
+
+        function ElementReleased(args) {
+            debugger
+            var name = args.currentTarget.getAttribute("data-value");
+            ActiveList[name + "_" + draggedElement] = {
+                ElementName: name,
+                InnerX: args.currentTarget,
+                ClientX: args.ClientX,
+                ClientY: args.clientY,
+                OffsetX: args.offsetX,
+                OffsetY: args.offsetY,
+                Width: args.currentTarget.offsetHeight,
+                Height: args.currentTarget.offsetHeight
+            }
+        }
 
         function dragMoveListener(event) {
             var target = event.target,
