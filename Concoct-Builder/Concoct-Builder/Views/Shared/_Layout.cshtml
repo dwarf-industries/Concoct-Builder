@@ -12,35 +12,39 @@
     <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" type="text/javascript"></script>
     <link href="~/css/Themes/Light/material.css" id="theme" rel="stylesheet" />
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <script src="~/js/DataHandlers.js" type="text/javascript"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="~/css/Shared/Light/_LayoutDashboard.css" id="themeAdjustments" rel="stylesheet" />
-    <link href="~/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
     <style>
 
         .widgetText {
             text-align: center;
             font-family: 'Roboto';
             font-size: 22px;
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
         }
 
-        .icon
-        {
+        .icon {
             color: #ff7979;
             width: 100% !important;
             font-size: 60px;
-            text-align:center;
+            text-align: center;
         }
 
-        .IconContainer
-        {
-            margin-top:20px;
-            cursor:pointer;
-            z-index:55;
+        .IconContainer {
+            margin-top: 20px;
+            cursor: pointer;
+            z-index: 55;
         }
 
         #outer-dropzone {
-            height: 140px;
+             transform: translateX(0px);
+            margin: 0px 0px 0px 290px;
+            padding: 0px;
+            width: 100%;
+            min-height: 94vh;
         }
 
         #inner-dropzone {
@@ -75,11 +79,13 @@
             border: solid 2px #fff;
             touch-action: none;
             transform: translate(0px, 0px);
-         }
+        }
+         
 
-            .drag-drop.can-drop {
-                color: #000;
-             }
+        .resize-drag {
+            transform: translate(301px, 269px);
+            border: 2px dashed #1c86c8;
+        }
     </style>
 </head>
 <body>
@@ -112,17 +118,17 @@
                     <aside id="sidebar-treeview" style="overflow-x:hidden;">
                         <div class="main-menu">
                             <div class="table-content" style="padding:0;">
+ 
                                 @*//   class="IconContainer drag-drop" id="yes-drop"*@
                                 @foreach (var widget in Widgets)
                                 {
-                                    <div class="IconContainer">
-                                        <i class="@widget.Icon" aria-hidden="true" onclick="GenerateWidget('@widget.Icon')"></i>
+                            <div class="IconContainer">
+                                <i class="fa @widget.Icon icon" aria-hidden="true" onclick="GenerateWidget('fa @widget.Icon icon','@widget.ComponentName')"></i>
 
-                                        <p class="widgetText">
-                                            @widget.DisplayName
-                                        </p>
-                                    </div>
-                                }
+                                <p class="widgetText">
+                                    @widget.DisplayName
+                                </p>
+                            </div>}
 
 
                             </div>
@@ -253,70 +259,79 @@
         return token;
     }
 
-    function GenerateWidget(target)
+    function GenerateWidget(target, componentName)
     {
+        debugger
+        var getElement =  document.createElement("div");
+        getElement.setAttribute("id", "yes-drop");
+        getElement.classList.add("resize-drag");
+        getElement.style.setProperty("top", "20");
+        getElement.style.setProperty("left", "20");
 
-        var getElement =  document.createElement("i");
-        getElement.setAttribute("id", "draggable");
-        getElement.classList.add(target.split(" "));
-        dragElement(getElement);
+        $.ajax({
+            url: "/Home/GetComponent?componentName=" + componentName,
+            method: "GET",
+            success: function (data) {
+                debugger
+                
+ 
+                $("#yes-drop").html(data)
+            }
+        });
+        $("#outer-dropzone").append(getElement);
     }
 
 
-          /* The dragging code forwidgIconconetdraggable' from the demo above
-        * applies to this demo as well so it doesn't have to be repeated. */
+    interact('.resize-drag')
+        .resizable({
+            // resize from all edges and corners
+            edges: { left: true, right: true, bottom: true, top: true },
 
-          // enable draggables to be dropped into this
-          interact('.dropzone').dropzone({
-              // only accept elements matching this CSS selector
-              accept: '#yes-drop',
-              // Require a 75% element overlap for a drop to be possible
-              overlap: 0.75,
+            listeners: {
+                move(event) {
+                    var target = event.target
+                    var x = (parseFloat(target.getAttribute('data-x')) || 0)
+                    var y = (parseFloat(target.getAttribute('data-y')) || 0)
 
-              // listen for drop related events:
+                    // update the element's style
+                    target.style.width = event.rect.width + 'px'
+                    target.style.height = event.rect.height + 'px'
 
-              ondropactivate: function (event) {
-                  // add active dropzone feedback
-                  event.target.classList.add('drop-active')
-              },
-              ondragenter: function (event) {
-                  var draggableElement = event.relatedTarget
-                  var dropzoneElement = event.target
+                    // translate when resizing from top or left edges
+                    x += event.deltaRect.left
+                    y += event.deltaRect.top
 
-                  // feedback the possibility of a drop
-                  dropzoneElement.classList.add('drop-target')
-                  draggableElement.classList.add('can-drop')
-                  draggableElement.textContent = 'Dragged in'
-              },
-              ondragleave: function (event) {
-                  // remove the drop feedback style
-                  event.target.classList.remove('drop-target')
-                  event.relatedTarget.classList.remove('can-drop')
-                  event.relatedTarget.textContent = 'Dragged out'
-              },
-              ondrop: function (event) {
-                  event.relatedTarget.textContent = 'Dropped'
-              },
-              ondropdeactivate: function (event) {
-                  // remove active dropzone feedback
-                  event.target.classList.remove('drop-active')
-                  event.target.classList.remove('drop-target')
-              }
-          })
+                    target.style.transform = 'translate(' + x + 'px,' + y + 'px)'
 
-          interact('.drag-drop')
-              .draggable({
-                  inertia: true,
-                  modifiers: [
-                      interact.modifiers.restrictRect({
-                          restriction: 'parent',
-                          endOnly: true
-                      })
-                  ],
-                  autoScroll: true,
-                  // dragMoveListener from the dragging demo above
-                  listeners: { move: dragMoveListener }
-              })
+                    target.setAttribute('data-x', x)
+                    target.setAttribute('data-y', y)
+                  //  target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height)
+                }
+            },
+            modifiers: [
+                // keep the edges inside the parent
+                interact.modifiers.restrictEdges({
+                    outer: 'parent'
+                }),
+
+                // minimum size
+                interact.modifiers.restrictSize({
+                    min: { width: 100, height: 50 }
+                })
+            ],
+
+            inertia: true
+        })
+        .draggable({
+            listeners: { move: window.dragMoveListener },
+            inertia: true,
+            modifiers: [
+                interact.modifiers.restrictRect({
+                    restriction: 'parent',
+                    endOnly: true
+                })
+            ]
+        })
 
         function dragMoveListener(event) {
             var target = event.target,
@@ -334,8 +349,7 @@
             target.setAttribute('data-y', y);
         }
     </script>
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-
+ 
     <style>
         .sb-mobile-diagram {
             width: 100%;
