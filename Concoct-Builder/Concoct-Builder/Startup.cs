@@ -59,8 +59,9 @@ namespace Concoct_Builder
             options.Fullscreen = true;
             options.Title = "Concoct Builder V 0.1";
             options.TitleBarStyle = TitleBarStyle.hidden;
+          
             Task.Run(async () => await Electron.WindowManager.CreateWindowAsync(options));
 
         }
-    }
+    }                       
 }
