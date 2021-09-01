@@ -1,4 +1,5 @@
 ﻿using Concoct_Builder.Models;
+using ElectronNET.API;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -195,6 +196,39 @@ namespace Concoct_Builder.Controllers
         public IActionResult GetComponent(string componentName)
         {
             return ViewComponent(componentName);
+        }
+
+        [HttpGet]
+        public IActionResult CloseApp()
+        {
+            var windows = Electron.WindowManager.BrowserWindows;
+            foreach (var window in windows)
+            {
+                window.Close();
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult MinimizeApp()
+        {
+            var windows = Electron.WindowManager.BrowserWindows;
+            foreach (var window in windows)
+            {
+                window.Minimize();
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult FullScreen(bool condition)
+        {
+            var windows = Electron.WindowManager.BrowserWindows;
+            foreach (var window in windows)
+            {
+                window.SetFullScreen(condition);
+            }
+            return View();
         }
     }
 }
