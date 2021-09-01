@@ -2,9 +2,11 @@
 using ElectronNET.API;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -229,6 +231,13 @@ namespace Concoct_Builder.Controllers
                 window.SetFullScreen(condition);
             }
             return View();
+        }
+
+        [HttpPost]
+        public List<PageElement> LoadFromFile([FromBody]IncomingFileRequest file)
+        {
+            var readContent  = System.IO.File.ReadAllText(file.Path);
+            return JsonConvert.DeserializeObject<List<PageElement>>(readContent);
         }
     }
 }
