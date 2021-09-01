@@ -47,17 +47,17 @@
                     <aside id="sidebar-treeview" style="overflow-x:hidden;">
                         <div class="main-menu">
                             <div class="table-content" style="padding:0;">
-
                                 @*//   class="IconContainer drag-drop" id="yes-drop"*@
                                 @foreach (var widget in Widgets)
                                 {
-                    <div class="IconContainer">
-                        <i class="fa @widget.Icon icon" aria-hidden="true" onclick="GenerateWidget('fa @widget.Icon icon','@widget.ComponentName')"></i>
+                                <div class="IconContainer">
+                                    <i class="fa @widget.Icon icon" aria-hidden="true" onclick="GenerateWidget('fa @widget.Icon icon','@widget.ComponentName')"></i>
 
-                        <p class="widgetText">
-                            @widget.DisplayName
-                        </p>
-                    </div>}
+                                    <p class="widgetText">
+                                        @widget.DisplayName
+                                    </p>
+                                </div>
+                                }
 
 
                             </div>

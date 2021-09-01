@@ -187,6 +187,7 @@ function ElementReleased(args) {
         Width: args.currentTarget.offsetHeight,
         Height: args.currentTarget.offsetHeight
     }
+    
 }
 
 function dragMoveListener(event) {
