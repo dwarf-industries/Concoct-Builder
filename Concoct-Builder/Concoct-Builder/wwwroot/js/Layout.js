@@ -107,6 +107,8 @@ function GenerateWidget(target, componentName) {
     getElement.classList.add("resize-drag");
     getElement.style.setProperty("top", "20");
     getElement.style.setProperty("left", "20");
+    getElement.style.setProperty("width", "200px");
+    getElement.style.setProperty("height", "200px");
 
     $.ajax({
         url: "/Home/GetComponent?componentName=" + componentName,
@@ -130,6 +132,7 @@ interact('.resize-drag')
 
         listeners: {
             move(event) {
+                RedRaw();
                 var target = event.target
                 var x = (parseFloat(target.getAttribute('data-x')) || 0)
                 var y = (parseFloat(target.getAttribute('data-y')) || 0)

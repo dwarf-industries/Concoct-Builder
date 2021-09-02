@@ -1,6 +1,6 @@
 ﻿@{ var UniqueId = Program.GetUniqueId(); }
 
-<div class="control-section">
+<div class="control-section" id="AreaChart_@UniqueId">
     <div id="area-container_@UniqueId" align="center"></div>
 </div>
 <style>
@@ -10,7 +10,15 @@
 </style>
 
 <script>
-    var chart = new ej.charts.Chart({
+    var uniqueId = "area-container_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw(){
+        $("#AreaChart_" + uuid).html("<div id=" + uniqueId + " align=\"center\"></div>");
+        DrawChart();
+    }
+    DrawChart();
+    function DrawChart() {
+        var chart = new ej.charts.Chart({
         //Initializing Primary X Axis
         primaryXAxis: {
             valueType: 'DateTime',
@@ -57,8 +65,10 @@
         ],
         //Initializing Chart Title
         title: 'Average Sales Comparison',
-        width: ej.base.Browser.isDevice ? '100%' : '100%',
+        width: '100%',
 
     });
     chart.appendTo('#area-container_@UniqueId');
+    }
+
 </script>
