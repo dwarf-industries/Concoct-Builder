@@ -146,8 +146,8 @@
         margin-top: 30px;
     }
 </style>
-<div class="content-wrapper" style="width: 100%;height: 590px;">
-    <div class='center'>
+<div class="content-wrapper" style="width: 100%;height: 100%;">
+    <div  >
         <div class='centercontrol' id="barcode_@UniqueId"></div>
     </div>
 
@@ -156,18 +156,25 @@
 <script>
 
 
+    var uniqueId = "barcode_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw(){
+        $("#barcode_" + uuid).html("<div id=" + uniqueId + " align=\"center\"></div>");
+        Barcode();
+    }
+    Barcode();
+    function Barcode() {
 
-
-    //Initializes barcode control
-    var barcodeQrCode = new ej.barcodegenerator.QRCodeGenerator({
-        width: '100%',
-        height: '250px',
-        mode: 'SVG',
-        type: 'QRCode',
-        displayText: { visibility: false },
-        value: 'Syncfusion',
-    });
-    barcodeQrCode.appendTo('#barcode_@UniqueId');
-
+        //Initializes barcode control
+        var barcodeQrCode = new ej.barcodegenerator.QRCodeGenerator({
+            width: '100%',
+            height: '200px',
+            mode: 'SVG',
+            type: 'QRCode',
+            displayText: { visibility: false },
+            value: 'Syncfusion',
+        });
+        barcodeQrCode.appendTo('#barcode_@UniqueId');
+    }
 
 </script>

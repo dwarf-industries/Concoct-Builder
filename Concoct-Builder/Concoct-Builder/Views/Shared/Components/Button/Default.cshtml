@@ -38,9 +38,18 @@
     }
 </style>
 
-<button id="outlinebtn_@UniqueId">Outline</button>
+<button id="outlinebtn_@UniqueId" style="width:100%; height:100%;">Outline</button>
 
 <script>
-    button = new ej.buttons.Button({ cssClass: 'e-outline', isPrimary: true });
-    button.appendTo('#outlinebtn_@UniqueId');
+    var uniqueId = "barcode_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw(){
+        $("#barcode_" + uuid).html("<div id=" + uniqueId + " align=\"center\"></div>");
+        Button();
+    }
+    Button();
+    function Button() {
+        button = new ej.buttons.Button({ cssClass: 'e-outline', isPrimary: true });
+        button.appendTo('#outlinebtn_@UniqueId');
+    }
 </script>
