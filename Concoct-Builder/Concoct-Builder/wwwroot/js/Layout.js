@@ -1,4 +1,5 @@
-﻿var storage = window.localStorage;
+﻿ 
+var storage = window.localStorage;
 var ActiveList = {};
 var draggedElement = 0;
 var IsOpen = 0;
@@ -24,7 +25,6 @@ sidebarMenu.appendTo('#sidebar-treeview');
 // Toggle the Sidebar
 document.getElementById('hamburger').addEventListener('click', function () {
     sidebarMenu.toggle();
-    sidebarChat.toggle();
 });
 // open new tab
 
@@ -97,8 +97,42 @@ function gettoken() {
     return token;
 }
 
+function GenerateWidgetAt(component, cDraggable) {
+    var getElement = document.createElement("div");
+    getElement.setAttribute("id", "yes-drop_" + cDraggable);
+    getElement.setAttribute("data-value", component.elementName);
+
+
+    getElement.classList.add("resize-drag");
+
+    $("#outer-dropzone").append(getElement);
+
+    $.ajax({
+        url: "/Home/GetComponent?componentName=" + component.elementName,
+        method: "GET",
+        success: function (data) {
+
+
+            getElement.onmouseup = ElementReleased;
+            $("#yes-drop_" + cDraggable).html(data)
+            getElement.style.setProperty("width", component.width);
+            getElement.style.setProperty("height", component.height);
+            getElement.style.setProperty("transform", "translate(" + component.clientX + "px," + component.clientY + "px)");
+            getElement.setAttribute("data-x", component.clientX);
+            getElement.setAttribute("data-y", component.clientY);
+            ActiveList[component.elementName + "_" + cDraggable] = {
+                ElementName: component.elementName,
+                ClientX: component.clientX,
+                ClientY: component.clientY,
+                Width: component.width,
+                Height: component.height
+            };
+         }
+    });
+}
+
 function GenerateWidget(target, componentName) {
-    debugger
+     
     var getElement = document.createElement("div");
     getElement.setAttribute("id", "yes-drop_" + draggedElement);
     getElement.setAttribute("data-value", componentName);
@@ -114,7 +148,7 @@ function GenerateWidget(target, componentName) {
         url: "/Home/GetComponent?componentName=" + componentName,
         method: "GET",
         success: function (data) {
-            debugger
+             
 
             getElement.onmouseup = ElementReleased;
             $("#yes-drop_" + draggedElement).html(data)
@@ -178,12 +212,12 @@ interact('.resize-drag')
     })
 
 function ElementReleased(args) {
-    debugger
+     
     var name = args.currentTarget.getAttribute("data-value");
     ActiveList[name + "_" + draggedElement] = {
         ElementName: name,
-        InnerX: args.currentTarget,
-        ClientX: args.ClientX,
+      //  InnerX: args.currentTarget,
+        ClientX: args.clientX,
         ClientY: args.clientY,
         OffsetX: args.offsetX,
         OffsetY: args.offsetY,

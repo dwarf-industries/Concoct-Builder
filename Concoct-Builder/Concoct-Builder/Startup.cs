@@ -1,6 +1,6 @@
 namespace Concoct_Builder
 {
-
+    using Concoct_Builder.Datalayer;
     using ElectronNET.API;
     using ElectronNET.API.Entities;
     using Microsoft.AspNetCore.Builder;
@@ -22,6 +22,7 @@ namespace Concoct_Builder
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IFileHandler, FileHandler>();
             services.AddControllersWithViews();
         }
 
