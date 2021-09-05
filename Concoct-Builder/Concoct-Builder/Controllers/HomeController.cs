@@ -1,24 +1,22 @@
-﻿using Concoct_Builder.Models;
+﻿using Concoct_Builder.Datalayer;
+using Concoct_Builder.Models;
 using ElectronNET.API;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Concoct_Builder.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly FileHandler handler;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IFileHandler fileHandler)
         {
             _logger = logger;
+            handler = (FileHandler)fileHandler;
         }
 
         public IActionResult Index()
@@ -236,8 +234,26 @@ namespace Concoct_Builder.Controllers
         [HttpPost]
         public List<PageElement> LoadFromFile([FromBody]IncomingFileRequest file)
         {
-            var readContent  = System.IO.File.ReadAllText(file.Path);
-            return JsonConvert.DeserializeObject<List<PageElement>>(readContent);
+            return handler.ReadFile(file.Path);
+        }
+        [HttpPost]
+        public bool SaveFile([FromBody] SaveFileRequest request)
+        {
+
+            // This text is added only once to the file.
+            if (!System.IO.File.Exists($"{request.File.Path}{request.File.Name}"))
+            {
+                // Create a file to write to.
+                handler.WriteFile($"{request.File.Path}{request.File.Name}", request.PageElements);
+             }
+            else
+            {
+                handler.DeleteFile($"{request.File.Path}{request.File.Name}");
+                handler.WriteFile($"{request.File.Path}{request.File.Name}", request.PageElements);
+
+                //System.IO.File.WriteAllText($"{request.File.Path}{request.File.Name}", Newtonsoft.Json.JsonConvert.SerializeObject(request.PageElements));
+            }
+            return true;
         }
     }
 }

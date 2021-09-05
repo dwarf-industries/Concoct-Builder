@@ -98,7 +98,7 @@ function gettoken() {
 }
 
 function GenerateWidget(target, componentName) {
-    debugger
+     
     var getElement = document.createElement("div");
     getElement.setAttribute("id", "yes-drop_" + draggedElement);
     getElement.setAttribute("data-value", componentName);
@@ -114,7 +114,7 @@ function GenerateWidget(target, componentName) {
         url: "/Home/GetComponent?componentName=" + componentName,
         method: "GET",
         success: function (data) {
-            debugger
+             
 
             getElement.onmouseup = ElementReleased;
             $("#yes-drop_" + draggedElement).html(data)
@@ -178,12 +178,12 @@ interact('.resize-drag')
     })
 
 function ElementReleased(args) {
-    debugger
+     
     var name = args.currentTarget.getAttribute("data-value");
     ActiveList[name + "_" + draggedElement] = {
         ElementName: name,
-        InnerX: args.currentTarget,
-        ClientX: args.ClientX,
+      //  InnerX: args.currentTarget,
+        ClientX: args.clientX,
         ClientY: args.clientY,
         OffsetX: args.offsetX,
         OffsetY: args.offsetY,
