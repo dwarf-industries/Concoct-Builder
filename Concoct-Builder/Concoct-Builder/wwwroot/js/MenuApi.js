@@ -97,8 +97,14 @@ function FileSelected(dto) {
             url: "/Home/LoadFromFile",
             contentType: "application/json",
             data: JSON.stringify(dto)
-        }).done(function (msg) {
-            alert("Data Saved: " + msg);
+        }).done(function (args) {
+            debugger
+            var draggableValue = 0;
+            for(var element in args)
+            {
+                GenerateWidgetAt(args[element], draggableValue);
+                draggableValue++;
+            }
         });
     }
     else

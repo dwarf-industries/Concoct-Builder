@@ -1,4 +1,5 @@
-﻿var storage = window.localStorage;
+﻿ 
+var storage = window.localStorage;
 var ActiveList = {};
 var draggedElement = 0;
 var IsOpen = 0;
@@ -24,7 +25,6 @@ sidebarMenu.appendTo('#sidebar-treeview');
 // Toggle the Sidebar
 document.getElementById('hamburger').addEventListener('click', function () {
     sidebarMenu.toggle();
-    sidebarChat.toggle();
 });
 // open new tab
 
@@ -95,6 +95,40 @@ function gettoken() {
     var token = '@Html.AntiForgeryToken()';
     token = $(token).val();
     return token;
+}
+
+function GenerateWidgetAt(component, cDraggable) {
+    var getElement = document.createElement("div");
+    getElement.setAttribute("id", "yes-drop_" + cDraggable);
+    getElement.setAttribute("data-value", component.elementName);
+
+
+    getElement.classList.add("resize-drag");
+
+    $("#outer-dropzone").append(getElement);
+
+    $.ajax({
+        url: "/Home/GetComponent?componentName=" + component.elementName,
+        method: "GET",
+        success: function (data) {
+
+
+            getElement.onmouseup = ElementReleased;
+            $("#yes-drop_" + cDraggable).html(data)
+            getElement.style.setProperty("width", component.width);
+            getElement.style.setProperty("height", component.height);
+            getElement.style.setProperty("transform", "translate(" + component.clientX + "px," + component.clientY + "px)");
+            getElement.setAttribute("data-x", component.clientX);
+            getElement.setAttribute("data-y", component.clientY);
+            ActiveList[component.elementName + "_" + cDraggable] = {
+                ElementName: component.elementName,
+                ClientX: component.clientX,
+                ClientY: component.clientY,
+                Width: component.width,
+                Height: component.height
+            };
+         }
+    });
 }
 
 function GenerateWidget(target, componentName) {
