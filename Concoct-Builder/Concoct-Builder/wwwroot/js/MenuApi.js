@@ -98,7 +98,7 @@ function FileSelected(dto) {
             contentType: "application/json",
             data: JSON.stringify(dto)
         }).done(function (args) {
-            debugger
+             
             var draggableValue = 0;
             for(var element in args)
             {

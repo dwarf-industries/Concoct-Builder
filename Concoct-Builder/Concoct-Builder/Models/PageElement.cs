@@ -8,11 +8,13 @@ namespace Concoct_Builder.Models
     public class PageElement
     {
         public string ElementName { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public int ClientX { get; set; }
-        public int ClientY { get; set; }
-        public int OffsetX { get; set; }
-        public int OffsetY { get; set; }
+        public string Width { get; set; }
+        public string Height { get; set; }
+        public string ClientX { get; set; }
+        public string ClientY { get; set; }
+        public string OffsetX { get; set; }
+        public string OffsetY { get; set; }
+        public string Translate { get; set; }
+
     }
 }

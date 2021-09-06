@@ -48,27 +48,29 @@ namespace Concoct_Builder.Datalayer
                                 pageElement.ElementName = x;
                                 break;
                             case 1:
-                                pageElement.Width = int.Parse(x);
+                                pageElement.Width = x;
                                 break;
                             case 2:
-                                pageElement.Height = int.Parse(x);
+                                pageElement.Height = x;
                                 break;
                             case 3:
-                                pageElement.ClientX = int.Parse(x);
+                                pageElement.ClientX = x;
                                 break;
                             case 4:
-                                pageElement.ClientY = int.Parse(x);
+                                pageElement.ClientY = x;
                                 break;
                             case 5:
-                                pageElement.OffsetX = int.Parse(x);
+                                pageElement.OffsetX = x;
                                 break;
                             case 6:
-                                pageElement.OffsetY = int.Parse(x);
+                                pageElement.OffsetY = x;
+                                break;
+                            case 7:
+                                pageElement.Translate = x;
                                 break;
 
                         }
                     }
-                  
                     i++;
                 });
                 result.Add(pageElement);
@@ -93,6 +95,7 @@ namespace Concoct_Builder.Datalayer
                 result += x.ClientY + Environment.NewLine;
                 result += x.OffsetX + Environment.NewLine;
                 result += x.OffsetY + Environment.NewLine;
+                result += x.Translate + Environment.NewLine;
                 if (pageElements.Count != i)
                     result += "@";
                 i++;

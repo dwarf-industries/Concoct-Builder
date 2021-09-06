@@ -117,15 +117,19 @@ function GenerateWidgetAt(component, cDraggable) {
             $("#yes-drop_" + cDraggable).html(data)
             getElement.style.setProperty("width", component.width);
             getElement.style.setProperty("height", component.height);
-            getElement.style.setProperty("transform", "translate(" + component.clientX + "px," + component.clientY + "px)");
-            getElement.setAttribute("data-x", component.clientX);
-            getElement.setAttribute("data-y", component.clientY);
+            getElement.style.setProperty("transform", component.translate);
+            //getElement.setAttribute("data-x", component.clientX);
+            draggedElement = cDraggable;
+            //getElement.setAttribute("data-y", component.clientY);
+            RedRaw();
+
             ActiveList[component.elementName + "_" + cDraggable] = {
                 ElementName: component.elementName,
                 ClientX: component.clientX,
                 ClientY: component.clientY,
                 Width: component.width,
-                Height: component.height
+                Height: component.height,
+                Translate: component.Translate
             };
          }
     });
@@ -212,17 +216,20 @@ interact('.resize-drag')
     })
 
 function ElementReleased(args) {
-     
+    
+
+    var transform = args.currentTarget.style.getPropertyValue("transform");
     var name = args.currentTarget.getAttribute("data-value");
     ActiveList[name + "_" + draggedElement] = {
         ElementName: name,
-      //  InnerX: args.currentTarget,
-        ClientX: args.clientX,
-        ClientY: args.clientY,
-        OffsetX: args.offsetX,
-        OffsetY: args.offsetY,
-        Width: args.currentTarget.offsetHeight,
-        Height: args.currentTarget.offsetHeight
+        ClientX: "2",
+        ClientY: "2",
+        OffsetX: args.offsetX.toString(),
+        OffsetY: args.offsetY.toString(),
+        Width: args.currentTarget.style.getPropertyValue("width"),
+        Height: args.currentTarget.style.getPropertyValue("height"),
+        Translate: transform
+
     }
     
 }
