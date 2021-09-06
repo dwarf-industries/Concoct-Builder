@@ -178,7 +178,14 @@ namespace Concoct_Builder.Controllers
                    ComponentName = "TreeMap",
                    DisplayName ="Tree Map",
                    Icon = "fa-map-marker"
+                },
+                new Widget
+                {
+                   ComponentName = "Placeholder",
+                   DisplayName = "Placeholder (Image/Custom)",
+                   Icon = "fa-calendar-o"
                 }
+
             };
         }
 
