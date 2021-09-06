@@ -11,5 +11,9 @@ namespace Concoct_Builder.Datalayer
 
         public string SerializeData(List<PageElement> pageElements);
         public List<PageElement> DeserializeData(string data);
+        Settings ReadConfig(string filePath);
+        public string SaveDirectoryFile(string files, IncomingFileRequest file);
+        public List<IncomingFileRequest> ReadDirectoryFile(string assocaitedFileLocation);
+        public string ReadFileRaw(string filePath);
     }
 }
