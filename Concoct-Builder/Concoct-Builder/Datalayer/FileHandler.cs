@@ -1,6 +1,7 @@
 ﻿using Concoct_Builder.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,6 +23,19 @@ namespace Concoct_Builder.Datalayer
                 return DeserializeData(contents);
 
             return null;
+        }
+
+        public string ReadFileRaw(string filePath)
+        {
+            if(!System.IO.File.Exists(filePath))
+            {
+                Console.WriteLine("File doesn't exist, creating empty file.");
+                System.IO.File.Create(filePath).Dispose();
+
+                return "";
+            }
+
+            return System.IO.File.ReadAllText(filePath);
         }
 
         public void WriteFile(string path, List<PageElement> content)
@@ -101,6 +115,99 @@ namespace Concoct_Builder.Datalayer
                 i++;
             });
             return result;
+        }
+
+        public string SaveDirectoryFile(string files, IncomingFileRequest file)
+        {
+            var result = files;
+            result += "@";
+            result += $"{file.Path}{Startup.Settings.SystemFolderDelimiter}{file.Name}" + Environment.NewLine;
+            result += file.Name + Environment.NewLine;
+
+            return result;
+        }
+
+        public Settings ReadConfig(string filePath)
+        {
+            try
+            {
+                var result = new Settings();
+                var i = 0;
+                filePath.Split('@').ToList().ForEach(dataRow =>
+                {
+                    dataRow.Split(Environment.NewLine).ToList().ForEach(x =>
+                    {
+                        if (x != "")
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    result.SingInType = x;
+                                    break;
+                                case 1:
+                                    result.ConcoctInstance = x;
+                                    break;
+                                case 2:
+                                    result.UserName = x;
+                                    break;
+                                case 3:
+                                    result.Password = x;
+                                    break;
+                                case 4:
+                                    result.APIKey = x;
+                                    break;
+                                case 5:
+                                    result.AssocaitedFileLocation = x;
+                                    break;
+                            }
+                        }
+                        i++;
+                    });
+                });
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to read configuration, please reinstall or fix the configuration file. Settings.cf");
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+           
+        }
+
+        public List<IncomingFileRequest> ReadDirectoryFile(string assocaitedFileLocation)
+        {
+            var i = 0;
+            var result = new List<IncomingFileRequest>();
+            var directory = default(IncomingFileRequest);
+
+            if (string.IsNullOrEmpty(assocaitedFileLocation))
+                return new List<IncomingFileRequest>();
+
+            assocaitedFileLocation.Split('@').ToList().ForEach(dataRow =>
+            {
+                directory = new IncomingFileRequest();
+                dataRow.Split(Environment.NewLine).ToList().ForEach(x =>
+                {
+                    if (x != "")
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                directory.Path = x;
+                                break;
+                            case 1:
+                                directory.Name = x;
+                                break;                        
+                        }
+                    }
+                    i++;
+                });
+                result.Add(directory);
+                i = 0;
+            });
+            return result;
+
         }
     }
 }

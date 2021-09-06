@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Concoct_Builder.Controllers
 {
@@ -245,7 +246,7 @@ namespace Concoct_Builder.Controllers
             {
                 // Create a file to write to.
                 handler.WriteFile($"{request.File.Path}{request.File.Name}", request.PageElements);
-             }
+            }
             else
             {
                 handler.DeleteFile($"{request.File.Path}{request.File.Name}");
@@ -253,7 +254,20 @@ namespace Concoct_Builder.Controllers
 
                 //System.IO.File.WriteAllText($"{request.File.Path}{request.File.Name}", Newtonsoft.Json.JsonConvert.SerializeObject(request.PageElements));
             }
+            UpdateDirectoryContent(request);
             return true;
+        }
+
+        private void UpdateDirectoryContent(SaveFileRequest request)
+        {
+            var fileData = handler.ReadDirectoryFile(Startup.Settings.AssocaitedFileLocation);
+            var exists = fileData.FirstOrDefault(x => x.Path == request.File.Path && x.Name == request.File.Name);
+            if (exists == null)
+            {
+                handler.DeleteFile(Startup.Settings.AssocaitedFileLocation);
+                var currentData = handler.ReadFileRaw(Startup.Settings.AssocaitedFileLocation);
+                handler.SaveDirectoryFile(currentData, request.File);
+            }
         }
     }
 }
