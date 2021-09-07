@@ -153,15 +153,27 @@ function GenerateWidget(target, componentName) {
         method: "GET",
         success: function (data) {
              
-
             getElement.onmouseup = ElementReleased;
-            $("#yes-drop_" + draggedElement).html(data)
+            $("#yes-drop_" + draggedElement).html(data);
             draggedElement++;
         }
     });
     $("#outer-dropzone").append(getElement);
 }
 
+
+function RemoveElement(id) {
+    var element = document.getElementById(id);
+    var parentId = element.offsetParent.getAttribute("id");
+    element.offsetParent.remove();
+    var newList = {};
+    for (var item in ActiveList) {
+        if (item !== parentId)
+            newList[item] = ActiveList[item];
+    }
+
+    ActiveList = newList;
+}
 
 interact('.resize-drag')
     .resizable({
