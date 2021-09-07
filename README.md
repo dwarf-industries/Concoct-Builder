@@ -57,7 +57,7 @@ Public demo and acess to the project for contributors:
 https://portal.concoctcloud.com/Accounts/ProjectSignup?projectId=11030
 
 
- [![Public Taskboard](https://portal.concoctcloud.com/IMG/LatestBoard.PNG)]https://portal.concoctcloud.com/Boards/PublicBoard?projectId=11030&iteration=9038&person=0)
+ [![Public Taskboard](https://portal.concoctcloud.com/IMG/LatestBoard.PNG)] https://portal.concoctcloud.com/Boards/PublicBoard?projectId=11030&iteration=9038&person=0)
 
 ## Authors
 
