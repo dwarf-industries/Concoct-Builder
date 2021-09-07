@@ -114,7 +114,10 @@ function GenerateWidgetAt(component, cDraggable) {
 
 
             getElement.onmouseup = ElementReleased;
-            $("#yes-drop_" + cDraggable).html(data)
+            $("#yes-drop_" + cDraggable).html(data);
+            if (component.base64 !== "" && component.base64 !== undefined && component.base64 !== null) {
+                SetContent(component.base64);
+            }
             getElement.style.setProperty("width", component.width);
             getElement.style.setProperty("height", component.height);
             getElement.style.setProperty("transform", component.translate);
@@ -129,7 +132,8 @@ function GenerateWidgetAt(component, cDraggable) {
                 ClientY: component.clientY,
                 Width: component.width,
                 Height: component.height,
-                Translate: component.Translate
+                Translate: component.Translate,
+                Base64: component.base64
             };
          }
     });
@@ -162,9 +166,27 @@ function GenerateWidget(target, componentName) {
 }
 
 
+function UpdatePlaceholderContent(id, content) {
+    var element = document.getElementById(id);
+    var parentId = element.offsetParent.getAttribute("data-value");
+    element.offsetParent.remove();
+    var newList = {};
+    for (var item in ActiveList) {
+        if (item !== parentId)
+            newList[item] = ActiveList[item];
+        else
+        {
+            var item = ActiveList[item];
+            item.Base64 = content;
+        }
+    }
+
+    ActiveList = newList;
+}
+
 function RemoveElement(id) {
     var element = document.getElementById(id);
-    var parentId = element.offsetParent.getAttribute("id");
+    var parentId = element.offsetParent.getAttribute("data-value");
     element.offsetParent.remove();
     var newList = {};
     for (var item in ActiveList) {
@@ -228,22 +250,32 @@ interact('.resize-drag')
     })
 
 function ElementReleased(args) {
-    
-
     var transform = args.currentTarget.style.getPropertyValue("transform");
     var name = args.currentTarget.getAttribute("data-value");
-    ActiveList[name + "_" + draggedElement] = {
-        ElementName: name,
-        ClientX: "2",
-        ClientY: "2",
-        OffsetX: args.offsetX.toString(),
-        OffsetY: args.offsetY.toString(),
-        Width: args.currentTarget.style.getPropertyValue("width"),
-        Height: args.currentTarget.style.getPropertyValue("height"),
-        Translate: transform
-
-    }
-    
+    if (ActiveList[name + "_" + draggedElement] === undefined)
+        ActiveList[name + "_" + draggedElement] = {
+            ElementName: name,
+            ClientX: "2",
+            ClientY: "2",
+            OffsetX: args.offsetX.toString(),
+            OffsetY: args.offsetY.toString(),
+            Width: args.currentTarget.style.getPropertyValue("width"),
+            Height: args.currentTarget.style.getPropertyValue("height"),
+            Translate: transform,
+            Base64: ""
+        };
+    else
+        ActiveList[name + "_" + draggedElement] = {
+            ElementName: name,
+            ClientX: "2",
+            ClientY: "2",
+            OffsetX: args.offsetX.toString(),
+            OffsetY: args.offsetY.toString(),
+            Width: args.currentTarget.style.getPropertyValue("width"),
+            Height: args.currentTarget.style.getPropertyValue("height"),
+            Translate: transform,
+            base64: ActiveList[name + "_" + draggedElement].Base64
+        };
 }
 
 function dragMoveListener(event) {

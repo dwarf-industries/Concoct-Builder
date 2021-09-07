@@ -15,6 +15,7 @@ namespace Concoct_Builder.Models
         public string OffsetX { get; set; }
         public string OffsetY { get; set; }
         public string Translate { get; set; }
+        public string Base64 { get; set; }
 
     }
 }

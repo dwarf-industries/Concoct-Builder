@@ -82,6 +82,9 @@ namespace Concoct_Builder.Datalayer
                             case 7:
                                 pageElement.Translate = x;
                                 break;
+                            case 8:
+                                pageElement.Base64 = x;
+                                break;
 
                         }
                     }
@@ -110,6 +113,7 @@ namespace Concoct_Builder.Datalayer
                 result += x.OffsetX + Environment.NewLine;
                 result += x.OffsetY + Environment.NewLine;
                 result += x.Translate + Environment.NewLine;
+                result += x.Base64 + Environment.NewLine;
                 if (pageElements.Count != i)
                     result += "@";
                 i++;
@@ -208,6 +212,12 @@ namespace Concoct_Builder.Datalayer
             });
             return result;
 
+        }
+
+        public string ConvertTobase64(string path)
+        {
+            var bytes = System.IO.File.ReadAllBytes(path);
+            return Convert.ToBase64String(bytes);
         }
     }
 }
