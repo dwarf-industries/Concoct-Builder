@@ -244,6 +244,13 @@ namespace Concoct_Builder.Controllers
         {
             return handler.ReadFile(file.Path);
         }
+
+        [HttpPost]
+        public string ConvertTobase([FromBody] IncomingFileRequest file)
+        {
+            return handler.ConvertTobase64(file.Path);
+        }
+
         [HttpPost]
         public bool SaveFile([FromBody] SaveFileRequest request)
         {

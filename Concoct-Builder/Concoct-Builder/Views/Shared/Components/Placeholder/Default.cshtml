@@ -1,13 +1,119 @@
 ﻿@{ var UniqueId = Program.GetUniqueId(); }
 
 
-<div class="img-fluid" style="width:100%; height:100%">
-    <img  id="placeholder_@UniqueId" />
+<div class="control-section" style="width:100%;height:100%;" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div class="img-fluid" style="width:100%; height:100%">
+                <img id="placeholder_@UniqueId"  style="display:none; width:100%;height:100%;" />
+                <input type="file" onchange="PlaceHolderChanged"  style="display:none" id="placeholder_file_@UniqueId" />
+            </div>
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
+    </div>
 </div>
 
+
+
 <script>
-    function SetImage(imageData) {
-        var getElemen = document.getElementById("placeholder_@UniqueId");
-        getElemen.setAttribute("src", imageData);
+    SetImage();
+
+
+    function RedRaw() {
+
     }
+
+    function SetImage(imageData) {
+        @*var getElemen = document.getElementById("placeholder_@UniqueId");
+        getElemen.setAttribute("src", imageData);*@
+
+        //ContextMenu model definition
+        var menuItems = [
+            {
+                text: 'Container Selected - Event'
+            },
+            {
+                separator: true
+            },
+            {
+                text: 'Delete'
+            },
+            {
+                text: 'Upload'
+            }];
+        var menuOptions = {
+            target: '#contextmenutarget_@UniqueId',
+            items: menuItems,
+            beforeItemRender: function (args) {
+                if (args.item.text === 'Link') {
+                    args.element.classList.add('e-disabled');
+                }
+            },
+            select: function (args) {
+                console.log(args);
+                console.log(args.item.properties.text);
+                switch (args.item.properties.text) {
+
+                    case "Container Selected - Event":
+                        ActivateEvent(0);
+                        break;
+                    case "Delete":
+                        RemoveElement("@UniqueId");
+                        break;
+                    case "Upload":
+                        AddContent("placeholder_file_@UniqueId");
+                        break;
+                }
+            }
+        };
+
+
+            // Initialize ContextMenu control.
+        var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+    }
+
+
+
+    function AddContent(id) {
+        mode = true;
+        var getElement;
+        getElement = document.getElementById(id);
+
+        getElement.type = "file";
+        getElement.click();
+        getElement.onchange = PlaceHolderChanged;
+    }
+
+    function SetContent(content) {
+        var imageElement = document.getElementById("placeholder_@UniqueId");
+        imageElement.setAttribute("src", "data:image/jpeg;base64, " + content);
+        imageElement.style.setProperty("display", "");
+        console.log(args);
+
+    }
+
+    function PlaceHolderChanged(event) {
+
+
+        var dto = {
+            Path: event.path[0].files[0].path,
+            Name: event.path[0].files[0].name
+        }
+
+        $.ajax({
+            method: "POST",
+            url: "/Home/ConvertTobase",
+            contentType: "application/json",
+            data: JSON.stringify(dto)
+        }).done(function (args) {
+            var imageElement = document.getElementById("placeholder_@UniqueId");
+            imageElement.setAttribute("src", "data:image/jpeg;base64, " + args);
+            imageElement.style.setProperty("display", "");
+            console.log(args);
+            UpdatePlaceholderContent("@UniqueId", args);
+        });
+
+    }
+
+
 </script>
