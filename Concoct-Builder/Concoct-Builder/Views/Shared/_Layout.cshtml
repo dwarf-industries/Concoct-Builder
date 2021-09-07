@@ -28,9 +28,9 @@
                     <ul class="header-list">
                         <li class="float-left header-style icon-menu" id="hamburger"></li>
 
-                        <li class="header-style float-right support border-left MenuIcon" onclick="KillWindow()" ><b><i class="fa fa-window-close-o MenuIcon" aria-hidden="true"></i></b></li>
- 
-                        <li class="header-style float-right support border-left MenuIcon" onclick="Minimize()" ><b><i class="fa fa-window-minimize MenuIcon" aria-hidden="true"></i></b></li>
+                        <li class="header-style float-right support border-left MenuIcon" onclick="KillWindow()"><b><i class="fa fa-window-close-o MenuIcon" aria-hidden="true"></i></b></li>
+
+                        <li class="header-style float-right support border-left MenuIcon" onclick="Minimize()"><b><i class="fa fa-window-minimize MenuIcon" aria-hidden="true"></i></b></li>
 
                         <li class="header-style float-right support border-left" onclick="LoadLayout()"><b>Load Layout</b></li>
                         <li class="header-style float-right support border-left" onclick="SaveChanges()"><b>Save</b></li>
@@ -49,14 +49,13 @@
                                 @*//   class="IconContainer drag-drop" id="yes-drop"*@
                                 @foreach (var widget in Widgets)
                                 {
-                                <div class="IconContainer">
-                                    <i class="fa @widget.Icon icon" aria-hidden="true" onclick="GenerateWidget('fa @widget.Icon icon','@widget.ComponentName')"></i>
+                    <div class="IconContainer">
+                        <i class="fa @widget.Icon icon" aria-hidden="true" onclick="GenerateWidget('fa @widget.Icon icon','@widget.ComponentName')"></i>
 
-                                    <p class="widgetText">
-                                        @widget.DisplayName
-                                    </p>
-                                </div>
-                                }
+                        <p class="widgetText">
+                            @widget.DisplayName
+                        </p>
+                    </div>}
 
 
                             </div>
@@ -68,6 +67,21 @@
                             @RenderBody()
                         </div>
                     </div>
+
+                    @*Declare Notification Pop Up, used for error handling and message subscriptions*@
+                    <div class="col-lg-12 control-section toast-type-section">
+                        <div class="e-sample-resize-container">
+                            <div id="toast_type">
+                            </div>
+                            <div id="toast_types">
+                                <div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    @*End INotify declaration*@
                 </div>
 
 
@@ -80,6 +94,7 @@
     <script src="~/js/Interact.js"></script>
     <script src="~/js/MenuApi.js"></script>
     <script src="~/js/Layout.js"></script>
+    <script src="~/js/INotify.js"></script>
 </body>
 </html>
 
