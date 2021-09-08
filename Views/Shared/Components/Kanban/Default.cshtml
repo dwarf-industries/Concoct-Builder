@@ -1,10 +1,20 @@
 ﻿@{ var UniqueId = Program.GetUniqueId(); }
 
-<div class="control-section">
-    <div class="control_wrapper">
-        <div id='Kanban_@UniqueId'></div>
+<div class="control-section" style="width:100%;height:100%; overflow:hidden" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div class="col-md-12 control-section">
+                <div class="content-wrapper" id="#column-container_@UniqueId">
+                    <div id='Kanban_@UniqueId'></div>
+                </div>
+            </div>
+
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
     </div>
 </div>
+
+ 
 <script id="headerTemplate" type="text/x-jsrender">
     <div class="header-template-wrap">
         <div class="header-icon e-icons ${keyField}"></div>
@@ -163,6 +173,56 @@
 </style>
  
 <script>
+
+    var uniqueId = "Kanban_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw() {
+         
+        $("#column-container_" + uuid).html("<div id=" + uniqueId + "  ></div>");
+        DrawKanban();
+
+
+
+    }
+    DrawKanban();
+
+
+        var menuItems = [
+        {
+            text: 'Container Selected - Event'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Delete'
+        },
+        ];
+    var menuOptions = {
+        target: '#contextmenutarget_@UniqueId',
+        items: menuItems,
+        beforeItemRender: function (args) {
+            if (args.item.text === 'Link') {
+                args.element.classList.add('e-disabled');
+            }
+        },
+        select: function (args) {
+            console.log(args);
+            console.log(args.item.properties.text);
+            switch (args.item.properties.text) {
+
+                case "Container Selected - Event":
+                    ActivateEvent(0);
+                    break;
+                case "Delete":
+                    RemoveElement("@UniqueId");
+                    break;
+
+            }
+        }
+    };
+    var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+
     var data = [
         {
             "requiredStories": 20,
@@ -502,37 +562,41 @@
             "Assignee": "Steven walker"
         }
     ];
-    var data = ej.base.extend([], cData, null, true); // To maintain the property changes, extend the object. 
-    var kanbanObj = new ej.kanban.Kanban({
-        dataSource: data,
-        keyField: 'Status',
-        enableTooltip: true,
-        columns: [
-            { headerText: 'To Do', keyField: 'Open', template: '#headerTemplate', allowToggle: true },
-            { headerText: 'In Progress', keyField: 'InProgress', template: '#headerTemplate', allowToggle: true },
-            { headerText: 'In Review', keyField: 'Review', template: '#headerTemplate', allowToggle: true },
-            { headerText: 'Done', keyField: 'Close', template: '#headerTemplate', allowToggle: true }
-        ],
-        cardSettings: {
-            headerField: 'Title',
-            template: '#cardTemplate',
-            selectionType: 'Multiple'
-        },
-        swimlaneSettings: {
-            keyField: 'Assignee',
-        },
-        dialogSettings: {
-            fields: [
-                { text: 'ID', key: 'Title', type: 'TextBox' },
-                { key: 'Status', type: 'DropDown' },
-                { key: 'Assignee', type: 'DropDown' },
-                { key: 'RankId', type: 'TextBox' },
-                { key: 'Summary', type: 'TextArea' }
-            ]
-        },
-        cardRendered: function (args) {
-            ej.base.addClass([args.element], args.data.Priority);
-        }
-    });
-    kanbanObj.appendTo('#Kanban_@UniqueId');
+
+    function DrawKanban() {
+        var data = ej.base.extend([], cData, null, true); // To maintain the property changes, extend the object.
+        var kanbanObj = new ej.kanban.Kanban({
+            dataSource: data,
+            keyField: 'Status',
+            enableTooltip: true,
+            columns: [
+                { headerText: 'To Do', keyField: 'Open', template: '#headerTemplate', allowToggle: true },
+                { headerText: 'In Progress', keyField: 'InProgress', template: '#headerTemplate', allowToggle: true },
+                { headerText: 'In Review', keyField: 'Review', template: '#headerTemplate', allowToggle: true },
+                { headerText: 'Done', keyField: 'Close', template: '#headerTemplate', allowToggle: true }
+            ],
+            cardSettings: {
+                headerField: 'Title',
+                template: '#cardTemplate',
+                selectionType: 'Multiple'
+            },
+            swimlaneSettings: {
+                keyField: 'Assignee',
+            },
+            dialogSettings: {
+                fields: [
+                    { text: 'ID', key: 'Title', type: 'TextBox' },
+                    { key: 'Status', type: 'DropDown' },
+                    { key: 'Assignee', type: 'DropDown' },
+                    { key: 'RankId', type: 'TextBox' },
+                    { key: 'Summary', type: 'TextArea' }
+                ]
+            },
+            cardRendered: function (args) {
+                ej.base.addClass([args.element], args.data.Priority);
+            }
+        });
+        kanbanObj.appendTo('#Kanban_@UniqueId');
+    }
+
 </script>

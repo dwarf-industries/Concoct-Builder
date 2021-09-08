@@ -1,14 +1,69 @@
 ﻿@{ var UniqueId = Program.GetUniqueId(); }
 
+ 
 
-<div class="col-md-8 control-section">
-    <div class="content-wrapper">
-        <div id="range-container_@UniqueId"></div>
+
+<div class="control-section" style="width:100%;height:100%;" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div class="control-section" id="#column-container_@UniqueId" style="width:100%; height:100%">
+                <div id="range-container_@UniqueId"></div>
+            </div>
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
     </div>
 </div>
 
+
+
 <script>
-    var circulargauge = new ej.circulargauge.CircularGauge({
+    var uniqueId = "range-container_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw(){
+        $("#column-container_" + uuid).html("<div id=" + uniqueId + " align=\"center\"></div>");
+        DrawGuage();
+    }
+    DrawGuage();
+
+
+        var menuItems = [
+        {
+            text: 'Container Selected - Event'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Delete'
+        },
+        ];
+    var menuOptions = {
+        target: '#contextmenutarget_@UniqueId',
+        items: menuItems,
+        beforeItemRender: function (args) {
+            if (args.item.text === 'Link') {
+                args.element.classList.add('e-disabled');
+            }
+        },
+        select: function (args) {
+            console.log(args);
+            console.log(args.item.properties.text);
+            switch (args.item.properties.text) {
+
+                case "Container Selected - Event":
+                    ActivateEvent(0);
+                    break;
+                case "Delete":
+                    RemoveElement("@UniqueId");
+                    break;
+
+            }
+        }
+    };
+    var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+
+    function DrawGuage() {
+         var circulargauge = new ej.circulargauge.CircularGauge({
         axes: [{
             lineStyle: { width: 10, color: 'transparent' },
             labelStyle: {
@@ -33,5 +88,7 @@
 
     });
     circulargauge.appendTo('#range-container_@UniqueId');
+
+    }
 
 </script>
