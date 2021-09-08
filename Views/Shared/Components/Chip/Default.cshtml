@@ -59,85 +59,144 @@
     }
 </style>
 
-<div class="sample-padding">
-    <div id="chip-avatar_@UniqueId"></div>
+<div class="control-section" style="width:100%;height:100%;" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div class="sample-padding" id="container_@UniqueId">
+                <div id="chip-avatar_@UniqueId"></div>
+            </div>
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
+    </div>
 </div>
 
+
+
 <script>
-  window.chipsData = {
-    "defaultData": [{
-            "text": "Apple",
-            "cssClass": "e-primary"
-        },
-        {
-            "text": "Microsoft",
-            "cssClass": "e-info"
-        },
-        {
-            "text": "Google",
-            "cssClass": "e-success"
-        },
-        {
-            "text": "Tesla",
-            "cssClass": "e-warning"
-        },
-        {
-            "text": "Intel",
-            "cssClass": "e-danger"
-        }
-    ],
-    "avatarData": [{
-            "text": "Anne",
-            "leadingIconCss": "anne"
-        },
-        {
-            "text": "Janet",
-            "leadingIconCss": "janet"
-        },
-        {
-            "text": "Laura",
-            "leadingIconCss": "laura"
-        },
-        {
-            "text": "Margaret",
-            "leadingIconCss": "margaret"
-        }
-    ],
-    "filterData": [{
-            "text": "Extra small"
-        },
-        {
-            "text": "Small"
-        },
-        {
-            "text": "Medium"
-        },
-        {
-            "text": "Large"
-        },
-        {
-            "text": "Extra large"
-        }
-    ],
-    "choiceData": [{
-            "text": "Send a text",
-            "leadingIconCss": "text"
-        },
-        {
-            "text": "Set a reminder",
-            "leadingIconCss": "alarm"
-        },
-        {
-            "text": "Read my emails",
-            "leadingIconCss": "mail"
-        },
-        {
-            "text": "Play a game",
-            "leadingIconCss": "game"
-        }
-    ]
-};
+
+    var uniqueId = "chip-avatar_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw() {
+        debugger
+        $("container_@UniqueId").html("<div id=" + uniqueId + " ></div>");
+        DrawChips();
+    }
+    DrawChips();
 
 
-    new ej.buttons.ChipList({ chips: window.chipsData.avatarData, enableDelete: true }, '#chip-avatar_@UniqueId');
+      var menuItems = [
+        {
+            text: 'Container Selected - Event'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Delete'
+        },
+    ];
+    var menuOptions = {
+        target: '#contextmenutarget_@UniqueId',
+        items: menuItems,
+        beforeItemRender: function (args) {
+            if (args.item.text === 'Link') {
+                args.element.classList.add('e-disabled');
+            }
+        },
+        select: function (args) {
+            console.log(args);
+            console.log(args.item.properties.text);
+            switch (args.item.properties.text) {
+
+                case "Container Selected - Event":
+                    ActivateEvent(0);
+                    break;
+                case "Delete":
+                    RemoveElement("@UniqueId");
+                    break;
+
+            }
+        }
+    };
+    var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+
+
+    function DrawChips() {
+
+
+        window.chipsData = {
+            "defaultData": [{
+                "text": "Apple",
+                "cssClass": "e-primary"
+            },
+            {
+                "text": "Microsoft",
+                "cssClass": "e-info"
+            },
+            {
+                "text": "Google",
+                "cssClass": "e-success"
+            },
+            {
+                "text": "Tesla",
+                "cssClass": "e-warning"
+            },
+            {
+                "text": "Intel",
+                "cssClass": "e-danger"
+            }
+            ],
+            "avatarData": [{
+                "text": "Anne",
+                "leadingIconCss": "anne"
+            },
+            {
+                "text": "Janet",
+                "leadingIconCss": "janet"
+            },
+            {
+                "text": "Laura",
+                "leadingIconCss": "laura"
+            },
+            {
+                "text": "Margaret",
+                "leadingIconCss": "margaret"
+            }
+            ],
+            "filterData": [{
+                "text": "Extra small"
+            },
+            {
+                "text": "Small"
+            },
+            {
+                "text": "Medium"
+            },
+            {
+                "text": "Large"
+            },
+            {
+                "text": "Extra large"
+            }
+            ],
+            "choiceData": [{
+                "text": "Send a text",
+                "leadingIconCss": "text"
+            },
+            {
+                "text": "Set a reminder",
+                "leadingIconCss": "alarm"
+            },
+            {
+                "text": "Read my emails",
+                "leadingIconCss": "mail"
+            },
+            {
+                "text": "Play a game",
+                "leadingIconCss": "game"
+            }
+            ]
+        };
+            new ej.buttons.ChipList({ chips: window.chipsData.avatarData, enableDelete: true }, '#chip-avatar_@UniqueId');
+    }
 </script>

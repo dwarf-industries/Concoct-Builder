@@ -1,10 +1,85 @@
 ﻿@{ var UniqueId = Program.GetUniqueId(); }
 
-<div class="control-section">
-    <div id="container_@UniqueId" align="center"> </div>
-</div>
 
+<style>
+    #container*{
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    svg[Attributes Style] {
+        width: 300px;
+        height: 100%;
+        shape-rendering: crispedges;
+    }
+</style>
+
+<div class="control-section" style="width:100%;height:100%;" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div class="col-md-12 control-section">
+                <div class="content-wrapper" id="#column-container_@UniqueId">
+                    <div id="container_@UniqueId" style="width:100%; height:100%;"> </div>
+                </div>
+            </div>
+            
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
+    </div>
+</div>
 <script>
+
+        var uniqueId = "container_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw() {
+        debugger
+        $("#column-container_" + uuid).html("<div id=" + uniqueId + "  ></div>");
+        DrawHeatmap();
+        $("#container_" + uuid + "_svg").css("width:100%; height:100%:");
+        $("#container_" + uuid + "_svg").height("100%");
+        $("#container_" + uuid + "_svg").width("100%");
+
+
+    }
+    DrawHeatmap();
+
+
+        var menuItems = [
+        {
+            text: 'Container Selected - Event'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Delete'
+        },
+        ];
+    var menuOptions = {
+        target: '#contextmenutarget_@UniqueId',
+        items: menuItems,
+        beforeItemRender: function (args) {
+            if (args.item.text === 'Link') {
+                args.element.classList.add('e-disabled');
+            }
+        },
+        select: function (args) {
+            console.log(args);
+            console.log(args.item.properties.text);
+            switch (args.item.properties.text) {
+
+                case "Container Selected - Event":
+                    ActivateEvent(0);
+                    break;
+                case "Delete":
+                    RemoveElement("@UniqueId");
+                    break;
+
+            }
+        }
+    };
+    var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+
     var datasource = [[null, null, null, null, 16, 48, 0],
     [0, 15, 0, 24, 0, 39, 0],
     [0, 18, 37, 0, 0, 50, 0],
@@ -60,75 +135,57 @@
     [0, 8, 47, 27, 0, 35, 40],
     [0, 10, 2, 0, 44, 5, null],
     ];
-    var heatmap = new ej.heatmap.HeatMap({
-        titleSettings: {
-            text: 'Annual Summary of User Activities in GitLab',
-            textStyle: {
-                size: '15px',
-                fontWeight: '500',
-                fontStyle: 'Normal',
-                fontFamily: 'Segoe UI'
-            }
-        },
-        height: '300px',
-        width:'100%',
-        xAxis: {
-            opposedPosition: true,
-            valueType: 'DateTime',
-            minimum: new Date(2017, 6, 23),
-            maximum: new Date(2018, 6, 30),
-            intervalType: 'Days',
-            showLabelOn: 'Months',
-            labelFormat: 'MMM',
-            increment: 7,
-            labelIntersectAction: 'Rotate45',
-        },
-        yAxis: {
-            labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            isInversed: true,
-        },
-        cellSettings: {
-            showLabel: false,
-            border: {
-                color: 'white'
-            }
-        },
-        paletteSettings: {
-            palette: [
-                { value: 0, color: 'rgb(238,238,238)', label: 'no contributions' },
-                { value: 1, color: 'rgb(172, 213, 242)', label: '1-15 contributions' },
-                { value: 16, color: 'rgb(127, 168, 201)', label: '16-31 contributions' },
-                { value: 32, color: 'rgb(82, 123, 160)', label: '31-49 contributions' },
-                { value: 50, color: 'rgb(37, 78, 119)', label: '50+ contributions' },
-            ],
-            type: 'Fixed',
-            emptyPointColor: 'white'
-        },
-        legendSettings: {
-            position: 'Bottom',
-            width: '20%',
-            alignment: 'Near',
-            showLabel: true,
-            labelDisplayType: 'None',
-            enableSmartLegend: true
-        },
-        tooltipRender: function (args) {
-            var intl = new ej.base.Internationalization();
-            var format = intl.getDateFormat({ format: 'EEE MMM dd, yyyy' });
-            var newDate = args.xValue;
-            var date = new Date(newDate.getTime());
-            var axisLabel = args.heatmap.axisCollections[1].axisLabels;
-            var index = axisLabel.indexOf(args.yLabel);
-            (date).setDate((date).getDate() + index);
-            var value = format(date);
-            args.content = [(args.value === 0 ? 'No' : args.value) + ' ' + 'contributions' + '<br>' + value];
-        },
-        load: function (args) {
-            var selectedTheme = location.hash.split('/')[1];
-            selectedTheme = selectedTheme ? selectedTheme : 'Material';
-            args.heatmap.theme = (selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1));
-        },
-        dataSource: datasource
-    });
-    heatmap.appendTo('#container_@UniqueId');
+
+    function DrawHeatmap() {
+        var heatmap = new ej.heatmap.HeatMap({
+            titleSettings: {
+                text: 'Net Migration Rate of Northern Europe From 1965 to 2015',
+                textStyle: {
+                    size: '15px',
+                    fontWeight: '500',
+                    fontStyle: 'Normal',
+                    fontFamily: 'Segoe UI'
+                }
+            },
+            xAxis: {
+                labels: ['Channel Isl', 'Denmark', 'Estonia', 'Finland',
+                    'Iceland', 'Ireland', 'Latvia', 'Lithuania', 'Norway', 'Sweden', 'UK'],
+                labelRotation: -90,
+                labelIntersectAction: 'None',
+            },
+            yAxis: {
+                labels: ['1965-1970', '1970-1975', '1975-1980', '1980-1985', '1985-1990',
+                    '1990-1995', '1995-2000', '2000-2005', '2005-2010', '2010-2015']
+            },
+            dataSource: datasource,
+            paletteSettings: {
+                palette: [{ color: '#C06C84' },
+                { color: '#355C7D' }
+                ],
+            },
+            renderingMode: 'SVG',
+            cellSettings: {
+                border: {
+                    width: 0
+                },
+                showLabel: false,
+                format: '{value} %'
+            },
+            legendSettings: {
+                position: 'Bottom',
+                width: '200px'
+            },
+            load: function (args) {
+                var renderModeTheme = location.hash.split('/')[1];
+                renderModeTheme = renderModeTheme ? renderModeTheme : 'Material';
+                args.heatmap.theme = (renderModeTheme.charAt(0).toUpperCase() + renderModeTheme.slice(1));
+            },
+        });
+        heatmap.appendTo('#container_@UniqueId');
+
+     }
+
+
+     
+
 </script>
