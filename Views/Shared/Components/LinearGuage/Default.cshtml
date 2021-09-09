@@ -5,13 +5,77 @@
         <img src='./images/Gauge_linear_light.jpg'>
     </div>
 </script>
-<div class="control-section">
-    <div id="defaultContainer_@UniqueId">
+ 
+
+<div class="control-section" style="width:100%;height:100%; overflow:hidden" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div class="col-md-12 control-section">
+                <div class="content-wrapper" id="column-container_@UniqueId">
+                    <div id="defaultContainer_@UniqueId">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
     </div>
 </div>
 
 <script>
-    var gauge = new ej.lineargauge.LinearGauge({
+
+    var uniqueId = "defaultContainer_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw() {
+
+        $("#column-container_" + uuid).html("<div id=" + uniqueId + "  ></div>");
+        DrawLiniarGuage();
+
+
+
+    }
+    DrawLiniarGuage();
+
+
+        var menuItems = [
+        {
+            text: 'Container Selected - Event'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Delete'
+        },
+        ];
+    var menuOptions = {
+        target: '#contextmenutarget_@UniqueId',
+        items: menuItems,
+        beforeItemRender: function (args) {
+            if (args.item.text === 'Link') {
+                args.element.classList.add('e-disabled');
+            }
+        },
+        select: function (args) {
+            console.log(args);
+            console.log(args.item.properties.text);
+            switch (args.item.properties.text) {
+
+                case "Container Selected - Event":
+                    ActivateEvent(0);
+                    break;
+                case "Delete":
+                    RemoveElement("@UniqueId");
+                    break;
+
+            }
+        }
+    };
+    var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+
+
+    function DrawLiniarGuage() {
+        var gauge = new ej.lineargauge.LinearGauge({
         orientation: 'Horizontal',
         axes: [{
             pointers: [{
@@ -42,4 +106,7 @@
 
     });
     gauge.appendTo('#defaultContainer_@UniqueId');
+    }
+
+
 </script>

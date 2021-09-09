@@ -1,47 +1,69 @@
 ﻿@{ var UniqueId = Program.GetUniqueId(); }
 
-<div id="defaultRTE_@UniqueId">
-    <p>
-        The Rich Text Editor component is a WYSIWYG ("what you see is what you get") editor that provides the best user experience to create and update the content.
-        Users can format their content using standard toolbar commands.
-    </p>
+<div class="control-section" style="width:100%;height:100%; overflow:hidden" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div id="defaultRTE_@UniqueId">
 
-    <p><b>Key features:</b></p>
+            </div>
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
+    </div>
+</div>
 
-    <ul>
-        <li>
-            <p>Provides &lt;IFRAME&gt; and &lt;DIV&gt; modes</p>
-        </li>
-        <li>
-            <p>Capable of handling markdown editing.</p>
-        </li>
-        <li>
-            <p>Contains a modular library to load the necessary functionality on demand.</p>
-        </li>
-        <li>
-            <p>Provides a fully customizable toolbar.</p>
-        </li>
-        <li>
-            <p>Provides HTML view to edit the source directly for developers.</p>
-        </li>
-        <li>
-            <p>Supports third-party library integration.</p>
-        </li>
-        <li>
-            <p>Allows a preview of modified content before saving it.</p>
-        </li>
-        <li>
-            <p>Handles images, hyperlinks, video, hyperlinks, uploads, etc.</p>
-        </li>
-        <li>
-            <p>Contains undo/redo manager.</p>
-        </li>
-        <li>
-            <p>Creates bulleted and numbered lists.</p>
-        </li>
-    </ul>
-</div> 
+
 <script>
-    var defaultRTE = new ej.richtexteditor.RichTextEditor({});
-    defaultRTE.appendTo("#defaultRTE_@UniqueId");
+
+
+    var uniqueId = "defaultRTE_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw() {
+        $("#column-container_" + uuid).html("<div id=" + uniqueId + "  ></div>");
+        DrawRLT();
+    }
+    DrawRLT();
+
+
+        var menuItems = [
+        {
+            text: 'Container Selected - Event'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Delete'
+        },
+        ];
+    var menuOptions = {
+        target: '#contextmenutarget_@UniqueId',
+        items: menuItems,
+        beforeItemRender: function (args) {
+            if (args.item.text === 'Link') {
+                args.element.classList.add('e-disabled');
+            }
+        },
+        select: function (args) {
+            console.log(args);
+            console.log(args.item.properties.text);
+            switch (args.item.properties.text) {
+
+                case "Container Selected - Event":
+                    ActivateEvent(0);
+                    break;
+                case "Delete":
+                    RemoveElement("@UniqueId");
+                    break;
+
+            }
+        }
+    };
+    var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+
+    function DrawRLT() {
+        var defaultRTE = new ej.richtexteditor.RichTextEditor({});
+        defaultRTE.appendTo("#defaultRTE_@UniqueId");
+    }
+
+
 </script>

@@ -1,69 +1,121 @@
 ﻿@{ var UniqueId = Program.GetUniqueId(); }
 
-
-
-<div class="control-section">
-    <div class="content-wrapper">
-        <div id="TreeGrid_@UniqueId">
-        </div>
-         
-        <script id="flagtemplate" type="text/x-template">
-            ${if(name != 'Select All')}
-            <div class="image" style="display:inline-block">
-                ${if(parentItem)}
-                <img src="src/tree-grid/images/${parentItem.name}.png" class="e-image" alt="${name}" />
-                ${else}
-                <img src="src/tree-grid/images/${name}.png" class="e-image" alt="${name}" />
-                ${/if}
-            </div>
-            <div style="display:inline-block; padding-left:4px">${name}</div>
-            ${else}
-            ${name}
-            ${/if}
-        </script>
-        <script id="areatemplate" type="text/x-template">
-            <span>
-                ${area} km<sup>2</sup>
-            </span>
-        </script>
-        <script id="locationtemplate" type="text/x-template">
-            <div class="image">
-                <img src="src/tree-grid/images/Map.png" class="e-image" alt="${coordinates}" /> &nbsp
-                <a target="_blank" href="https://www.google.com/maps/place/${coordinates}">${coordinates}</a>
-            </div>
-        </script>
-        <script type="text/x-template" id="gdptemplate">
-            <div class="statustemp">
-                <span class="statustxt">${gdp} %</span>
-            </div>
-        </script>
-        <script type="text/x-template" id="timezonetemplate">
-            ${utcZone(data)}
-            <span style="padding-left:7px;">${timezone}</span>
-        </script>
-        <script type="text/x-template" id="ratingtemplate">
-            ${if(rating)}
-            <div class="rating">
-                <span class="star"></span>
-                <span class="star"></span>
-                <span class="star"></span>
-                <span class="star"></span>
-                <span class="star"></span>
-            </div>
-            ${/if}
-        </script>
-
-        <script type="text/x-template" id="unemploymentTemplate">
-            <div id="myProgress" class="pbar">
-                <div id="myBar" class="bar">
-                    <div id="label" class="barlabel"></div>
+<div class="control-section" style="width:100%;height:100%; overflow:hidden" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div class="col-md-12 control-section">
+                <div class="content-wrapper" id="column-container_@UniqueId">
+                    <div id="TreeGrid_@UniqueId">
+                    </div>
                 </div>
             </div>
-        </script>
+
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
     </div>
 </div>
 
+<script id="flagtemplate" type="text/x-template">
+    ${if(name != 'Select All')}
+    <div class="image" style="display:inline-block">
+        ${if(parentItem)}
+        <img src="src/tree-grid/images/${parentItem.name}.png" class="e-image" alt="${name}" />
+        ${else}
+        <img src="src/tree-grid/images/${name}.png" class="e-image" alt="${name}" />
+        ${/if}
+    </div>
+    <div style="display:inline-block; padding-left:4px">${name}</div>
+    ${else}
+    ${name}
+    ${/if}
+</script>
+<script id="areatemplate" type="text/x-template">
+    <span>
+        ${area} km<sup>2</sup>
+    </span>
+</script>
+<script id="locationtemplate" type="text/x-template">
+    <div class="image">
+        <img src="src/tree-grid/images/Map.png" class="e-image" alt="${coordinates}" /> &nbsp
+        <a target="_blank" href="https://www.google.com/maps/place/${coordinates}">${coordinates}</a>
+    </div>
+</script>
+<script type="text/x-template" id="gdptemplate">
+    <div class="statustemp">
+        <span class="statustxt">${gdp} %</span>
+    </div>
+</script>
+<script type="text/x-template" id="timezonetemplate">
+    ${utcZone(data)}
+    <span style="padding-left:7px;">${timezone}</span>
+</script>
+<script type="text/x-template" id="ratingtemplate">
+    ${if(rating)}
+    <div class="rating">
+        <span class="star"></span>
+        <span class="star"></span>
+        <span class="star"></span>
+        <span class="star"></span>
+        <span class="star"></span>
+    </div>
+    ${/if}
+</script>
+
+<script type="text/x-template" id="unemploymentTemplate">
+    <div id="myProgress" class="pbar">
+        <div id="myBar" class="bar">
+            <div id="label" class="barlabel"></div>
+        </div>
+    </div>
+</script>
 <script>
+
+
+    var uniqueId = "TreeGrid_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw() {
+        $("#column-container_" + uuid).html("<div id=" + uniqueId + "  ></div>");
+        DrawTreeGrid();
+    }
+    DrawTreeGrid();
+
+
+        var menuItems = [
+        {
+            text: 'Container Selected - Event'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Delete'
+        },
+        ];
+    var menuOptions = {
+        target: '#contextmenutarget_@UniqueId',
+        items: menuItems,
+        beforeItemRender: function (args) {
+            if (args.item.text === 'Link') {
+                args.element.classList.add('e-disabled');
+            }
+        },
+        select: function (args) {
+            console.log(args);
+            console.log(args.item.properties.text);
+            switch (args.item.properties.text) {
+
+                case "Container Selected - Event":
+                    ActivateEvent(0);
+                    break;
+                case "Delete":
+                    RemoveElement("@UniqueId");
+                    break;
+
+            }
+        }
+    };
+    var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+
 
     var data = [
         {
@@ -340,36 +392,40 @@
             ]
         }
     ];
-    var treeGridObj = new ej.treegrid.TreeGrid({
-        dataSource:data,
-        childMapping: 'states',
-        height: 400,
-        allowReordering: true,
-        allowFiltering: true,
-        allowSorting: true,
-        filterSettings: { type: 'Excel' },
-        queryCellInfo: queryCellInfo,
-        columns: [
-            {
-                field: 'name', headerText: 'Province', template: '#flagtemplate',
-                filter: { type: 'Excel', itemTemplate: '#flagtemplate' }, width: 190
-            },
-            { field: 'population', headerText: 'Population (Million)', valueAccessor: populationValue, textAlign: 'Right', width: 188 },
-            { field: 'gdp', headerText: 'GDP Rate %', template: '#gdptemplate', allowFiltering: false, width: 120 },
-            {
-                field: 'rating', headerText: 'Credit Rating', customAttributes: { class: 'ratingCircle' },
-                template: '#ratingtemplate', width: 150
-            },
-            {
-                field: 'unemployment', headerText: 'Unemployment Rate', allowFiltering: false,
-                template: '#unemploymentTemplate', width: 170
-            },
-            { field: 'coordinates', headerText: 'Coordinates', allowSorting: false, template: '#locationtemplate', width: 220 },
-            { field: 'area', headerText: 'Area', template: '#areatemplate', width: 140 },
-            { field: 'timezone', headerText: 'Time Zone', template: '#timezonetemplate', width: 150 }
-        ]
-    });
-    treeGridObj.appendTo('#TreeGrid_@UniqueId');
+
+    function DrawTreeGrid() {
+        var treeGridObj = new ej.treegrid.TreeGrid({
+            dataSource:data,
+            childMapping: 'states',
+            height: "100%",
+            allowReordering: true,
+            allowFiltering: true,
+            allowSorting: true,
+            filterSettings: { type: 'Excel' },
+            queryCellInfo: queryCellInfo,
+            columns: [
+                {
+                    field: 'name', headerText: 'Province', template: '#flagtemplate',
+                    filter: { type: 'Excel', itemTemplate: '#flagtemplate' }, width: 190
+                },
+                { field: 'population', headerText: 'Population (Million)', valueAccessor: populationValue, textAlign: 'Right', width: 188 },
+                { field: 'gdp', headerText: 'GDP Rate %', template: '#gdptemplate', allowFiltering: false, width: 120 },
+                {
+                    field: 'rating', headerText: 'Credit Rating', customAttributes: { class: 'ratingCircle' },
+                    template: '#ratingtemplate', width: 150
+                },
+                {
+                    field: 'unemployment', headerText: 'Unemployment Rate', allowFiltering: false,
+                    template: '#unemploymentTemplate', width: 170
+                },
+                { field: 'coordinates', headerText: 'Coordinates', allowSorting: false, template: '#locationtemplate', width: 220 },
+                { field: 'area', headerText: 'Area', template: '#areatemplate', width: 140 },
+                { field: 'timezone', headerText: 'Time Zone', template: '#timezonetemplate', width: 150 }
+            ]
+        });
+        treeGridObj.appendTo('#TreeGrid_@UniqueId');
+
+    }
 
     window.utcZone = function (data) {
         var img = document.createElement('img');

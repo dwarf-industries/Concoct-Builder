@@ -196,6 +196,7 @@ function RemoveElement(id) {
     ActiveList = newList;
 }
 
+var resizing = false;
 interact('.resize-drag')
     .resizable({
         // resize from all edges and corners
@@ -203,7 +204,6 @@ interact('.resize-drag')
 
         listeners: {
             move(event) {
-                RedRaw();
                 var target = event.target
                 var x = (parseFloat(target.getAttribute('data-x')) || 0)
                 var y = (parseFloat(target.getAttribute('data-y')) || 0)
@@ -220,7 +220,14 @@ interact('.resize-drag')
 
                 target.setAttribute('data-x', x)
                 target.setAttribute('data-y', y)
-                //  target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height)
+                if (!resizing) {
+                    resizing = true;
+                    setTimeout(function () {
+                        RedRaw();
+                        resizing = false;
+                    }, 600)
+                }
+                 //  target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height)
             }
         },
         modifiers: [
@@ -228,7 +235,7 @@ interact('.resize-drag')
             interact.modifiers.restrictEdges({
                 outer: 'parent'
             }),
-
+            
             // minimum size
             interact.modifiers.restrictSize({
                 min: { width: 100, height: 50 }
@@ -247,6 +254,8 @@ interact('.resize-drag')
             })
         ]
     })
+
+ 
 
 function ElementReleased(args) {
     var transform = args.currentTarget.style.getPropertyValue("transform");
