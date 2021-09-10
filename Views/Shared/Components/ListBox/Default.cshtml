@@ -1,0 +1,107 @@
+﻿@{ var UniqueId = Program.GetUniqueId(); }
+
+<div class="control-section" style="width:100%;height:100%; overflow:hidden" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div class="content-wrapper" id="column-container_@UniqueId">
+                <input id="listbox_@UniqueId" />
+            </div>
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
+    </div>
+</div>
+
+<script>
+    var data = [
+        {
+            "text": "JavaScript",
+            "pic": "javascript",
+            "description": "It is a lightweight interpreted or JIT-compiled programming language."
+        },
+        {
+            "text": "TypeScript",
+            "pic": "typescript",
+            "description": "It is a typed superset of JavaScript that compiles to plain JavaScript."
+        },
+        {
+            "text": "Angular",
+            "pic": "angular",
+            "description": "It is a TypeScript-based open-source web application framework."
+        },
+        {
+            "text": "React",
+            "pic": "react",
+            "description": "A JavaScript library for building user interfaces. It can also render on the server using Node."
+        },
+        {
+            "text": "Vue",
+            "pic": "vue",
+            "description": "A progressive framework for building user interfaces. it is incrementally adoptable."
+        }
+    ];
+    var uniqueId = "defaultContainer_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw() {
+        var items = `<input id="listbox_@UniqueId" />`
+        $("#column-container_" + uuid).html(items);
+        DrawListBox();
+
+
+
+    }
+    DrawListBox();
+
+
+        var menuItems = [
+        {
+            text: 'Container Selected - Event'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Delete'
+        },
+        ];
+    var menuOptions = {
+        target: '#contextmenutarget_@UniqueId',
+        items: menuItems,
+        beforeItemRender: function (args) {
+            if (args.item.text === 'Link') {
+                args.element.classList.add('e-disabled');
+            }
+        },
+        select: function (args) {
+            console.log(args);
+            console.log(args.item.properties.text);
+            switch (args.item.properties.text) {
+
+                case "Container Selected - Event":
+                    ActivateEvent(0);
+                    break;
+                case "Delete":
+                    RemoveElement("@UniqueId");
+                    break;
+
+            }
+        }
+    };
+    var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+
+
+    function DrawListBox() {
+         // Initialize ListBox component.
+        var listObj= new ej.dropdowns.ListBox({
+            // Set the info to the data source property.
+            dataSource: data,
+            // set the template content for list items.
+            itemTemplate:  '<div class="list-wrapper">' +
+            '<span class="${pic} e-avatar e-avatar-xlarge e-avatar-circle"></span>' +
+            '<span class="text">${text}</span><span class="description">' +
+            '${description}</span></div>'
+        });
+        listObj.appendTo('#listbox_@UniqueId');
+    }
+
+
+</script>

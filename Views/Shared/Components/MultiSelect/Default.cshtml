@@ -1,0 +1,87 @@
+﻿@{ var UniqueId = Program.GetUniqueId(); }
+ 
+<div class="control-section" style="width:100%;height:100%; overflow:hidden" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div class="content-wrapper" id="column-container_@UniqueId">
+                <select id="default_@UniqueId">
+                    <option value="Game1">American Football</option>
+                    <option value="Game2">Badminton</option>
+                    <option value="Game3">Basketball</option>
+          
+                </select>
+            </div>
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
+    </div>
+</div>
+
+<script>
+
+    var uniqueId = "defaultContainer_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw() {
+        var items = `<select id="default_@UniqueId">
+                    <option value="Game1">American Football</option>
+                    <option value="Game2">Badminton</option>
+                    <option value="Game3">Basketball</option>
+                </select>`
+        $("#column-container_" + uuid).html(items);
+        DrawMultiSelect();
+
+
+
+    }
+    DrawMultiSelect();
+
+
+        var menuItems = [
+        {
+            text: 'Container Selected - Event'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Delete'
+        },
+        ];
+    var menuOptions = {
+        target: '#contextmenutarget_@UniqueId',
+        items: menuItems,
+        beforeItemRender: function (args) {
+            if (args.item.text === 'Link') {
+                args.element.classList.add('e-disabled');
+            }
+        },
+        select: function (args) {
+            console.log(args);
+            console.log(args.item.properties.text);
+            switch (args.item.properties.text) {
+
+                case "Container Selected - Event":
+                    ActivateEvent(0);
+                    break;
+                case "Delete":
+                    RemoveElement("@UniqueId");
+                    break;
+
+            }
+        }
+    };
+    var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+
+
+    function DrawMultiSelect() {
+        // initialize MultiSelect component
+        var listObj = new ej.dropdowns.MultiSelect({
+            // set the placeholder to MultiSelect input element
+            placeholder: 'Favorite Sports',
+            // set the type of mode for how to visualized the selected items in input element.
+            mode: 'Box'
+        });
+        listObj.appendTo('#default_@UniqueId');
+    }
+
+
+</script>
