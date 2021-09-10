@@ -4,7 +4,6 @@
 
     public class DateRangePickerViewComponent : ViewComponent
     {
-
         public IViewComponentResult Invoke()
         {
             return View();

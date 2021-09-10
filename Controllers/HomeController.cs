@@ -184,9 +184,50 @@ namespace Concoct_Builder.Controllers
                    ComponentName = "Placeholder",
                    DisplayName = "Placeholder (Image/Custom)",
                    Icon = "fa-calendar-o"
-                }
-
-            };
+                },
+                new Widget
+                {
+                   ComponentName = "InPlaceEditor",
+                   DisplayName = "In Place Editor",
+                   Icon = "fa-edit"
+                },
+                new Widget
+                {
+                   ComponentName = "TimePicker",
+                   DisplayName = "Time Picker",
+                   Icon = "fa-history"
+                },
+                new Widget
+                {
+                   ComponentName = "Dropdown",
+                   DisplayName = "Dropdown",
+                   Icon = "fa-th-list"
+                },
+                new Widget
+                {
+                   ComponentName = "MultiSelect",
+                   DisplayName = "Multi SElect",
+                   Icon = "fa-list-alt"
+                },
+                new Widget
+                {
+                   ComponentName = "ListBox",
+                   DisplayName = "List Box",
+                   Icon = "fa-list-alt"
+                },
+                new Widget
+                {
+                   ComponentName = "Accordion",
+                   DisplayName = "Accordion",
+                   Icon = "fa-list-alt"
+                },
+                 new Widget
+                {
+                   ComponentName = "MenuBar",
+                   DisplayName = "Menu Bar",
+                   Icon = "fa-list-alt"
+                },
+            }; 
         }
 
         public IActionResult Privacy()
