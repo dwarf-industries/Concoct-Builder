@@ -227,6 +227,48 @@ namespace Concoct_Builder.Controllers
                    DisplayName = "Menu Bar",
                    Icon = "fa-list-alt"
                 },
+                new Widget
+                {
+                   ComponentName = "Tab",
+                   DisplayName = "Tab",
+                   Icon = "fa-list-alt"
+                },
+                new Widget
+                {
+                   ComponentName = "FileExplorer",
+                   DisplayName = "File Explorer",
+                   Icon = "fa-list-alt"
+                },
+                new Widget
+                {
+                   ComponentName = "Badge",
+                   DisplayName = "Badge",
+                   Icon = "fa-list-alt"
+                },
+                 new Widget
+                {
+                   ComponentName = "Toast",
+                   DisplayName = "Toast",
+                   Icon = "fa-list-alt"
+                },
+                new Widget
+                {
+                   ComponentName = "FileUploader",
+                   DisplayName = "File Uploader",
+                   Icon = "fa-list-alt"
+                },
+                 new Widget
+                {
+                   ComponentName = "ColorPicker",
+                   DisplayName = "Color Picker",
+                   Icon = "fa-list-alt"
+                },
+                new Widget
+                {
+                   ComponentName = "Input",
+                   DisplayName = "Text Input",
+                   Icon = "fa-list-alt"
+                },
             }; 
         }
 

@@ -1,0 +1,159 @@
+﻿@{ var UniqueId = Program.GetUniqueId(); }
+
+<style>
+     .control-section {
+        overflow: auto;
+    }
+
+    @@media only screen and (max-width: 400px) {
+        .sample_container.badge-default .e-btn-group {
+            left: calc(50% - 111px);
+        }
+        .sample_container.badge-default #task {
+            display: none;
+        }
+    }
+
+    .sample_container.badge-default {
+        max-width: 328px;
+        margin: auto;
+        margin-top: 130px;
+    }
+
+    .badge-default .e-btn {
+        position: relative;
+    }
+
+    .badge-default .e-bigger .e-btn {
+        padding: 3px 10px;
+    }
+
+    /* Group Button Customization */
+
+    .badge-default .e-btn-group {
+        width: auto;
+        position: relative;
+        left: calc(50% - 164px);
+    }
+
+    .e-btn-group.e-custom-button {
+        box-shadow: none;
+    }
+
+    .highcontrast .e-btn-group.e-custom-button .e-btn:focus {
+        outline: 0px;
+        color: white;
+    }
+
+    .fabric .e-btn-group.e-custom-button .e-btn,
+	.material .e-btn-group.e-custom-button .e-btn,
+	.bootstrap .e-btn-group.e-custom-button .e-btn {
+        background: #F6F7F9;
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+        text-transform: initial;
+    }
+
+    #update.e-btn {
+        border-bottom-left-radius: 8px;
+        border-top-left-radius: 8px;
+        border-right: 1px dotted #aaa;
+        width: 100px;
+    }
+
+    #task.e-btn {
+        border-right: 1px dotted #aaa;
+        width: 100px;
+    }
+
+    #notify.e-btn {
+        padding-left: 24px;
+        padding-right: 24px;
+        border-bottom-right-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    .default .e-badge.e-badge-overlap {
+        transform: translateX(-110%);
+        z-index: 100;
+    }
+</style>
+
+<div class="control-section" style="width:100%;height:100%;" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div id="column-container_@UniqueId">
+                <button id="update_@UniqueId" class="e-btn">
+                    Updates
+                    <!-- Notification Badge -->
+                    <span class="e-badge e-badge-info e-badge-notification e-badge-overlap">14</span>
+                </button>
+            </div>
+
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
+    </div>
+</div>
+
+
+<script>
+
+    var uniqueId = "inplace_editor_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw() {
+        var items = ` <button id="update_@UniqueId" class="e-btn">
+                    Updates
+                    <!-- Notification Badge -->
+                    <span class="e-badge e-badge-info e-badge-notification e-badge-overlap">14</span>
+                </button>`;
+        $("#column-container_" + uuid).html(items);
+        DrawBadge();
+
+
+
+    }
+    DrawBadge();
+
+
+        var menuItems = [
+        {
+            text: 'Container Selected - Event'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Delete'
+        },
+        ];
+    var menuOptions = {
+        target: '#contextmenutarget_@UniqueId',
+        items: menuItems,
+        beforeItemRender: function (args) {
+            if (args.item.text === 'Link') {
+                args.element.classList.add('e-disabled');
+            }
+        },
+        select: function (args) {
+            console.log(args);
+            console.log(args.item.properties.text);
+            switch (args.item.properties.text) {
+
+                case "Container Selected - Event":
+                    ActivateEvent(0);
+                    break;
+                case "Delete":
+                    RemoveElement("@UniqueId");
+                    break;
+
+            }
+        }
+    };
+    var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+
+    function DrawBadge() {
+        // initialize ComboBox component
+         
+    }
+
+
+</script>

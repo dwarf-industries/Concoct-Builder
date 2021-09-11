@@ -1,0 +1,75 @@
+﻿@{ var UniqueId = Program.GetUniqueId(); }
+
+ 
+
+<div class="control-section" style="width:100%;height:100%;" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div id="column-container_@UniqueId">
+                <input id="color-picker_@UniqueId" type="color">
+            </div>
+
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
+    </div>
+</div>
+
+
+<script>
+
+    var uniqueId = "inplace_editor_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw() {
+        var items = `<input id="color-picker_@UniqueId" type="color">`;
+        $("#column-container_" + uuid).html(items);
+        DrawBadge();
+
+
+
+    }
+    DrawBadge();
+
+
+        var menuItems = [
+        {
+            text: 'Container Selected - Event'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Delete'
+        },
+        ];
+    var menuOptions = {
+        target: '#contextmenutarget_@UniqueId',
+        items: menuItems,
+        beforeItemRender: function (args) {
+            if (args.item.text === 'Link') {
+                args.element.classList.add('e-disabled');
+            }
+        },
+        select: function (args) {
+            console.log(args);
+            console.log(args.item.properties.text);
+            switch (args.item.properties.text) {
+
+                case "Container Selected - Event":
+                    ActivateEvent(0);
+                    break;
+                case "Delete":
+                    RemoveElement("@UniqueId");
+                    break;
+
+            }
+        }
+    };
+    var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+
+    function DrawBadge() {
+        // initialize Color picker component
+        var defaultObj = new ej.inputs.ColorPicker({}, '#color-picker_@UniqueId');
+    }
+
+
+</script>
