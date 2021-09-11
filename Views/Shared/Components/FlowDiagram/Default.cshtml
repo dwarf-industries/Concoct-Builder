@@ -1,0 +1,49 @@
+﻿
+<div id="diagram"></div>
+
+<script>
+    var interval = [1, 9, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75];
+    var gridlines = { lineColor: '#e0e0e0', lineIntervals: interval };
+    //Initializes diagram control
+    var diagram = new ej.diagrams.Diagram({
+        width: '100%', height: '700px', nodes: [], connectors: [],
+        snapSettings: { horizontalGridlines: gridlines, verticalGridlines: gridlines },
+        //Sets the default values of a node
+        getNodeDefaults: function (node) {
+            var obj = {};
+            if (obj.width === undefined) {
+                obj.width = 145;
+            } else {
+                var ratio = 100 / obj.width;
+                obj.width = 100;
+                obj.height *= ratio;
+            }
+            obj.style = { fill: '#357BD2', strokeColor: 'white' };
+            obj.annotations = [{ style: { color: 'white', fill: 'transparent' } }];
+            obj.ports = getNodePorts(node);
+            return obj;
+        },
+        //Sets the default values of a Connector.
+        getConnectorDefaults: function (obj) {
+            if (obj.id.indexOf('connector') !== -1) {
+                obj.type = 'Orthogonal';
+                obj.targetDecorator = { shape: 'Arrow', width: 10, height: 10 };
+            }
+        },
+        //Sets the Node style for DragEnter element.
+        dragEnter: function (args) {
+            var obj = args.element;
+            if (obj instanceof ej.diagrams.Node) {
+                var oWidth = obj.width;
+                var oHeight = obj.height;
+                var ratio = 100 / obj.width;
+                obj.width = 100;
+                obj.height *= ratio;
+                obj.offsetX += (obj.width - oWidth) / 2;
+                obj.offsetY += (obj.height - oHeight) / 2;
+                obj.style = { fill: '#357BD2', strokeColor: 'white' };
+            }
+        }
+    });
+    diagram.appendTo('#diagram');
+</script>

@@ -2,6 +2,19 @@
 
 var isFullScreen = false;
 var fileName = "Untiteled.cf";
+var IsOpen = 0;
+
+function ToggleSetting(val) {
+    if (IsOpen === 1) {
+        $("#PlatformElement").slideToggle();
+        $("#SlidingElement").slideToggle();
+    }
+    else {
+        $("#PlatformElement").slideToggle();
+        $("#SlidingElement").slideToggle();
+    }
+    IsOpen = val;
+} 
 
 function KillWindow() {
         $.ajax({

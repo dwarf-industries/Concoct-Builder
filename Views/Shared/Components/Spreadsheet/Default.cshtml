@@ -54,7 +54,7 @@
             switch (args.item.properties.text) {
 
                 case "Container Selected - Event":
-                    ActivateEvent(0);
+                    ActivateEvent("@UniqueId");
                     break;
                 case "Delete":
                     RemoveElement("@UniqueId");
@@ -65,7 +65,7 @@
     };
     var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
 
-   
+
     //Initialize Spreadsheet component
 
     function DrawSpreadsheet() {
