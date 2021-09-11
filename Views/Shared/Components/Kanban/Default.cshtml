@@ -177,7 +177,7 @@
     var uniqueId = "Kanban_@UniqueId";
     var uuid = "@UniqueId";
     function RedRaw() {
-         
+
         $("#column-container_" + uuid).html("<div id=" + uniqueId + "  ></div>");
         DrawKanban();
 
@@ -212,7 +212,7 @@
             switch (args.item.properties.text) {
 
                 case "Container Selected - Event":
-                    ActivateEvent(0);
+                    ActivateEvent("@UniqueId");
                     break;
                 case "Delete":
                     RemoveElement("@UniqueId");

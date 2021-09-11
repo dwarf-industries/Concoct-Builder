@@ -8,7 +8,15 @@
         public IViewComponentResult Invoke(string componentName)
         {
             ViewData["RenderComponent"] = componentName;
-            return View();
-        }
+            switch (componentName)
+            {
+                case "SystemSetting":
+                    return View("SystemSetting");
+                case "Flow":
+                    return View("FlowDiagram");
+                default:
+                    return View();
+             }
+         }
     }
 }

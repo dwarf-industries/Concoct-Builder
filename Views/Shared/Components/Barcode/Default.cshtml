@@ -172,7 +172,7 @@
     function RedRaw(){
         $("#barcode_" + uuid).html("<div id=" + uniqueId + " ></div>");
         Barcode();
-         
+
 
         var content = document.getElementById("barcode_" + uuid + "content");
         content.setAttribute("style", "width: 100% !important; height: 100% !important; position: absolute; top: 30% !important;")
@@ -204,7 +204,7 @@
             switch (args.item.properties.text) {
 
                 case "Container Selected - Event":
-                    ActivateEvent(0);
+                    ActivateEvent("@UniqueId");
                     break;
                 case "Delete":
                     RemoveElement("@UniqueId");

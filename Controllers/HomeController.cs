@@ -288,6 +288,11 @@ namespace Concoct_Builder.Controllers
         {
             return ViewComponent(componentName);
         }
+        [HttpGet]
+        public IActionResult GetComponentPanel(string componentName, string args)
+        {
+            return ViewComponent(componentName, args);
+        }
 
         [HttpGet]
         public IActionResult CloseApp()

@@ -275,7 +275,7 @@
             switch (args.item.properties.text) {
 
                 case "Container Selected - Event":
-                    ActivateEvent(0);
+                    ActivateEvent("@UniqueId");
                     break;
                 case "Delete":
                     RemoveElement("@UniqueId");
@@ -305,10 +305,10 @@
             open: onOpenToast, close: onToastClose, beforeOpen: onToastBeforeOpen
         });
         toastObj.appendTo('#toast_template');
-       
+
          var snoozeFlag = false;
-         
-        
+
+
         var listObj = new ej.dropdowns.DropDownList({
             placeholder: 'Select a snooze time',
             popupHeight: '200px',

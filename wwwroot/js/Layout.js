@@ -2,7 +2,6 @@
 var storage = window.localStorage;
 var ActiveList = {};
 var draggedElement = 0;
-var IsOpen = 0;
 var cThemeToggle = new ejs.buttons.Switch({ checked: false });
 cThemeToggle.appendTo('#ChangeTheme');
 var data;
@@ -78,18 +77,7 @@ function ShowContent() {
     $("#spinner").hide();
     $("#Content").show();
 }
-
-function ChatToggle(val) {
-    if (IsOpen == 1) {
-        $("#PlatformElement").slideToggle();
-        $("#ChatElement").slideToggle();
-    }
-    else {
-        $("#PlatformElement").slideToggle();
-        $("#ChatElement").slideToggle();
-    }
-    IsOpen = val;
-}
+ 
 
 function gettoken() {
     var token = '@Html.AntiForgeryToken()';
@@ -101,6 +89,7 @@ function GenerateWidgetAt(component, cDraggable) {
     var getElement = document.createElement("div");
     getElement.setAttribute("id", "yes-drop_" + cDraggable);
     getElement.setAttribute("data-value", component.elementName);
+    getElement.setAttribute("data-info", component.elementName + "_" + cDraggable);
 
 
     getElement.classList.add("resize-drag");
@@ -144,6 +133,7 @@ function GenerateWidget(target, componentName) {
     var getElement = document.createElement("div");
     getElement.setAttribute("id", "yes-drop_" + draggedElement);
     getElement.setAttribute("data-value", componentName);
+    getElement.setAttribute("data-info", componentName + "_" + draggedElement);
 
 
     getElement.classList.add("resize-drag");
@@ -284,6 +274,38 @@ function ElementReleased(args) {
             Translate: transform,
             base64: ActiveList[name + "_" + draggedElement].Base64
         };
+}
+
+function ActivateEvent(id) {
+    var element = document.getElementById(id);
+    var parentId = element.offsetParent.getAttribute("data-value");
+    var arrayId = element.offsetParent.getAttribute("data-info");
+    var newList = {};
+   // ShowLoader();
+    for (var item in ActiveList) {
+        if (item !== arrayId)
+            newList[item] = ActiveList[item];
+        else
+        {
+            var data = ActiveList[item];
+            data.Events = [
+                {Type: 0, relation : "" }
+            ];
+            newList[item] = data;
+        }
+    }
+ 
+
+    $.ajax({
+        url: "/Home/GetComponentPanel?componentName=Element&&args=FlowDiagram",
+        method: "GET",
+        success: function (data) {
+            $("#SlidingElement").html(data);
+          //  ShowContent();
+            ToggleSetting();
+         }
+    });
+    ActiveList = newList;
 }
 
 function dragMoveListener(event) {
