@@ -1,0 +1,85 @@
+﻿@{ var UniqueId = Program.GetUniqueId(); }
+
+
+<div class="control-section" style="width:100%;height:100%;" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div id="column-container_@UniqueId" style="height:100%">
+                <input type='file' id='fileupload_@UniqueId' name='UploadFiles' style="height:100%" />
+            </div>
+
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
+    </div>
+</div>
+
+
+<script>
+
+    var uniqueId = "inplace_editor_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw() {
+        var items = `<input type='file' id='fileupload_@UniqueId' name='UploadFiles' />`;
+        $("#column-container_" + uuid).html(items);
+        DrawFileUploader();
+
+
+
+    }
+    DrawFileUploader();
+
+
+        var menuItems = [
+        {
+            text: 'Container Selected - Event'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Delete'
+        },
+        ];
+    var menuOptions = {
+        target: '#contextmenutarget_@UniqueId',
+        items: menuItems,
+        beforeItemRender: function (args) {
+            if (args.item.text === 'Link') {
+                args.element.classList.add('e-disabled');
+            }
+        },
+        select: function (args) {
+            console.log(args);
+            console.log(args.item.properties.text);
+            switch (args.item.properties.text) {
+
+                case "Container Selected - Event":
+                    ActivateEvent(0);
+                    break;
+                case "Delete":
+                    RemoveElement("@UniqueId");
+                    break;
+
+            }
+        }
+    };
+    var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+
+    function DrawFileUploader() {
+        var dropElement = document.getElementsByClassName('control-fluid')[0];
+        // Initialize the uploader component
+        var uploadObj = new ej.inputs.Uploader({
+            asyncSettings: {
+                saveUrl: 'https://ej2.syncfusion.com/services/api/uploadbox/Save',
+                removeUrl: 'https://ej2.syncfusion.com/services/api/uploadbox/Remove'
+            },
+            dropArea: dropElement
+        });
+        uploadObj.appendTo('#fileupload_@UniqueId');
+
+        
+         
+    }
+
+
+</script>

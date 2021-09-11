@@ -1,0 +1,86 @@
+﻿@{ var UniqueId = Program.GetUniqueId(); }
+
+<style>
+    .control_wrapper {
+        margin: auto;
+        border: 1px solid #dddddd;
+        border-radius: 3px;
+    }
+</style>
+
+<div class="control-section" style="width:100%;height:100%; overflow:hidden" id="@UniqueId">
+    <div class="contextmenu-control" style="width:100%;height:100%;">
+        <div id='contextmenutarget_@UniqueId' style="width:100%;height:100%;">
+            <div class="content-wrapper" id="column-container_@UniqueId">
+                <div id="filemanager_@UniqueId"></div>
+            </div>
+        </div>
+        <ul id='contextmenu_@UniqueId'></ul>
+    </div>
+</div>
+
+<script>
+
+    var uniqueId = "defaultContainer_@UniqueId";
+    var uuid = "@UniqueId";
+    function RedRaw() {
+        var items = `<div id="filemanager_@UniqueId"></div>`;
+        $("#column-container_" + uuid).html(items);
+        DrawExplorer();
+    }
+    DrawExplorer();
+
+
+        var menuItems = [
+        {
+            text: 'Container Selected - Event'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Delete'
+        },
+        ];
+    var menuOptions = {
+        target: '#contextmenutarget_@UniqueId',
+        items: menuItems,
+        beforeItemRender: function (args) {
+            if (args.item.text === 'Link') {
+                args.element.classList.add('e-disabled');
+            }
+        },
+        select: function (args) {
+            console.log(args);
+            console.log(args.item.properties.text);
+            switch (args.item.properties.text) {
+
+                case "Container Selected - Event":
+                    ActivateEvent(0);
+                    break;
+                case "Delete":
+                    RemoveElement("@UniqueId");
+                    break;
+
+            }
+        }
+    };
+    var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
+
+
+    function DrawExplorer() {
+        var hostUrl = 'https://ej2-aspcore-service.azurewebsites.net/';
+        var fileObject = new ej.filemanager.FileManager({
+            ajaxSettings: {
+                url: hostUrl + 'api/FileManager/FileOperations',
+                getImageUrl: hostUrl + 'api/FileManager/GetImage',
+                uploadUrl: hostUrl + 'api/FileManager/Upload',
+                downloadUrl: hostUrl + 'api/FileManager/Download'
+            },
+            view: 'Details'
+        });
+        fileObject.appendTo('#filemanager_@UniqueId');
+    }
+
+
+</script>

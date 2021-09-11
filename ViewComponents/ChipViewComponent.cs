@@ -4,7 +4,6 @@
 
     public class ChipViewComponent : ViewComponent
     {
-
         public IViewComponentResult Invoke()
         {
             return View();
