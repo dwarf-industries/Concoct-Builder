@@ -333,6 +333,14 @@ namespace Concoct_Builder.Controllers
             return handler.ReadFile(file.Path);
         }
 
+
+        [HttpGet]
+        public List<IncomingFileRequest> LoadLayouts()
+        {
+            var fileContent = handler.ReadFileRaw(Startup.Settings.AssocaitedFileLocation);
+            return handler.ReadDirectoryFile(fileContent);
+        }
+
         [HttpPost]
         public string ConvertTobase([FromBody] IncomingFileRequest file)
         {
