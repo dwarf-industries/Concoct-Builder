@@ -5,6 +5,7 @@ var draggedElement = 0;
 var cThemeToggle = new ejs.buttons.Switch({ checked: false });
 cThemeToggle.appendTo('#ChangeTheme');
 var data;
+var LastActiveElement;
 // Sidebar Initialization
 var sidebarMenu = new ej.navigations.Sidebar({
     width: '290px',
@@ -281,6 +282,7 @@ function ActivateEvent(id) {
     var element = document.getElementById(id);
     var parentId = element.offsetParent.getAttribute("data-value");
     var arrayId = element.offsetParent.getAttribute("data-info");
+    LastActiveElement = arrayId;
     var newList = {};
    // ShowLoader();
     for (var item in ActiveList) {
@@ -307,11 +309,53 @@ function ActivateEvent(id) {
             $("#SlidingElement").html(data);
             setTimeout(function () {
                 DrawFlowDiagram();
-                AddShape(id);
+                SetCurrentActiveEvent(id);
+                AddShape(id, "Event", "node1");
+                InitLayouts();
             }, 1000);
          }
     });
     ActiveList = newList;
+}
+
+function AssociateTransitionEvent(key, screen) {
+    var newList = {};
+    debugger
+    // ShowLoader();
+    for (var item in ActiveList)
+    {
+        if (item !== LastActiveElement)
+            newList[item] = ActiveList[item];
+        else
+        {
+            var data = ActiveList[item];
+            if (data.Events === undefined) {
+                data.Events = [
+                    { Type: 0, relation: screen }
+                ];
+            }
+            else
+            {
+                var tpm = []; 
+                for (var event in data.Events)
+                {
+                    if (data.Events[event].Type === 0) {
+                        data.Events[event].relation = screen;
+                        tpm.push(data.Events[event]);
+                    }
+                    else
+                    {
+                        tpm.push(data.Events[event]);
+                    }
+                }
+                data.Events = tpm;
+            }
+           
+            newList[item] = data;
+        }
+    }
+    ActiveList = newList;
+
 }
 
 function dragMoveListener(event) {

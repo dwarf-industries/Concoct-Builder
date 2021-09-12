@@ -112,7 +112,14 @@
     }
 
     .e-people:before {
-        content: '\e700';
+        content: '\e913';
+    }
+
+    .e-event:before {
+        content: '\e65d';
+    }
+    .e-avatar .e-event.icons {
+        font-size: 24px;
     }
 
     .e-avatar .e-people.icons {
@@ -154,11 +161,24 @@
 <div style="display:flex; width:100%;height:100%;">
     <div id="diagram" style="width:80%; height:94.6vh"></div>
     <div style="width:20%">
+        <aside id="sidebar" style="overflow-x:hidden;">
+            <div class="main-menu">
+                <div class="table-content" id="layoutList" style="padding:0;">
+                    
+
+                </div>
+            </div>
+        </aside>
 
     </div>
 </div>
 
 <script>
+    var CurrentActiveEvent;
+    var ActiveLayouts = [];
+    var LayoutCollection = {};
+    var lastActiveLayout;
+    var ActivePaths = {};
     var interval = [1, 9, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75];
     var gridlines = { lineColor: '#e0e0e0', lineIntervals: interval };
 
@@ -169,7 +189,7 @@
             shape:
             {
                 type: 'HTML',
-                content: `<div style="display:block"><div class="e-avatar e-avatar-xlarge e-avatar-circle Screen"><div class="e-people icons" ></div></div><p> Untiteled.cf</p></div>`
+                content: `<div style="display:block"><div class="e-avatar e-avatar-xlarge e-avatar-circle Screen"><div class="fa fa-desktop" ></div></div><p> Untiteled.cf</p></div>`
             }
         }
     ];
@@ -224,8 +244,51 @@
         diagram.appendTo('#diagram');
     }
 
+    function SetCurrentActiveEvent(element) {
+        debugger
+        CurrentActiveEvent = element;
+    }
 
-    function AddShape(eventName) {
+    function InitLayouts() {
+        var itemArr = document.getElementById("layoutList");
+        $.ajax({
+            url: "/Home/LoadLayouts",
+            method: "GET",
+            contentType: "application/json",
+            success: function (data) {
+                var res = "";
+                debugger
+                for (var element in data) {
+                    var current = data[element];
+                    res += `
+                     <div class="IconContainer">
+                        <i class="fa fa-desktop icon" aria-hidden="true" onclick="SelectLayout(`+element+`)"></i>
+
+                        <p class="widgetText">
+                             `+current.name +`
+                        </p>
+                    </div>`
+                }
+                itemArr.innerHTML = res;
+                ActiveLayouts = data;
+            }
+        });
+
+    }
+
+    function SelectLayout(index) {
+        debugger
+        var selected = ActiveLayouts[index];
+
+        if (ActivePaths[selected.path] === undefined) {
+            AddShape(selected.name, "Layout", CurrentActiveEvent);
+            ActivePaths[selected.path] = 1;
+            lastActiveLayout = selected.path;
+        }
+    }
+ 
+    function AddShape(eventName, type, relative) {
+        debugger
         if (nodes.length === 0) {
             nodes = [
                 {
@@ -233,7 +296,7 @@
                     shape:
                     {
                         type: 'HTML',
-                        content: `<div style="display:block"><div class="e-avatar e-avatar-xlarge e-avatar-circle Screen"><div class="e-people icons" ></div></div><p> Untiteled.cf</p></div>`
+                        content: `<div style="display:block"><div class="e-avatar e-avatar-xlarge e-avatar-circle Screen"><div class="fa fa-desktop" ></div></div><p> Untiteled.cf</p></div>`
                     }
                 }
             ];
@@ -242,14 +305,37 @@
         {
             var cNode = parseInt(nodes.length) + 1;
             var newId = 'node' + cNode;
-            nodes.push({
-                id: newId, width: 60, height: 40, offsetX: 480, offsetY: 100 * parseInt(nodes.length),
-                shape:
-                {
-                    type: 'HTML',
-                    content: `<div style="display:block"><div class="e-avatar e-avatar-xlarge e-avatar-circle Event"><div class="e-people icons" ></div></div><p>` + eventName+`</p></div>`
-                }
-            });
+
+            if (type === "Event") {
+                nodes.push({
+                    id: newId, width: 60, height: 40, offsetX: 480, offsetY: 100 * parseInt(nodes.length),
+                    shape:
+                    {
+                        type: 'HTML',
+                        content: `<div style="display:block"><div class="e-avatar e-avatar-xlarge e-avatar-circle Event"><div class="fa fa-flag" ></div></div><p>` + eventName + `</p></div>`
+                    }
+                });
+                LayoutCollection[eventName] = {
+                    x: 480,
+                    y: 100 * parseInt(nodes.length),
+                    ElementName: newId
+                };
+            }
+            else {
+                
+                var getElement = LayoutCollection[relative];
+                nodes.push({
+                    id: newId, width: 60, height: 40, offsetX: 620, offsetY: getElement.y,
+                    shape:
+                    {
+                        type: 'HTML',
+                        content: `<div style="display:block"><div class="e-avatar e-avatar-xlarge e-avatar-circle Screen"><div class="fa fa-desktop" ></div></div><p>` + eventName + `</p></div>`
+                    }
+                });
+                relative = getElement.ElementName;
+
+            }
+              
 
             connectors.push({
                 // Name of the connector
@@ -266,13 +352,20 @@
                     }
                 },
                 // ID of the source and target nodes
-                sourceID: "node1",
+                sourceID: relative,
                 targetID: newId,
                 type: 'Orthogonal'
             });
+        
         }
-       
+
         DrawFlowDiagram();
+
+    }
+
+    function CloseFlowDiagram() {
+        ToggleSetting();
+        AssociateTransitionEvent("", lastActiveLayout);
 
     }
 </script>
