@@ -6,8 +6,9 @@ var IsOpen = 0;
 
 function ToggleSetting(val) {
     if (IsOpen === 1) {
-        $("#PlatformElement").slideToggle();
         $("#SlidingElement").slideToggle();
+
+        $("#PlatformElement").slideToggle();
     }
     else {
         $("#PlatformElement").slideToggle();

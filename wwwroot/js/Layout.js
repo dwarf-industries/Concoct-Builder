@@ -133,7 +133,6 @@ function GenerateWidget(target, componentName) {
     var getElement = document.createElement("div");
     getElement.setAttribute("id", "yes-drop_" + draggedElement);
     getElement.setAttribute("data-value", componentName);
-    getElement.setAttribute("data-info", componentName + "_" + draggedElement);
 
 
     getElement.classList.add("resize-drag");
@@ -150,6 +149,8 @@ function GenerateWidget(target, componentName) {
             getElement.onmouseup = ElementReleased;
             $("#yes-drop_" + draggedElement).html(data);
             draggedElement++;
+            getElement.setAttribute("data-info", componentName + "_" + draggedElement);
+
         }
     });
     $("#outer-dropzone").append(getElement);
@@ -294,15 +295,20 @@ function ActivateEvent(id) {
             newList[item] = data;
         }
     }
- 
+    ToggleSetting();
+
 
     $.ajax({
         url: "/Home/GetComponentPanel?componentName=Element&&args=FlowDiagram",
         method: "GET",
         success: function (data) {
+       
+    
             $("#SlidingElement").html(data);
-          //  ShowContent();
-            ToggleSetting();
+            setTimeout(function () {
+                DrawFlowDiagram();
+                AddShape(id);
+            }, 1000);
          }
     });
     ActiveList = newList;

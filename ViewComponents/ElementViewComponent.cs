@@ -11,9 +11,9 @@
             switch (componentName)
             {
                 case "SystemSetting":
-                    return View("SystemSetting");
-                case "Flow":
-                    return View("FlowDiagram");
+                    return View("~/Views/Shared/Components/SystemSetting/Default.cshtml");
+                case "FlowDiagram":
+                    return View("~/Views/Shared/Components/FlowDiagram/Default.cshtml");
                 default:
                     return View();
              }
