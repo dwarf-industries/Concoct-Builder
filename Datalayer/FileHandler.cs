@@ -1,9 +1,7 @@
 ﻿using Concoct_Builder.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Concoct_Builder.Datalayer
 {
@@ -124,9 +122,10 @@ namespace Concoct_Builder.Datalayer
         public string SaveDirectoryFile(string files, IncomingFileRequest file)
         {
             var result = files;
-            result += "@";
             result += $"{file.Path}{Startup.Settings.SystemFolderDelimiter}{file.Name}" + Environment.NewLine;
             result += file.Name + Environment.NewLine;
+            result += "@";
+
 
             return result;
         }
@@ -218,6 +217,11 @@ namespace Concoct_Builder.Datalayer
         {
             var bytes = System.IO.File.ReadAllBytes(path);
             return Convert.ToBase64String(bytes);
+        }
+
+        public void CreateFile(string path, string data)
+        {
+            System.IO.File.WriteAllText(path, data);
         }
     }
 }

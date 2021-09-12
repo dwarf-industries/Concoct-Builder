@@ -362,14 +362,22 @@ namespace Concoct_Builder.Controllers
 
         private void UpdateDirectoryContent(SaveFileRequest request)
         {
-            var fileData = handler.ReadDirectoryFile(Startup.Settings.AssocaitedFileLocation);
-            var exists = fileData.FirstOrDefault(x => x.Path == request.File.Path && x.Name == request.File.Name);
+            var fileContent = handler.ReadFileRaw(Startup.Settings.AssocaitedFileLocation);
+            var fileData = handler.ReadDirectoryFile(fileContent);
+            var exists = fileData.FirstOrDefault(x => x.Path == $"{request.File.Path}{Startup.Settings.SystemFolderDelimiter}{request.File.Name}"&& x.Name == request.File.Name);
+            var currentData = string.Empty;
             if (exists == null)
             {
-                handler.DeleteFile(Startup.Settings.AssocaitedFileLocation);
-                var currentData = handler.ReadFileRaw(Startup.Settings.AssocaitedFileLocation);
-                handler.SaveDirectoryFile(currentData, request.File);
+                if(!string.IsNullOrEmpty(Startup.Settings.AssocaitedFileLocation))
+                {
+                    currentData = handler.ReadFileRaw(Startup.Settings.AssocaitedFileLocation);
+                    handler.DeleteFile(Startup.Settings.AssocaitedFileLocation);
+                }
+           
+                var currentFileData = handler.SaveDirectoryFile(currentData, request.File);
+                handler.CreateFile(Startup.Settings.AssocaitedFileLocation, currentFileData);
             }
+             
         }
     }
 }

@@ -138,7 +138,8 @@ function FileSelected(dto) {
             url: "/Home/SaveFile",
             data: JSON.stringify(currentDto)
         }).done(function (msg) {
-            alert("Data Saved: " + msg);
+//            alert("Data Saved: " + msg);
+            ShowInfo("Layout saved!");
         });
     }
    
