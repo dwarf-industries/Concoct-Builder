@@ -83,6 +83,19 @@ namespace Concoct_Builder.Datalayer
                             case 8:
                                 pageElement.Base64 = x;
                                 break;
+                            case 9:
+                                pageElement.Events = new List<Event>();
+                                var events = x.Split("_");
+                                events.ToList().ForEach(y =>
+                                {
+                                    var source = y.Split(",");
+                                    pageElement.Events.Add(new Event
+                                    {
+                                        Type = int.Parse(source[0]),
+                                        Relation = source[1]
+                                    });
+                                });
+                                break;
 
                         }
                     }
@@ -112,6 +125,15 @@ namespace Concoct_Builder.Datalayer
                 result += x.OffsetY + Environment.NewLine;
                 result += x.Translate + Environment.NewLine;
                 result += x.Base64 + Environment.NewLine;
+                if(x.Events != null)
+                {
+                    x.Events.ForEach(y =>
+                    {
+                        result += $"{y.Type},{y.Relation}_";
+                    });
+                    result += Environment.NewLine;
+                }
+               
                 if (pageElements.Count != i)
                     result += "@";
                 i++;

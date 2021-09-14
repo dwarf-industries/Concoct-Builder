@@ -292,7 +292,7 @@ function ActivateEvent(id) {
         {
             var data = ActiveList[item];
             data.Events = [
-                {Type: 0, relation : "" }
+                {Type: 0, Relation : "" }
             ];
             newList[item] = data;
         }
@@ -331,7 +331,7 @@ function AssociateTransitionEvent(key, screen) {
             var data = ActiveList[item];
             if (data.Events === undefined) {
                 data.Events = [
-                    { Type: 0, relation: screen }
+                    { Type: 0, Relation: screen }
                 ];
             }
             else
@@ -340,7 +340,7 @@ function AssociateTransitionEvent(key, screen) {
                 for (var event in data.Events)
                 {
                     if (data.Events[event].Type === 0) {
-                        data.Events[event].relation = screen;
+                        data.Events[event].Relation = screen;
                         tpm.push(data.Events[event]);
                     }
                     else

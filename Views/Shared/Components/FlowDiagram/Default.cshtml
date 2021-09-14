@@ -245,7 +245,7 @@
     }
 
     function SetCurrentActiveEvent(element) {
-        debugger
+         
         CurrentActiveEvent = element;
     }
 
@@ -257,7 +257,7 @@
             contentType: "application/json",
             success: function (data) {
                 var res = "";
-                debugger
+                 
                 for (var element in data) {
                     var current = data[element];
                     res += `
@@ -277,18 +277,19 @@
     }
 
     function SelectLayout(index) {
-        debugger
+  
         var selected = ActiveLayouts[index];
 
         if (ActivePaths[selected.path] === undefined) {
             AddShape(selected.name, "Layout", CurrentActiveEvent);
             ActivePaths[selected.path] = 1;
             lastActiveLayout = selected.path;
+            CloseFlowDiagram();
         }
     }
  
     function AddShape(eventName, type, relative) {
-        debugger
+         
         if (nodes.length === 0) {
             nodes = [
                 {

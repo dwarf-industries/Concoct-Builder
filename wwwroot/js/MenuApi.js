@@ -4,6 +4,25 @@ var isFullScreen = false;
 var fileName = "Untiteled.cf";
 var IsOpen = 0;
 
+var editObj = new ej.inplaceeditor.InPlaceEditor({
+    mode: 'popup',
+    type: 'Text',
+    value: 'Untiteled.cf',
+    change: FileNameChanged,
+    submitOnEnter: true,
+    model: {
+        placeholder: 'Enter Layout Name'
+    },
+    popupSettings: {
+        title: 'Enter Layout Name'
+    }
+});
+editObj.appendTo('#inplace_editor');
+
+function FileNameChanged(args) {
+    fileName = args.value;
+} 
+
 function ToggleSetting(val) {
     if (IsOpen === 1) {
         $("#SlidingElement").slideToggle();

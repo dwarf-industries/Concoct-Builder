@@ -79,7 +79,25 @@
     font-size:20px !important;
 }
 
-    .MenuIcon:hover {
-        background: #0a6298 !important;
-        color: #ff7979 !important;
-     }
+.MenuIcon:hover {
+background: #0a6298 !important;
+color: #ff7979 !important;
+}
+
+.e-inplaceeditor .e-editable-value-wrapper .e-editable-value {
+    color: white;
+}
+
+.e-inplaceeditor .e-editable-value-wrapper .e-editable-overlay-icon {
+    color: white;
+}
+
+.e-inplaceeditor .e-editable-value-wrapper:hover {
+    background: #0a6298 !important;
+    color: #ff7979 !important;
+    border-radius: 2px;
+}
+
+.e-inplaceeditor .e-editable-value-wrapper .e-editable-value{
+    border:none;
+}
