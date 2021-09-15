@@ -27,10 +27,10 @@
                 <div class="main-header" id="header-section">
                     <ul class="header-list">
                         <li class="float-left header-style icon-menu" id="hamburger"></li>
-                        <li class="float-left header-style" >
-                            <div  id='inplace_editor'></div>
+                        <li class="float-left header-style">
+                            <div id='inplace_editor'></div>
                         </li>
- 
+
 
                         <li class="header-style float-right support border-left MenuIcon" onclick="KillWindow()"><b><i class="fa fa-window-close-o MenuIcon" aria-hidden="true"></i></b></li>
 
@@ -67,7 +67,7 @@
                     </aside>
 
                     <div class="main-content" id="main-text" style="min-height: 94vh; width: 99.9%;">
-                        <div class="sidebar-content dropzone" id="outer-dropzone">
+                        <div class="sidebar-content dropzone scroll-container" id="outer-dropzone">
                             @RenderBody()
                         </div>
                     </div>
@@ -87,7 +87,7 @@
                     </div>
                     @*End INotify declaration*@
                 </div>
-                <div id="SlidingElement" >
+                <div id="SlidingElement">
 
                 </div>
 
@@ -97,10 +97,10 @@
         </div>
 
     </div>
-    <script src="~/js/Interact.js"></script>
     <script src="~/js/MenuApi.js"></script>
     <script src="~/js/Layout.js"></script>
     <script src="~/js/INotify.js"></script>
+    <script src="~/js/DragDrop.js"></script>
 </body>
 </html>
 
