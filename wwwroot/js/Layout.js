@@ -86,14 +86,19 @@ function gettoken() {
     return token;
 }
 
+function SetDraggableStartingIndex(index) {
+    draggedElement = index + 1;
+}
+
 function GenerateWidgetAt(component, cDraggable) {
     var getElement = document.createElement("div");
     getElement.setAttribute("id", "yes-drop_" + cDraggable);
     getElement.setAttribute("data-value", component.elementName);
     getElement.setAttribute("data-info", component.elementName + "_" + cDraggable);
+    getElement.classList.add("popup");
 
 
-    getElement.classList.add("resize-drag");
+    //getElement.classList.add("resize-drag");
 
     $("#outer-dropzone").append(getElement);
 
@@ -111,18 +116,23 @@ function GenerateWidgetAt(component, cDraggable) {
             getElement.style.setProperty("width", component.width);
             getElement.style.setProperty("height", component.height);
             getElement.style.setProperty("transform", component.translate);
+            getElement.style.setProperty("position", "relative");
+
             //getElement.setAttribute("data-x", component.clientX);
             draggedElement = cDraggable;
             //getElement.setAttribute("data-y", component.clientY);
             RedRaw();
+           // initDragElement();
+            getElement.onclick = StartDrag;
 
+            initResizeElement();
             ActiveList[component.elementName + "_" + cDraggable] = {
                 ElementName: component.elementName,
                 ClientX: component.clientX,
                 ClientY: component.clientY,
                 Width: component.width,
                 Height: component.height,
-                Translate: component.Translate,
+                Translate: component.translate,
                 Base64: component.base64
             };
          }
@@ -130,28 +140,34 @@ function GenerateWidgetAt(component, cDraggable) {
 }
 
 function GenerateWidget(target, componentName) {
-     
+    draggedElement++;
+
     var getElement = document.createElement("div");
     getElement.setAttribute("id", "yes-drop_" + draggedElement);
     getElement.setAttribute("data-value", componentName);
 
+    getElement.classList.add("popup");
 
-    getElement.classList.add("resize-drag");
+  //  getElement.classList.add("resize-drag");
+
+    
     getElement.style.setProperty("top", "20");
     getElement.style.setProperty("left", "20");
     getElement.style.setProperty("width", "200px");
     getElement.style.setProperty("height", "200px");
+    getElement.style.setProperty("position", "relative");
 
     $.ajax({
         url: "/Home/GetComponent?componentName=" + componentName,
         method: "GET",
         success: function (data) {
-             
+
             getElement.onmouseup = ElementReleased;
             $("#yes-drop_" + draggedElement).html(data);
-            draggedElement++;
             getElement.setAttribute("data-info", componentName + "_" + draggedElement);
-
+           // initDragElement();
+            getElement.onclick = StartDrag;
+           initResizeElement();
         }
     });
     $("#outer-dropzone").append(getElement);
@@ -189,63 +205,51 @@ function RemoveElement(id) {
 }
 
 var resizing = false;
-interact('.resize-drag')
-    .resizable({
-        // resize from all edges and corners
-        edges: { left: true, right: true, bottom: true, top: true },
+//interact('.resize-drag')
+//    .draggable({})
+//    .resizable({
+//        preserveAspectRatio: false,
+//        edges: {
+//            left: true,
+//            right: true,
+//            bottom: true,
+//            top: true
+//        }
+//    })
+//    .on('dragstart', function (event) {
+//        event.preventDefault();
+//    })
+//    .on('dragmove', dragMoveListener)
+//    .on('resizestart', function (event) {
+//        console.info('resizestart = ', event);
+//    })
+//    .on('resizemove', function (event) {
+//        console.info('resizemove = ', event);
+//        var target = event.target,
+//            x = (parseFloat(target.getAttribute('data-x')) || 0),
+//            y = (parseFloat(target.getAttribute('data-y')) || 0);
 
-        listeners: {
-            move(event) {
-                var target = event.target
-                var x = (parseFloat(target.getAttribute('data-x')) || 0)
-                var y = (parseFloat(target.getAttribute('data-y')) || 0)
+//        // update the element's style
+//        target.style.width = event.rect.width + 'px';
+//        target.style.height = event.rect.height + 'px';
 
-                // update the element's style
-                target.style.width = event.rect.width + 'px'
-                target.style.height = event.rect.height + 'px'
+//        // translate when resizing from top or left edges
+//        x += event.deltaRect.left;
+//        y += event.deltaRect.top;
 
-                // translate when resizing from top or left edges
-                x += event.deltaRect.left
-                y += event.deltaRect.top
+//        target.style.webkitTransform = target.style.transform =
+//            'translate(' + x + 'px,' + y + 'px)';
+//        if (!resizing) {
+//            resizing = true;
+//            setTimeout(function () {
+//                RedRaw();
+//                resizing = false;
+//            }, 600)
+//        }
 
-                target.style.transform = 'translate(' + x + 'px,' + y + 'px)'
-
-                target.setAttribute('data-x', x)
-                target.setAttribute('data-y', y)
-                if (!resizing) {
-                    resizing = true;
-                    setTimeout(function () {
-                        RedRaw();
-                        resizing = false;
-                    }, 600)
-                }
-                 //  target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height)
-            }
-        },
-        modifiers: [
-            // keep the edges inside the parent
-            interact.modifiers.restrictEdges({
-                outer: 'parent'
-            }),
-            
-            // minimum size
-            interact.modifiers.restrictSize({
-                min: { width: 100, height: 50 }
-            })
-        ],
-
-        inertia: true
-    })
-    .draggable({
-        listeners: { move: window.dragMoveListener },
-        inertia: true,
-        modifiers: [
-            interact.modifiers.restrictRect({
-                restriction: 'parent',
-                endOnly: true
-            })
-        ]
-    })
+//        target.setAttribute('data-x', x);
+//        target.setAttribute('data-y', y);
+//    });
 
  
 
@@ -358,18 +362,18 @@ function AssociateTransitionEvent(key, screen) {
 
 }
 
-function dragMoveListener(event) {
-    var target = event.target,
-        // keep the dragged position in the data-x/data-y attributes
-        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+//function dragMoveListener(event) {
+//    var target = event.target,
+//        // keep the dragged position in the data-x/data-y attributes
+//        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+//        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-    // translate the element
-    target.style.webkitTransform =
-        target.style.transform =
-        'translate(' + x + 'px, ' + y + 'px)';
+//    // translate the element
+//    target.style.webkitTransform =
+//        target.style.transform =
+//        'translate(' + x + 'px, ' + y + 'px)';
 
-    // update the posiion attributes
-    target.setAttribute('data-x', x);
-    target.setAttribute('data-y', y);
-}
+//    // update the posiion attributes
+//    target.setAttribute('data-x', x);
+//    target.setAttribute('data-y', y);
+//}
