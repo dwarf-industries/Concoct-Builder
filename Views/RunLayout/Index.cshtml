@@ -1,0 +1,83 @@
+﻿@{ 
+    var selected = ViewData["SelectedFile"] as string;
+    Layout = "~/Views/Shared/_LayoutCompiler.cshtml";
+}
+
+
+<div>
+    @*Menu*@
+    <div>
+
+    </div>
+    @*Content*@
+    <div id="ContentPane">
+
+    </div>
+</div>
+
+
+<script>
+    var currentDragable = 0;
+    GetLayoutByName("@selected");
+
+    function GetLayoutByName(layout) {
+        var contentHolder = document.getElementById("ContentPane");
+        contentHolder.innerHTML = "";
+        $.ajax({
+            url: "/RunLayout/GetContent/"+layout,
+            method: "GET",
+            success: function (data) {
+
+                var getArea = document.getElementById("outer-dropzone");
+                getArea.innerHTML = "";
+                var draggableValue = 0;
+                ClearActiveList();
+                for (var element in args) {
+                     GenerateWidgetOn(args[element], draggableValue);
+                    draggableValue++;
+                }
+
+                SetDraggableStartingIndex(draggableValue);
+                
+            }
+        });
+    }
+
+
+    
+function GenerateWidgetOn(component, cDraggable) {
+    var getElement = document.createElement("div");
+    getElement.setAttribute("id", "yes-drop_" + currentDragable);
+   
+
+    //getElement.classList.add("resize-drag");
+
+    $("#outer-dropzone").append(getElement);
+
+    $.ajax({
+        url: "/Home/GetComponent?componentName=" + component.elementName,
+        method: "GET",
+        success: function (data) {
+            getElement.onmouseup = ElementReleased;
+            $("#yes-drop_" + currentDragable).html(data);
+            getElement.setAttribute("drag-id", currentDragable);
+
+            if (component.base64 !== "" && component.base64 !== undefined && component.base64 !== null) {
+                SetContent(component.base64);
+            }
+            getElement.style.cssText = component.translate;
+            RedRaw();
+            if (component.events[0] !== undefined) {
+                getElement.setAttribute("onclick", RenderLayout(component.events[0].path));
+
+            }
+         }
+    });
+    }
+
+    function RenderLayout(path) {
+
+    }
+
+
+</script>
