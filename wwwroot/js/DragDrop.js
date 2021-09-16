@@ -65,6 +65,7 @@ var container = document.querySelector("#outer-dropzone");
    
 function StartDrag(id) {
     dragItem = id.currentTarget;
+    
     id.currentTarget.addEventListener('mousedown', mouseDown, false);
     window.addEventListener('mouseup', mouseUp, false);
 }

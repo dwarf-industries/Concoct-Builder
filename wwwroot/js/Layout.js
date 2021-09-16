@@ -90,6 +90,10 @@ function SetDraggableStartingIndex(index) {
     draggedElement = index + 1;
 }
 
+function ClearActiveList() {
+    ActiveList = {};
+}
+
 function GenerateWidgetAt(component, cDraggable) {
     var getElement = document.createElement("div");
     getElement.setAttribute("id", "yes-drop_" + cDraggable);
@@ -110,13 +114,12 @@ function GenerateWidgetAt(component, cDraggable) {
 
             getElement.onmouseup = ElementReleased;
             $("#yes-drop_" + cDraggable).html(data);
+            getElement.setAttribute("drag-id", cDraggable);
+
             if (component.base64 !== "" && component.base64 !== undefined && component.base64 !== null) {
                 SetContent(component.base64);
             }
-            getElement.style.setProperty("width", component.width);
-            getElement.style.setProperty("height", component.height);
-            getElement.style.setProperty("transform", component.translate);
-            getElement.style.setProperty("position", "relative");
+            getElement.style.cssText = component.translate;
 
             //getElement.setAttribute("data-x", component.clientX);
             draggedElement = cDraggable;
@@ -155,7 +158,7 @@ function GenerateWidget(target, componentName) {
     getElement.style.setProperty("left", "20");
     getElement.style.setProperty("width", "200px");
     getElement.style.setProperty("height", "200px");
-    getElement.style.setProperty("position", "relative");
+    getElement.style.setProperty("position", "absolute");
 
     $.ajax({
         url: "/Home/GetComponent?componentName=" + componentName,
@@ -164,6 +167,8 @@ function GenerateWidget(target, componentName) {
 
             getElement.onmouseup = ElementReleased;
             $("#yes-drop_" + draggedElement).html(data);
+            getElement.setAttribute("drag-id", draggedElement);
+
             getElement.setAttribute("data-info", componentName + "_" + draggedElement);
            // initDragElement();
             getElement.onclick = StartDrag;
@@ -183,8 +188,9 @@ function UpdatePlaceholderContent(id, content) {
             newList[item] = ActiveList[item];
         else
         {
-            var item = ActiveList[item];
-            item.Base64 = content;
+            var currentItem = ActiveList[item];
+            currentItem.Base64 = content;
+            ActiveList[item] = currentItem;
         }
     }
 
@@ -205,80 +211,36 @@ function RemoveElement(id) {
 }
 
 var resizing = false;
-//interact('.resize-drag')
-//    .draggable({})
-//    .resizable({
-//        preserveAspectRatio: false,
-//        edges: {
-//            left: true,
-//            right: true,
-//            bottom: true,
-//            top: true
-//        }
-//    })
-//    .on('dragstart', function (event) {
-//        event.preventDefault();
-//    })
-//    .on('dragmove', dragMoveListener)
-//    .on('resizestart', function (event) {
-//        console.info('resizestart = ', event);
-//    })
-//    .on('resizemove', function (event) {
-//        console.info('resizemove = ', event);
-//        var target = event.target,
-//            x = (parseFloat(target.getAttribute('data-x')) || 0),
-//            y = (parseFloat(target.getAttribute('data-y')) || 0);
-
-//        // update the element's style
-//        target.style.width = event.rect.width + 'px';
-//        target.style.height = event.rect.height + 'px';
-
-//        // translate when resizing from top or left edges
-//        x += event.deltaRect.left;
-//        y += event.deltaRect.top;
-
-//        target.style.webkitTransform = target.style.transform =
-//            'translate(' + x + 'px,' + y + 'px)';
-//        if (!resizing) {
-//            resizing = true;
-//            setTimeout(function () {
-//                RedRaw();
-//                resizing = false;
-//            }, 600)
-//        }
-
-//        target.setAttribute('data-x', x);
-//        target.setAttribute('data-y', y);
-//    });
-
  
 
 function ElementReleased(args) {
     var transform = args.currentTarget.style.getPropertyValue("transform");
     var name = args.currentTarget.getAttribute("data-value");
-    if (ActiveList[name + "_" + draggedElement] === undefined)
-        ActiveList[name + "_" + draggedElement] = {
+    var dragId = args.currentTarget.getAttribute("drag-id");
+
+    if (ActiveList[name + "_" + dragId] === undefined)
+        ActiveList[name + "_" + dragId] = {
             ElementName: name,
-            ClientX: "2",
-            ClientY: "2",
-            OffsetX: args.offsetX.toString(),
-            OffsetY: args.offsetY.toString(),
-            Width: args.currentTarget.style.getPropertyValue("width"),
-            Height: args.currentTarget.style.getPropertyValue("height"),
-            Translate: transform,
+            ClientX: "Depricated",
+            ClientY: "Depricated",
+            OffsetX: "Depricated",
+            OffsetY: "Depricated",
+            Width: "Depricated",
+            Height: "Depricated",
+            Translate: args.currentTarget.style.cssText,
             Base64: ""
         };
     else
-        ActiveList[name + "_" + draggedElement] = {
+        ActiveList[name + "_" + dragId] = {
             ElementName: name,
-            ClientX: "2",
-            ClientY: "2",
-            OffsetX: args.offsetX.toString(),
-            OffsetY: args.offsetY.toString(),
-            Width: args.currentTarget.style.getPropertyValue("width"),
-            Height: args.currentTarget.style.getPropertyValue("height"),
-            Translate: transform,
-            base64: ActiveList[name + "_" + draggedElement].Base64
+            ClientX: "Depricated",
+            ClientY: "Depricated",
+            OffsetX: "Depricated",
+            OffsetY: "Depricated",
+            Width: "Depricated",
+            Height: "Depricated",
+            Translate: args.currentTarget.style.cssText,
+            base64: ActiveList[name + "_" + dragId].Base64
         };
 }
 
