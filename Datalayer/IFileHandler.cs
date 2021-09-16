@@ -16,5 +16,6 @@ namespace Concoct_Builder.Datalayer
         public string ReadFileRaw(string filePath);
         public string ConvertTobase64(string path);
         void CreateFile(string path, string data);
+        public List<Widget> GetAllWidgets();
     }
 }
