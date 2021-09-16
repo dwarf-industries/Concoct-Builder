@@ -88,12 +88,15 @@ namespace Concoct_Builder.Datalayer
                                 var events = x.Split("_");
                                 events.ToList().ForEach(y =>
                                 {
-                                    var source = y.Split(",");
-                                    pageElement.Events.Add(new Event
+                                    if (!string.IsNullOrEmpty(y))
                                     {
-                                        Type = int.Parse(source[0]),
-                                        Relation = source[1]
-                                    });
+                                        var source = y.Split(",");
+                                        pageElement.Events.Add(new Event
+                                        {
+                                            Type = int.Parse(source[0]),
+                                            Relation = source[1]
+                                        });
+                                    }
                                 });
                                 break;
 

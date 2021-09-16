@@ -1,11 +1,13 @@
 ﻿using Concoct_Builder.Datalayer;
 using Concoct_Builder.Models;
 using ElectronNET.API;
+using ElectronNET.API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Concoct_Builder.Controllers
 {
@@ -346,6 +348,19 @@ namespace Concoct_Builder.Controllers
         {
             return handler.ConvertTobase64(file.Path);
         }
+
+        [HttpPost]
+        public void InitScreen(string request)
+        {
+            var options = new BrowserWindowOptions();
+            options.AutoHideMenuBar = true;
+            options.DarkTheme = true;
+            options.Fullscreen = true;
+            options.Title = "Concoct Builder V 0.1";
+            options.TitleBarStyle = TitleBarStyle.hidden;
+ 
+            Task.Run(async () => await Electron.WindowManager.CreateWindowAsync(options, "http://localhost/RunLayout?Id="+ request));
+         }
 
         [HttpPost]
         public bool SaveFile([FromBody] SaveFileRequest request)
