@@ -138,13 +138,13 @@ color: #ff7979 !important;
 
 .popup {
     z-index: 9;
-    background-color: #f1f1f1;
     border: 1px solid #d3d3d3;
     text-align: center;
-    min-height: 150px;
-    min-width: 300px;
+    min-height: 1px;
+    min-width: 1px;
     max-height: max-content;
     max-width: 100%;
+    overflow:hidden !important;
 }
 
 /*Drgable */

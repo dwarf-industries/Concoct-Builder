@@ -181,7 +181,7 @@ function GenerateWidget(target, componentName) {
 
 function UpdatePlaceholderContent(id, content) {
     var element = document.getElementById(id);
-    var parentId = element.offsetParent.getAttribute("data-value");
+    var parentId = element.offsetParent.getAttribute("data-info");
     var newList = {};
     for (var item in ActiveList) {
         if (item !== parentId)
@@ -199,7 +199,7 @@ function UpdatePlaceholderContent(id, content) {
 
 function RemoveElement(id) {
     var element = document.getElementById(id);
-    var parentId = element.offsetParent.getAttribute("data-value");
+    var parentId = element.offsetParent.getAttribute("data-info");
     element.offsetParent.remove();
     var newList = {};
     for (var item in ActiveList) {
@@ -215,7 +215,7 @@ var resizing = false;
 
 function ElementReleased(args) {
     var transform = args.currentTarget.style.getPropertyValue("transform");
-    var name = args.currentTarget.getAttribute("data-value");
+    var name = args.currentTarget.getAttribute("data-info");
     var dragId = args.currentTarget.getAttribute("drag-id");
 
     if (ActiveList[name + "_" + dragId] === undefined)
@@ -240,7 +240,7 @@ function ElementReleased(args) {
             Width: "Depricated",
             Height: "Depricated",
             Translate: args.currentTarget.style.cssText,
-            base64: ActiveList[name + "_" + dragId].Base64
+            Base64: ActiveList[name + "_" + dragId].Base64
         };
 }
 
