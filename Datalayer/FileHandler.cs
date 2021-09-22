@@ -14,12 +14,16 @@ namespace Concoct_Builder.Datalayer
 
         public List<PageElement> ReadFile(string path)
         {
-
-            var contents = System.IO.File.ReadAllText(path);
-
-            if (!string.IsNullOrEmpty(contents))
-                return DeserializeData(contents);
-
+            var context = new ConcoctbuilderDbContext();
+            var layout = context.Layouts.FirstOrDefault(x => x.Name == path);
+            if (layout != null)
+                return context.LayoutData.Where(x => x.LayoutId == layout.Id).Select(x => new PageElement
+                {
+                    Base64 = x.Base64,
+                    ElementName = x.ElementName,
+                    Translate = x.Translate,
+                }).ToList();
+            
             return null;
         }
 
@@ -39,78 +43,48 @@ namespace Concoct_Builder.Datalayer
         public void WriteFile(string path, List<PageElement> content)
         {
             var serialized = SerializeData(content);
-            System.IO.File.WriteAllText(path, serialized);
-        }
-
-        public List<PageElement> DeserializeData(string data)
-        {
-            var i = 0;
-            var result = new List<PageElement>();
-            var pageElement = default(PageElement);
-            data.Split('@').ToList().ForEach( dataRow =>
+            var context = new ConcoctbuilderDbContext();
+            
+            var layout = context.Layouts.FirstOrDefault(x => x.Name == path);
+            if (layout == null)
             {
-                pageElement = new PageElement();
-                dataRow.Split(Environment.NewLine).ToList().ForEach(x =>
+                layout = context.Layouts.Add(new Layouts
                 {
-                    if(x != "")
+                    Name = path,
+                    CreatedAt = DateTime.Now.ToFileTimeUtc().ToString(),
+                    Owner = "",
+                    UpdatedAt = "",
+                }).Entity;
+                context.SaveChanges();
+            }
+            content.ForEach(x =>
+            {
+                var existing = context.LayoutData.FirstOrDefault(y => y.ElementName == x.ElementName && y.LayoutId == layout.Id);
+                if (existing != null)
+                {
+                    existing.Translate = x.Translate;
+                    existing.Base64 = x.Base64;
+                    context.Attach(existing);
+                    context.Update(existing);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    context.LayoutData.Add(new LayoutData
                     {
-                        switch (i)
-                        {
-                            case 0:
-                                pageElement.ElementName = x;
-                                break;
-                            case 1:
-                                pageElement.Width = x;
-                                break;
-                            case 2:
-                                pageElement.Height = x;
-                                break;
-                            case 3:
-                                pageElement.ClientX = x;
-                                break;
-                            case 4:
-                                pageElement.ClientY = x;
-                                break;
-                            case 5:
-                                pageElement.OffsetX = x;
-                                break;
-                            case 6:
-                                pageElement.OffsetY = x;
-                                break;
-                            case 7:
-                                pageElement.Translate = x;
-                                break;
-                            case 8:
-                                pageElement.Base64 = x;
-                                break;
-                            case 9:
-                                pageElement.Events = new List<Event>();
-                                var events = x.Split("_");
-                                events.ToList().ForEach(y =>
-                                {
-                                    if (!string.IsNullOrEmpty(y))
-                                    {
-                                        var source = y.Split(",");
-                                        pageElement.Events.Add(new Event
-                                        {
-                                            Type = int.Parse(source[0]),
-                                            Relation = source[1]
-                                        });
-                                    }
-                                });
-                                break;
-
-                        }
-                    }
-                    i++;
-                });
-                result.Add(pageElement);
-                i = 0;
-
-
+                        ElementName = x.ElementName,
+                        Base64 = x.Base64,
+                        Translate = x.Translate,
+                        LayoutId = layout.Id
+                    });
+                    context.SaveChanges();
+                }    
             });
-            return result;
+
+          //  System.IO.File.WriteAllText(path, serialized);
         }
+
+      
 
         public string SerializeData(List<PageElement> pageElements)
         {
@@ -205,37 +179,12 @@ namespace Concoct_Builder.Datalayer
 
         public List<IncomingFileRequest> ReadDirectoryFile(string assocaitedFileLocation)
         {
-            var i = 0;
-            var result = new List<IncomingFileRequest>();
-            var directory = default(IncomingFileRequest);
-
-            if (string.IsNullOrEmpty(assocaitedFileLocation))
-                return new List<IncomingFileRequest>();
-
-            assocaitedFileLocation.Split('@').ToList().ForEach(dataRow =>
+            var context = new ConcoctbuilderDbContext();
+            return context.Layouts.ToList().Select(x => new IncomingFileRequest
             {
-                directory = new IncomingFileRequest();
-                dataRow.Split(Environment.NewLine).ToList().ForEach(x =>
-                {
-                    if (x != "")
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                directory.Path = x;
-                                break;
-                            case 1:
-                                directory.Name = x;
-                                break;                        
-                        }
-                    }
-                    i++;
-                });
-                result.Add(directory);
-                i = 0;
-            });
-            return result;
-
+                Name = "--",
+                Path = x.Name
+            }).ToList();
         }
 
         public string ConvertTobase64(string path)

@@ -116,9 +116,6 @@ function GenerateWidgetAt(component, cDraggable) {
             $("#yes-drop_" + cDraggable).html(data);
             getElement.setAttribute("drag-id", cDraggable);
 
-            if (component.base64 !== "" && component.base64 !== undefined && component.base64 !== null) {
-                SetContent(component.base64);
-            }
             getElement.style.cssText = component.translate;
 
             //getElement.setAttribute("data-x", component.clientX);
@@ -129,7 +126,7 @@ function GenerateWidgetAt(component, cDraggable) {
             getElement.onclick = StartDrag;
 
             initResizeElement();
-            ActiveList[component.elementName + "_" + cDraggable] = {
+            ActiveList[component.elementName] = {
                 ElementName: component.elementName,
                 ClientX: component.clientX,
                 ClientY: component.clientY,
@@ -138,6 +135,9 @@ function GenerateWidgetAt(component, cDraggable) {
                 Translate: component.translate,
                 Base64: component.base64
             };
+
+            if (component.base64 !== null)
+                SetContent(component.base64);
          }
     });
 }
@@ -190,7 +190,7 @@ function UpdatePlaceholderContent(id, content) {
         {
             var currentItem = ActiveList[item];
             currentItem.Base64 = content;
-            ActiveList[item] = currentItem;
+            newList[item] = currentItem;
         }
     }
 
@@ -218,8 +218,8 @@ function ElementReleased(args) {
     var name = args.currentTarget.getAttribute("data-info");
     var dragId = args.currentTarget.getAttribute("drag-id");
 
-    if (ActiveList[name + "_" + dragId] === undefined)
-        ActiveList[name + "_" + dragId] = {
+    if (ActiveList[name] === undefined)
+        ActiveList[name] = {
             ElementName: name,
             ClientX: "Depricated",
             ClientY: "Depricated",
@@ -231,7 +231,7 @@ function ElementReleased(args) {
             Base64: ""
         };
     else
-        ActiveList[name + "_" + dragId] = {
+        ActiveList[name] = {
             ElementName: name,
             ClientX: "Depricated",
             ClientY: "Depricated",
@@ -240,7 +240,7 @@ function ElementReleased(args) {
             Width: "Depricated",
             Height: "Depricated",
             Translate: args.currentTarget.style.cssText,
-            Base64: ActiveList[name + "_" + dragId].Base64
+            Base64: ActiveList[name].Base64
         };
 }
 
@@ -286,7 +286,7 @@ function ActivateEvent(id) {
 
 function AssociateTransitionEvent(key, screen) {
     var newList = {};
-    debugger
+    
     // ShowLoader();
     for (var item in ActiveList)
     {
@@ -324,18 +324,3 @@ function AssociateTransitionEvent(key, screen) {
 
 }
 
-//function dragMoveListener(event) {
-//    var target = event.target,
-//        // keep the dragged position in the data-x/data-y attributes
-//        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-//        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-//    // translate the element
-//    target.style.webkitTransform =
-//        target.style.transform =
-//        'translate(' + x + 'px, ' + y + 'px)';
-
-//    // update the posiion attributes
-//    target.setAttribute('data-x', x);
-//    target.setAttribute('data-y', y);
-//}
