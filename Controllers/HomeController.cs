@@ -140,28 +140,9 @@ namespace Concoct_Builder.Controllers
 
                 //System.IO.File.WriteAllText($"{request.File.Path}{request.File.Name}", Newtonsoft.Json.JsonConvert.SerializeObject(request.PageElements));
             }
-            UpdateDirectoryContent(request);
             return true;
         }
 
-        private void UpdateDirectoryContent(SaveFileRequest request)
-        {
-            var fileContent = handler.ReadFileRaw(Startup.Settings.AssocaitedFileLocation);
-            var fileData = handler.ReadDirectoryFile(fileContent);
-            var exists = fileData.FirstOrDefault(x => x.Path == $"{request.File.Path}{Startup.Settings.SystemFolderDelimiter}{request.File.Name}"&& x.Name == request.File.Name);
-            var currentData = string.Empty;
-            if (exists == null)
-            {
-                if(!string.IsNullOrEmpty(Startup.Settings.AssocaitedFileLocation))
-                {
-                    currentData = handler.ReadFileRaw(Startup.Settings.AssocaitedFileLocation);
-                    handler.DeleteFile(Startup.Settings.AssocaitedFileLocation);
-                }
-           
-                var currentFileData = handler.SaveDirectoryFile(currentData, request.File);
-                handler.CreateFile(Startup.Settings.AssocaitedFileLocation, currentFileData);
-            }
-             
-        }
+        
     }
 }
