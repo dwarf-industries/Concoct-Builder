@@ -4,7 +4,7 @@
    "ContextNamespace": null,
    "DefaultDacpacSchema": null,
    "FilterSchemas": false,
-   "IncludeConnectionString": true,
+   "IncludeConnectionString": false,
    "ModelNamespace": null,
    "OutputContextPath": null,
    "OutputPath": null,
@@ -14,11 +14,15 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
+         "Name": "LayoutData",
+         "ObjectType": 0
+      },
+      {
          "Name": "Layouts",
          "ObjectType": 0
       },
       {
-         "Name": "LayoutData",
+         "Name": "UserSettings",
          "ObjectType": 0
       }
    ],

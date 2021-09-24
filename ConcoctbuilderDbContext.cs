@@ -11,6 +11,7 @@ namespace Concoct_Builder
     {
         public ConcoctbuilderDbContext()
         {
+            Database.EnsureCreated();
         }
 
         public ConcoctbuilderDbContext(DbContextOptions<ConcoctbuilderDbContext> options)
@@ -20,14 +21,7 @@ namespace Concoct_Builder
 
         public virtual DbSet<LayoutData> LayoutData { get; set; }
         public virtual DbSet<Layouts> Layouts { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlite("Data Source=ConcoctBuilder.db");
-            }
-        }
+        public virtual DbSet<UserSettings> UserSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +33,13 @@ namespace Concoct_Builder
             });
 
             modelBuilder.Entity<Layouts>(entity =>
+            {
+                entity.HasOne(d => d.UserSettingNavigation)
+                    .WithMany(p => p.Layouts)
+                    .HasForeignKey(d => d.UserSetting);
+            });
+
+            modelBuilder.Entity<UserSettings>(entity =>
             {
             });
 

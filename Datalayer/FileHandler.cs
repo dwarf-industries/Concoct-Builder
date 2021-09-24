@@ -42,18 +42,19 @@ namespace Concoct_Builder.Datalayer
 
         public void WriteFile(string path, List<PageElement> content)
         {
-            var serialized = SerializeData(content);
             var context = new ConcoctbuilderDbContext();
-            
             var layout = context.Layouts.FirstOrDefault(x => x.Name == path);
+            var activeSetting = context.UserSettings.FirstOrDefault(x => x.IsActive == 1);
             if (layout == null)
             {
                 layout = context.Layouts.Add(new Layouts
                 {
                     Name = path,
                     CreatedAt = DateTime.Now.ToFileTimeUtc().ToString(),
-                    Owner = "",
+                    Owner = activeSetting.OrganizationName,
                     UpdatedAt = "",
+                    UserSetting = activeSetting.Id
+
                 }).Entity;
                 context.SaveChanges();
             }
@@ -80,112 +81,9 @@ namespace Concoct_Builder.Datalayer
                     context.SaveChanges();
                 }    
             });
-
-          //  System.IO.File.WriteAllText(path, serialized);
         }
 
-      
 
-        public string SerializeData(List<PageElement> pageElements)
-        {
-            var result = string.Empty;
-
-            var i = 1;
-            pageElements.ForEach(x =>
-            {
-                result += x.ElementName + Environment.NewLine;
-                result += x.Width + Environment.NewLine;
-                result += x.Height + Environment.NewLine;
-                result += x.ClientX + Environment.NewLine;
-                result += x.ClientY + Environment.NewLine;
-                result += x.OffsetX + Environment.NewLine;
-                result += x.OffsetY + Environment.NewLine;
-                result += x.Translate + Environment.NewLine;
-                result += x.Base64 + Environment.NewLine;
-                if(x.Events != null)
-                {
-                    x.Events.ForEach(y =>
-                    {
-                        result += $"{y.Type},{y.Relation}_";
-                    });
-                    result += Environment.NewLine;
-                }
-               
-                if (pageElements.Count != i)
-                    result += "@";
-                i++;
-            });
-            return result;
-        }
-
-        public string SaveDirectoryFile(string files, IncomingFileRequest file)
-        {
-            var result = files;
-            result += $"{file.Path}{Startup.Settings.SystemFolderDelimiter}{file.Name}" + Environment.NewLine;
-            result += file.Name + Environment.NewLine;
-            result += "@";
-
-
-            return result;
-        }
-
-        public Settings ReadConfig(string filePath)
-        {
-            try
-            {
-                var result = new Settings();
-                var i = 0;
-                filePath.Split('@').ToList().ForEach(dataRow =>
-                {
-                    dataRow.Split(Environment.NewLine).ToList().ForEach(x =>
-                    {
-                        if (x != "")
-                        {
-                            switch (i)
-                            {
-                                case 0:
-                                    result.SingInType = x;
-                                    break;
-                                case 1:
-                                    result.ConcoctInstance = x;
-                                    break;
-                                case 2:
-                                    result.UserName = x;
-                                    break;
-                                case 3:
-                                    result.Password = x;
-                                    break;
-                                case 4:
-                                    result.APIKey = x;
-                                    break;
-                                case 5:
-                                    result.AssocaitedFileLocation = x;
-                                    break;
-                            }
-                        }
-                        i++;
-                    });
-                });
-                return result;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Failed to read configuration, please reinstall or fix the configuration file. Settings.cf");
-                Console.WriteLine(ex.ToString());
-                return null;
-            }
-           
-        }
-
-        public List<IncomingFileRequest> ReadDirectoryFile(string assocaitedFileLocation)
-        {
-            var context = new ConcoctbuilderDbContext();
-            return context.Layouts.ToList().Select(x => new IncomingFileRequest
-            {
-                Name = "--",
-                Path = x.Name
-            }).ToList();
-        }
 
         public string ConvertTobase64(string path)
         {
@@ -198,9 +96,10 @@ namespace Concoct_Builder.Datalayer
             System.IO.File.WriteAllText(path, data);
         }
 
-        public List<object> GetUserSettings()
+        public List<UserSettings> GetUserSettings()
         {
-            return null;
+            var context = new ConcoctbuilderDbContext();
+            return context.UserSettings.ToList();
         }
 
         public List<Widget> GetAllWidgets()

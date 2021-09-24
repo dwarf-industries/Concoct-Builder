@@ -8,14 +8,10 @@ namespace Concoct_Builder.Datalayer
         public List<PageElement> ReadFile(string path);
         public void WriteFile(string path, List<PageElement> content);
         public void DeleteFile(string path);
-        public string SerializeData(List<PageElement> pageElements);
-        Settings ReadConfig(string filePath);
-        public string SaveDirectoryFile(string files, IncomingFileRequest file);
-        public List<IncomingFileRequest> ReadDirectoryFile(string assocaitedFileLocation);
-        public string ReadFileRaw(string filePath);
+         public string ReadFileRaw(string filePath);
         public string ConvertTobase64(string path);
         void CreateFile(string path, string data);
         public List<Widget> GetAllWidgets();
-        List<object> GetUserSettings();
+        List<UserSettings> GetUserSettings();
     }
 }
