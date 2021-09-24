@@ -123,8 +123,9 @@ function GenerateWidgetAt(component, cDraggable) {
             //getElement.setAttribute("data-y", component.clientY);
             RedRaw();
            // initDragElement();
-            getElement.onclick = StartDrag;
-
+            getElement.onmousemove = divMove;
+            getElement.onmouseup = mouseUp;
+            getElement.onmousedown = StartDrag;
             initResizeElement();
             ActiveList[component.elementName] = {
                 ElementName: component.elementName,
@@ -171,8 +172,9 @@ function GenerateWidget(target, componentName) {
 
             getElement.setAttribute("data-info", componentName + "_" + draggedElement);
            // initDragElement();
-            getElement.onclick = StartDrag;
-           initResizeElement();
+            getElement.onmousemove = divMove;
+            getElement.onmousedown = StartDrag;
+            initResizeElement();
         }
     });
     $("#outer-dropzone").append(getElement);

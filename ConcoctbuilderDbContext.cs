@@ -10,7 +10,8 @@ namespace Concoct_Builder
     public partial class ConcoctbuilderDbContext : DbContext
     {
         public ConcoctbuilderDbContext()
-        { 
+        {
+            Database.EnsureCreated();
         }
 
         public ConcoctbuilderDbContext(DbContextOptions<ConcoctbuilderDbContext> options)

@@ -1,15 +1,7 @@
 ﻿.ModalInnerFix {
     padding: 5%;
 }
-/* header-section styles */
-#header-section.main-header {
-    border-bottom: 1px solid #d2d6de;
-    height: 55px;
-    min-height: 55px;
-    max-height: 55px;
-    background: #333;
-    color: #fff;
-}
+ 
 
 #header-section .header-style {
     line-height: 40px;

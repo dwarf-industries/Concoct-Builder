@@ -16,7 +16,7 @@
 
     <link href="~/css/Shared/MainMenu.css" rel="stylesheet" />
 </head>
-<body>
+<body style="overflow: hidden; ">
     <div class="stackblitz-container material">
         <div class="control-section">
 
@@ -24,24 +24,21 @@
             <div id="wrapper">
 
                 <!--header-section  declaration -->
-                <div class="main-header" id="header-section">
+                <div class="main-header" id="header-section" >
                     <ul class="header-list">
                         <li class="float-left header-style icon-menu" id="hamburger"></li>
-                        <li class="float-left header-style">
+                        <li class="float-left header-style" style="width: 15%;padding: 0;">
                             <div id='inplace_editor'></div>
                         </li>
+                        <span class="menuDrag">
 
+                        </span>
 
-                        <li class="header-style float-right support border-left MenuIcon" onclick="KillWindow()"><b><i class="fa fa-window-close-o MenuIcon" aria-hidden="true"></i></b></li>
-
-                        <li class="header-style float-right support border-left MenuIcon" onclick="Minimize()"><b><i class="fa fa-window-minimize MenuIcon" aria-hidden="true"></i></b></li>
-
-                        <li class="header-style float-right support border-left" onclick="LoadLayout()"><b>Load Layout</b></li>
-                        <li class="header-style float-right support border-left" onclick="SaveChanges()"><b>Save</b></li>
                         <li class="header-style float-right support border-left" onclick="InitScreen()"><b>Run</b></li>
-
-
-
+                        <li class="header-style float-right support border-left" onclick="SaveChanges()"><b>Save</b></li>
+                        <li class="header-style float-right support border-left" onclick="LoadLayout()"><b>Load Layout</b></li>
+                        <li class="header-style float-right support border-left MenuIcon" onclick="Minimize()"><b><i class="fa fa-window-minimize MenuIcon" aria-hidden="true"></i></b></li>
+                        <li class="header-style float-right support border-left MenuIcon" onclick="KillWindow()"><b><i class="fa fa-window-close-o MenuIcon" aria-hidden="true"></i></b></li>
                     </ul>
                 </div>
                 <!-- end of header-section -->

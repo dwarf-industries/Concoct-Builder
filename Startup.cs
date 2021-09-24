@@ -97,10 +97,14 @@ namespace Concoct_Builder
             var options = new BrowserWindowOptions();
             options.AutoHideMenuBar = true;
             options.DarkTheme = true;
-            options.Fullscreen = true;
+            options.Fullscreen = false;
             options.Title = "Concoct Builder V 0.1";
             options.TitleBarStyle = TitleBarStyle.hidden;
-          
+            options.Frame = false;
+            options.FullscreenWindowTitle = true;
+            options.Closable = true;
+            options.Fullscreenable = true;
+ 
             Task.Run(async () => await Electron.WindowManager.CreateWindowAsync(options));
 
         }

@@ -29,6 +29,7 @@
         "to": "ElectronHostHook/node_modules",
         "filter": [ "**/*" ]
       },
+      "ConcoctBuilder.db",
       "**/*"
     ]
   }

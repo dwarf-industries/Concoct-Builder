@@ -61,19 +61,25 @@ function initResizeElement() {
  
 var dragItem = null;
 var container = document.querySelector("#outer-dropzone");
-
+window.addEventListener("mouseup", mouseUp, true);
    
 function StartDrag(id) {
-    dragItem = id.currentTarget;
-    
-    id.currentTarget.addEventListener('mousedown', mouseDown, false);
-    window.addEventListener('mouseup', mouseUp, false);
-}
+    if (dragItem === null || dragItem !== id.currentTarget) {
+        dragItem = id.currentTarget;
+        startX = id.currentTarget.onmousedown.arguments[0].offsetX;
+        startY = id.currentTarget.onmousedown.arguments[0].offsetY;
+        window.addEventListener('mousemove', divMove, true);
+    }
+ }
 
 
 function mouseUp() {
-    dragItem = null;
-    window.removeEventListener('mousemove', divMove, true);
+    if (dragItem !== null) {
+        startY = undefined;
+        startX = undefined;
+        dragItem = null;
+        window.removeEventListener('mousemove', divMove, true);
+    }
 }
 
 function mouseDown(e) {
@@ -83,8 +89,8 @@ function mouseDown(e) {
 function divMove(e) {
     if (dragItem !== null) {
         dragItem.style.position = 'absolute';
-        dragItem.style.top = e.clientY + 'px';
-        dragItem.style.left = e.clientX + 'px';
+        dragItem.style.top = (e.clientY - startY)  + 'px';
+        dragItem.style.left = (e.clientX - startX)  + 'px';
     }
 }
  
