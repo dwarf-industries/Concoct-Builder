@@ -49,15 +49,15 @@ namespace Concoct_Builder
 
             var rawSettings = fileHandler.ReadFileRaw("Settings.cf");
 
-            if(string.IsNullOrEmpty(rawSettings))
+            if (string.IsNullOrEmpty(rawSettings))
             {
                 var data = string.Empty;
                 data += "1" + Environment.NewLine;
-                data += "https://portal.concoctcloud.com/Authenication/OutboundBuilder" + Environment.NewLine; 
+                data += "https://portal.concoctcloud.com/Authenication/OutboundBuilder" + Environment.NewLine;
                 data += "-" + Environment.NewLine;
-                data += "-" + Environment.NewLine; 
-                data += "key" + Environment.NewLine; 
-                data += "Files.cf" + Environment.NewLine; 
+                data += "-" + Environment.NewLine;
+                data += "key" + Environment.NewLine;
+                data += "Files.cf" + Environment.NewLine;
                 data += "@";
                 fileHandler.CreateFile("Settings.cf", data);
             }

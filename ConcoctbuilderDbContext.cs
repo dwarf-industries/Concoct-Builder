@@ -11,7 +11,6 @@ namespace Concoct_Builder
     {
         public ConcoctbuilderDbContext()
         {
-            Database.EnsureCreated();
         }
 
         public ConcoctbuilderDbContext(DbContextOptions<ConcoctbuilderDbContext> options)
