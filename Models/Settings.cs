@@ -7,7 +7,6 @@
         public string UserName { get; set; }
         public string Password { get; set; }
         public string APIKey{ get; set; }
-        public string AssocaitedFileLocation { get; set; }
         public string SystemFolderDelimiter { get; set; }
     }
 }

@@ -99,8 +99,13 @@ namespace Concoct_Builder.Controllers
         [HttpGet]
         public List<IncomingFileRequest> LoadLayouts()
         {
-            var fileContent = handler.ReadFileRaw(Startup.Settings.AssocaitedFileLocation);
-            return handler.ReadDirectoryFile(fileContent);
+            var context = new ConcoctbuilderDbContext();
+            var activeSetting = context.UserSettings.FirstOrDefault(x => x.IsActive == 1);
+            return context.Layouts.Where(x => x.UserSetting == activeSetting.Id && x.UserSetting == 1).Select(x => new IncomingFileRequest
+            {
+                Name = x.Name,
+                Path = x.Name
+            }).ToList();
         }
 
         [HttpPost]

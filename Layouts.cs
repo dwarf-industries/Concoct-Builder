@@ -18,7 +18,9 @@ namespace Concoct_Builder
         public string CreatedAt { get; set; }
         public string UpdatedAt { get; set; }
         public string Owner { get; set; }
+        public long? UserSetting { get; set; }
 
+        public virtual UserSettings UserSettingNavigation { get; set; }
         public virtual ICollection<LayoutData> LayoutData { get; set; }
     }
 }

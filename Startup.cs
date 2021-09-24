@@ -11,6 +11,7 @@ namespace Concoct_Builder
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class Startup
@@ -46,23 +47,34 @@ namespace Concoct_Builder
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 //app.UseHsts();
             }
-
-            var rawSettings = fileHandler.ReadFileRaw("Settings.cf");
-
-            if (string.IsNullOrEmpty(rawSettings))
+            var settings = fileHandler.GetUserSettings();
+            var activeSetting = default(UserSettings);
+            if (settings != null)
+                activeSetting = settings.FirstOrDefault(x => x.IsActive == 1);
+            else
             {
-                var data = string.Empty;
-                data += "1" + Environment.NewLine;
-                data += "https://portal.concoctcloud.com/Authenication/OutboundBuilder" + Environment.NewLine;
-                data += "-" + Environment.NewLine;
-                data += "-" + Environment.NewLine;
-                data += "key" + Environment.NewLine;
-                data += "Files.cf" + Environment.NewLine;
-                data += "@";
-                fileHandler.CreateFile("Settings.cf", data);
+                var context = new ConcoctbuilderDbContext();
+                activeSetting = context.UserSettings.Add(new UserSettings
+                {
+                    Key = new Guid().ToString(),
+                    OrganizationName = "Offline",
+                    IsActive = 1,
+                    Username = "--",
+                    Password = "--",
+                    ConnectionType = 0,
+                    Endpoint = "--",
+                    InstanceAddress = "Local"
+                }).Entity;
+                context.SaveChanges();
             }
 
-            Settings = fileHandler.ReadConfig(rawSettings);
+
+            Settings.SingInType = activeSetting.ConnectionType.ToString();
+            Settings.ConcoctInstance = activeSetting.InstanceAddress;
+            Settings.UserName = activeSetting.Username;
+            Settings.Password = activeSetting.Password;
+            Settings.APIKey = activeSetting.Key;
+
             var getOs = new OS();
 
             switch (OS.GetCurrent())
