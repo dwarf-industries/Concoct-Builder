@@ -198,6 +198,11 @@ namespace Concoct_Builder.Datalayer
             System.IO.File.WriteAllText(path, data);
         }
 
+        public List<object> GetUserSettings()
+        {
+            return null;
+        }
+
         public List<Widget> GetAllWidgets()
         {
             return new List<Widget>{

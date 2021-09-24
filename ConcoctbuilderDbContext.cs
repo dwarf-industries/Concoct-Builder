@@ -10,7 +10,7 @@ namespace Concoct_Builder
     public partial class ConcoctbuilderDbContext : DbContext
     {
         public ConcoctbuilderDbContext()
-        { 
+        {
         }
 
         public ConcoctbuilderDbContext(DbContextOptions<ConcoctbuilderDbContext> options)

@@ -49,15 +49,15 @@ namespace Concoct_Builder
 
             var rawSettings = fileHandler.ReadFileRaw("Settings.cf");
 
-            if(string.IsNullOrEmpty(rawSettings))
+            if (string.IsNullOrEmpty(rawSettings))
             {
                 var data = string.Empty;
                 data += "1" + Environment.NewLine;
-                data += "https://portal.concoctcloud.com/Authenication/OutboundBuilder" + Environment.NewLine; 
+                data += "https://portal.concoctcloud.com/Authenication/OutboundBuilder" + Environment.NewLine;
                 data += "-" + Environment.NewLine;
-                data += "-" + Environment.NewLine; 
-                data += "key" + Environment.NewLine; 
-                data += "Files.cf" + Environment.NewLine; 
+                data += "-" + Environment.NewLine;
+                data += "key" + Environment.NewLine;
+                data += "Files.cf" + Environment.NewLine;
                 data += "@";
                 fileHandler.CreateFile("Settings.cf", data);
             }
@@ -97,10 +97,14 @@ namespace Concoct_Builder
             var options = new BrowserWindowOptions();
             options.AutoHideMenuBar = true;
             options.DarkTheme = true;
-            options.Fullscreen = true;
+            options.Fullscreen = false;
             options.Title = "Concoct Builder V 0.1";
             options.TitleBarStyle = TitleBarStyle.hidden;
-          
+            options.Frame = false;
+            options.FullscreenWindowTitle = true;
+            options.Closable = true;
+            options.Fullscreenable = true;
+ 
             Task.Run(async () => await Electron.WindowManager.CreateWindowAsync(options));
 
         }
