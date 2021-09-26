@@ -101,11 +101,12 @@ namespace Concoct_Builder.Controllers
         {
             var context = new ConcoctbuilderDbContext();
             var activeSetting = context.UserSettings.FirstOrDefault(x => x.IsActive == 1);
-            return context.Layouts.Where(x => x.UserSetting == activeSetting.Id && x.UserSetting == 1).Select(x => new IncomingFileRequest
+            var result = context.Layouts.Where(x => x.UserSetting == activeSetting.Id && x.UserSetting == 0).Select(x => new IncomingFileRequest
             {
                 Name = x.Name,
                 Path = x.Name
             }).ToList();
+            return result;
         }
 
         [HttpPost]
@@ -131,20 +132,14 @@ namespace Concoct_Builder.Controllers
         [HttpPost]
         public bool SaveFile([FromBody] SaveFileRequest request)
         {
+            handler.WriteFile($"{request.File.Path}{request.File.Name}", request.PageElements, request.LayoutDetail);
+            return true;
+        }
 
-            // This text is added only once to the file.
-            if (!System.IO.File.Exists($"{request.File.Path}{request.File.Name}"))
-            {
-                // Create a file to write to.
-                handler.WriteFile($"{request.File.Path}{request.File.Name}", request.PageElements);
-            }
-            else
-            {
-                handler.DeleteFile($"{request.File.Path}{request.File.Name}");
-                handler.WriteFile($"{request.File.Path}{request.File.Name}", request.PageElements);
-
-                //System.IO.File.WriteAllText($"{request.File.Path}{request.File.Name}", Newtonsoft.Json.JsonConvert.SerializeObject(request.PageElements));
-            }
+        [HttpPost]
+        public bool RemoveItemFromLayout([FromBody] RemoveRequest request)
+        {
+            handler.RemoveLayoutFile(request.Layout, request.File);
             return true;
         }
 

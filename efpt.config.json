@@ -14,7 +14,7 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
-         "Name": "LayoutData",
+         "Name": "UserSettings",
          "ObjectType": 0
       },
       {
@@ -22,7 +22,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "UserSettings",
+         "Name": "LayoutData",
          "ObjectType": 0
       }
    ],

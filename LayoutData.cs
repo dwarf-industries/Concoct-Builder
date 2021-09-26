@@ -13,7 +13,10 @@ namespace Concoct_Builder
         public string ElementName { get; set; }
         public string Base64 { get; set; }
         public string Translate { get; set; }
+        public long? RefereenceScreen { get; set; }
+        public string ComponentName { get; set; }
 
         public virtual Layouts Layout { get; set; }
+        public virtual Layouts RefereenceScreenNavigation { get; set; }
     }
 }

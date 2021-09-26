@@ -97,8 +97,8 @@ function ClearActiveList() {
 function GenerateWidgetAt(component, cDraggable) {
     var getElement = document.createElement("div");
     getElement.setAttribute("id", "yes-drop_" + cDraggable);
-    getElement.setAttribute("data-value", component.elementName);
-    getElement.setAttribute("data-info", component.elementName + "_" + cDraggable);
+    getElement.setAttribute("data-value", component.componentName);
+    getElement.setAttribute("data-info", component.componentName + "_" + cDraggable);
     getElement.classList.add("popup");
 
 
@@ -107,7 +107,7 @@ function GenerateWidgetAt(component, cDraggable) {
     $("#outer-dropzone").append(getElement);
 
     $.ajax({
-        url: "/Home/GetComponent?componentName=" + component.elementName,
+        url: "/Home/GetComponent?componentName=" + component.componentName,
         method: "GET",
         success: function (data) {
 
@@ -129,16 +129,15 @@ function GenerateWidgetAt(component, cDraggable) {
             initResizeElement();
             ActiveList[component.elementName] = {
                 ElementName: component.elementName,
-                ClientX: component.clientX,
-                ClientY: component.clientY,
-                Width: component.width,
-                Height: component.height,
+                ComponentName: component.componentName,
                 Translate: component.translate,
                 Base64: component.base64
             };
 
-            if (component.base64 !== null)
-                SetContent(component.base64);
+            if (component.base64 !== null && component.base64 !== "") {
+                var cElement = document.getElementById("#yes-drop_" + cDraggable);
+                cElement.LayoutElementAPI.SetContent(component.base64);
+            }
          }
     });
 }
@@ -207,6 +206,20 @@ function RemoveElement(id) {
     for (var item in ActiveList) {
         if (item !== parentId)
             newList[item] = ActiveList[item];
+        else {
+            var dto = {
+                Layout: GetActiveFileName(),
+                File: ActiveList[item].ElementName
+            }
+            $.ajax({
+                method: "POST",
+                contentType: "application/json",
+                url: "/Home/RemoveItemFromLayout",
+                data: JSON.stringify(currentDto)
+            }).done(function (msg) {
+                ShowInfo("Layout saved!");
+            });
+        }
     }
 
     ActiveList = newList;
@@ -219,11 +232,12 @@ function ElementReleased(args) {
     var transform = args.currentTarget.style.getPropertyValue("transform");
     var name = args.currentTarget.getAttribute("data-info");
     var dragId = args.currentTarget.getAttribute("drag-id");
+    var cName = args.currentTarget.GetActiveFileName("data-value");
 
     if (ActiveList[name] === undefined)
         ActiveList[name] = {
             ElementName: name,
-            ClientX: "Depricated",
+            ComponentName: cName,
             ClientY: "Depricated",
             OffsetX: "Depricated",
             OffsetY: "Depricated",
@@ -235,7 +249,7 @@ function ElementReleased(args) {
     else
         ActiveList[name] = {
             ElementName: name,
-            ClientX: "Depricated",
+            ComponentName: cName,
             ClientY: "Depricated",
             OffsetX: "Depricated",
             OffsetY: "Depricated",

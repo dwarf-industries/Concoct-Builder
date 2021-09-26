@@ -33,7 +33,7 @@ namespace Concoct_Builder
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IFileHandler fileHandler)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IFileHandler fileHandler, ConcoctbuilderDbContext context)
         {
             if (env.IsDevelopment())
             {
@@ -49,11 +49,15 @@ namespace Concoct_Builder
             }
             var settings = fileHandler.GetUserSettings();
             var activeSetting = default(UserSettings);
-            if (settings != null)
+            context = new ConcoctbuilderDbContext();
+
+            if (Settings == null)
+                Settings = new Settings();
+
+            if (settings.Count >0)
                 activeSetting = settings.FirstOrDefault(x => x.IsActive == 1);
             else
             {
-                var context = new ConcoctbuilderDbContext();
                 activeSetting = context.UserSettings.Add(new UserSettings
                 {
                     Key = new Guid().ToString(),

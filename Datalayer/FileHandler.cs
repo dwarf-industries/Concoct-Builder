@@ -22,6 +22,7 @@ namespace Concoct_Builder.Datalayer
                     Base64 = x.Base64,
                     ElementName = x.ElementName,
                     Translate = x.Translate,
+                    ComponentName = x.ComponentName
                 }).ToList();
             
             return null;
@@ -40,7 +41,7 @@ namespace Concoct_Builder.Datalayer
             return System.IO.File.ReadAllText(filePath);
         }
 
-        public void WriteFile(string path, List<PageElement> content)
+        public void WriteFile(string path, List<PageElement> content, string layoutDetails)
         {
             var context = new ConcoctbuilderDbContext();
             var layout = context.Layouts.FirstOrDefault(x => x.Name == path);
@@ -53,31 +54,61 @@ namespace Concoct_Builder.Datalayer
                     CreatedAt = DateTime.Now.ToFileTimeUtc().ToString(),
                     Owner = activeSetting.OrganizationName,
                     UpdatedAt = "",
-                    UserSetting = activeSetting.Id
+                    UserSetting = activeSetting.Id,
+                    LayoutThumbnail = layoutDetails,
+                    
 
                 }).Entity;
                 context.SaveChanges();
             }
+            else
+            {
+                layout.LayoutThumbnail = layoutDetails;
+                context.Attach(layout);
+                context.Update(layout);
+                context.SaveChanges();
+            }
+
             content.ForEach(x =>
             {
+                var existingEvent = default(long); 
+           
+                var attachedEvent = x.Events != null ? x.Events.FirstOrDefault() : null;
+
+                if (attachedEvent != null)
+                    existingEvent = context.Layouts.FirstOrDefault(y => y.Name == attachedEvent.Relation).Id;
+
                 var existing = context.LayoutData.FirstOrDefault(y => y.ElementName == x.ElementName && y.LayoutId == layout.Id);
                 if (existing != null)
                 {
                     existing.Translate = x.Translate;
                     existing.Base64 = x.Base64;
+                    existing.RefereenceScreen = existingEvent;
                     context.Attach(existing);
                     context.Update(existing);
                     context.SaveChanges();
                 }
                 else
                 {
-                    context.LayoutData.Add(new LayoutData
-                    {
-                        ElementName = x.ElementName,
-                        Base64 = x.Base64,
-                        Translate = x.Translate,
-                        LayoutId = layout.Id
-                    });
+                    if(existingEvent == default(long))
+                        context.LayoutData.Add(new LayoutData
+                        {
+                            ElementName = x.ElementName,
+                            Base64 = x.Base64,
+                            Translate = x.Translate,
+                            LayoutId = layout.Id,
+                            ComponentName =  x.ComponentName
+                        });
+                    else
+                        context.LayoutData.Add(new LayoutData
+                        {
+                            ElementName = x.ElementName,
+                            Base64 = x.Base64,
+                            Translate = x.Translate,
+                            LayoutId = layout.Id,
+                            ComponentName = x.ComponentName,
+                            RefereenceScreen = existingEvent
+                        });
                     context.SaveChanges();
                 }    
             });
@@ -94,6 +125,21 @@ namespace Concoct_Builder.Datalayer
         public void CreateFile(string path, string data)
         {
             System.IO.File.WriteAllText(path, data);
+        }
+
+        public void RemoveLayoutFile(string layout, string file)
+        {
+            var context = new ConcoctbuilderDbContext();
+            var currentLayout = context.Layouts.FirstOrDefault(x => x.Name == layout);
+            if (currentLayout == null)
+                return;
+
+            var item = context.LayoutData.FirstOrDefault(x => x.LayoutId == currentLayout.Id && x.ElementName == file);
+            if (item == null)
+                return;
+
+            context.LayoutData.Remove(item);
+            context.SaveChanges();
         }
 
         public List<UserSettings> GetUserSettings()

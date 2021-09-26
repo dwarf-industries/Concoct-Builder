@@ -13,7 +13,13 @@ namespace Concoct_Builder
         {
             Database.EnsureCreated();
         }
-
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite("Data Source=ConcoctBuilder.db");
+            }
+        }
         public ConcoctbuilderDbContext(DbContextOptions<ConcoctbuilderDbContext> options)
             : base(options)
         {
@@ -28,8 +34,12 @@ namespace Concoct_Builder
             modelBuilder.Entity<LayoutData>(entity =>
             {
                 entity.HasOne(d => d.Layout)
-                    .WithMany(p => p.LayoutData)
+                    .WithMany(p => p.LayoutDataLayout)
                     .HasForeignKey(d => d.LayoutId);
+
+                entity.HasOne(d => d.RefereenceScreenNavigation)
+                    .WithMany(p => p.LayoutDataRefereenceScreenNavigation)
+                    .HasForeignKey(d => d.RefereenceScreen);
             });
 
             modelBuilder.Entity<Layouts>(entity =>
@@ -41,6 +51,7 @@ namespace Concoct_Builder
 
             modelBuilder.Entity<UserSettings>(entity =>
             {
+                entity.Property(e => e.Id).ValueGeneratedNever();
             });
 
             OnModelCreatingPartial(modelBuilder);
