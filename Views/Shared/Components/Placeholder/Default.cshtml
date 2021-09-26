@@ -17,104 +17,106 @@
 
 <script>
     SetImage();
+    var activeId;
+    var LayoutElementAPI = function () {
 
 
-    function RedRaw() {
+        function RedRaw() {
 
-    }
+        }
 
-    function SetImage(imageData) {
+        function SetImage(imageData) {
         @*var getElemen = document.getElementById("placeholder_@UniqueId");
         getElemen.setAttribute("src", imageData);*@
 
-        //ContextMenu model definition
-        var menuItems = [
-            {
-                text: 'Container Selected - Event'
-            },
-            {
-                separator: true
-            },
-            {
-                text: 'Delete'
-            },
-            {
-                text: 'Upload'
-            }];
-        var menuOptions = {
-            target: '#contextmenutarget_@UniqueId',
-            items: menuItems,
-            beforeItemRender: function (args) {
-                if (args.item.text === 'Link') {
-                    args.element.classList.add('e-disabled');
-                }
-            },
-            select: function (args) {
-                console.log(args);
-                console.log(args.item.properties.text);
-                switch (args.item.properties.text) {
+            //ContextMenu model definition
+            var menuItems = [
+                {
+                    text: 'Container Selected - Event'
+                },
+                {
+                    separator: true
+                },
+                {
+                    text: 'Delete'
+                },
+                {
+                    text: 'Upload'
+                }];
+            var menuOptions = {
+                target: '#contextmenutarget_@UniqueId',
+                items: menuItems,
+                beforeItemRender: function (args) {
+                    if (args.item.text === 'Link') {
+                        args.element.classList.add('e-disabled');
+                    }
+                },
+                select: function (args) {
+                    console.log(args);
+                    console.log(args.item.properties.text);
+                    switch (args.item.properties.text) {
 
-                    case "Container Selected - Event":
-                    ActivateEvent("@UniqueId");
-                        break;
-                    case "Delete":
-                        RemoveElement("@UniqueId");
-                        break;
-                    case "Upload":
-                        AddContent("placeholder_file_@UniqueId");
-                        break;
+                        case "Container Selected - Event":
+                            ActivateEvent("@UniqueId");
+                            break;
+                        case "Delete":
+                            RemoveElement("@UniqueId");
+                            break;
+                        case "Upload":
+                            this.AddContent("placeholder_file_@UniqueId");
+                            break;
+                    }
                 }
-            }
-        };
+            };
 
 
             // Initialize ContextMenu control.
-        var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
-    }
-
-
-
-    function AddContent(id) {
-        mode = true;
-        var getElement;
-        getElement = document.getElementById(id);
-
-        getElement.type = "file";
-        getElement.click();
-        getElement.onchange = PlaceHolderChanged;
-    }
-
-    function SetContent(content) {
-        var imageElement = document.getElementById("placeholder_@UniqueId");
-        imageElement.setAttribute("src", "data:image/jpeg;base64, " + content);
-        imageElement.style.setProperty("display", "");
-        console.log(args);
-
-    }
-
-    function PlaceHolderChanged(event) {
-
-
-        var dto = {
-            Path: event.path[0].files[0].path,
-            Name: event.path[0].files[0].name
+            var menuObj = new ej.navigations.ContextMenu(menuOptions, '#contextmenu_@UniqueId');
         }
 
-        $.ajax({
-            method: "POST",
-            url: "/Home/ConvertTobase",
-            contentType: "application/json",
-            data: JSON.stringify(dto)
-        }).done(function (args) {
-            debugger
+
+
+        function AddContent(id) {
+            mode = true;
+            var getElement;
+            getElement = document.getElementById(id);
+
+            getElement.type = "file";
+            getElement.click();
+            getElement.onchange = PlaceHolderChanged;
+        }
+
+        function SetContent(content, id) {
             var imageElement = document.getElementById("placeholder_@UniqueId");
-            imageElement.setAttribute("src", "data:image/jpeg;base64, " + args);
+            imageElement.setAttribute("src", "data:image/jpeg;base64, " + content);
             imageElement.style.setProperty("display", "");
             console.log(args);
-            UpdatePlaceholderContent("@UniqueId", args);
-        });
 
+        }
+
+        function PlaceHolderChanged(event) {
+
+
+            var dto = {
+                Path: event.path[0].files[0].path,
+                Name: event.path[0].files[0].name
+            }
+
+            $.ajax({
+                method: "POST",
+                url: "/Home/ConvertTobase",
+                contentType: "application/json",
+                data: JSON.stringify(dto)
+            }).done(function (args) {
+                debugger
+                var imageElement = document.getElementById("placeholder_@UniqueId");
+                imageElement.setAttribute("src", "data:image/jpeg;base64, " + args);
+                imageElement.style.setProperty("display", "");
+                console.log(args);
+                UpdatePlaceholderContent("@UniqueId", args);
+            });
+
+        }
     }
-
 
 </script>

@@ -17,6 +17,7 @@ namespace Concoct_Builder.Models
         public string Translate { get; set; }
         public string Base64 { get; set; }
         public List<Event> Events{ get; set; }
+        public string ComponentName { get; set; }
 
     }
 }

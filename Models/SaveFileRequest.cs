@@ -9,5 +9,6 @@ namespace Concoct_Builder.Models
     {
         public IncomingFileRequest File { get; set; }
         public List<PageElement> PageElements { get; set; }
+        public string LayoutDetail { get; set; }
     }
 }

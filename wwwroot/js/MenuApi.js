@@ -21,7 +21,11 @@ editObj.appendTo('#inplace_editor');
 
 function FileNameChanged(args) {
     fileName = args.value;
-} 
+}
+
+function GetActiveFileName() {
+    return fileName;
+}
 
 function ToggleSetting(val) {
     if (IsOpen === 1) {
@@ -62,18 +66,7 @@ var mode = true;
 
 function SaveChanges() {
     mode = false;
-    var getElement;
-    getElement = document.getElementById("FileManager");
-    if (getElement === null) {
-        getElement = document.createElement("input");
-    }
-    getElement.setAttribute("id", "fileManage");
-    getElement.setAttribute("webkitdirectory", "");
-    getElement.setAttribute("directory", "");
-    getElement.type = "file";
-    getElement.setAttribute("style", "display:none");
-    getElement.click();
-    getElement.onchange = FileSelect;
+    FileSelect();
 }
 
 function LoadLayout() {
@@ -98,7 +91,7 @@ function FileSelect(event) {
     if (mode) {
 
         dto = {
-            Path: event.path[0].files[0].path,
+            Path: event.path[0].files[0].name,
             Name: event.path[0].files[0].name
         }
     }
@@ -153,17 +146,26 @@ function FileSelected(dto) {
 
         var currentDto = {
             File: dto,
-            PageElements: items
+            PageElements: items,
+            LayoutDetail : ""
         }
-        $.ajax({
-            method: "POST",
-            contentType: "application/json",
-            url: "/Home/SaveFile",
-            data: JSON.stringify(currentDto)
-        }).done(function (msg) {
-//            alert("Data Saved: " + msg);
-            ShowInfo("Layout saved!");
+        var container = document.getElementById("outer-dropzone");
+        html2canvas(container).then(function (canvas) {
+            debugger
+            var base64 = canvas.toDataURL();
+            currentDto.LayoutDetail = base64;
+
+            $.ajax({
+                method: "POST",
+                contentType: "application/json",
+                url: "/Home/SaveFile",
+                data: JSON.stringify(currentDto)
+            }).done(function (msg) {
+                 ShowInfo("Layout saved!");
+            });
         });
+
+      
     }
    
 }
