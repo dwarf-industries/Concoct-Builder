@@ -18,7 +18,7 @@
 <script>
     SetImage();
     var activeId;
-    var LayoutElementAPI = function () {
+
 
 
         function RedRaw() {
@@ -63,7 +63,12 @@
                             RemoveElement("@UniqueId");
                             break;
                         case "Upload":
-                            this.AddContent("placeholder_file_@UniqueId");
+                            var getElement;
+                            getElement = document.getElementById("placeholder_file_@UniqueId");
+                            activeId = "@UniqueId";
+                            getElement.type = "file";
+                            getElement.click();
+                            getElement.onchange = PlaceHolderChanged;
                             break;
                     }
                 }
@@ -76,22 +81,12 @@
 
 
 
-        function AddContent(id) {
-            mode = true;
-            var getElement;
-            getElement = document.getElementById(id);
 
-            getElement.type = "file";
-            getElement.click();
-            getElement.onchange = PlaceHolderChanged;
-        }
-
-        function SetContent(content, id) {
+        function SetContent(content) {
             var imageElement = document.getElementById("placeholder_@UniqueId");
             imageElement.setAttribute("src", "data:image/jpeg;base64, " + content);
             imageElement.style.setProperty("display", "");
-            console.log(args);
-
+ 
         }
 
         function PlaceHolderChanged(event) {
@@ -109,7 +104,7 @@
                 data: JSON.stringify(dto)
             }).done(function (args) {
                 debugger
-                var imageElement = document.getElementById("placeholder_@UniqueId");
+                var imageElement = document.getElementById("placeholder_"+ activeId);
                 imageElement.setAttribute("src", "data:image/jpeg;base64, " + args);
                 imageElement.style.setProperty("display", "");
                 console.log(args);
@@ -117,6 +112,6 @@
             });
 
         }
-    }
+
 
 </script>

@@ -98,7 +98,7 @@ function GenerateWidgetAt(component, cDraggable) {
     var getElement = document.createElement("div");
     getElement.setAttribute("id", "yes-drop_" + cDraggable);
     getElement.setAttribute("data-value", component.componentName);
-    getElement.setAttribute("data-info", component.componentName + "_" + cDraggable);
+    getElement.setAttribute("data-info", component.elementName);
     getElement.classList.add("popup");
 
 
@@ -123,10 +123,7 @@ function GenerateWidgetAt(component, cDraggable) {
             //getElement.setAttribute("data-y", component.clientY);
             RedRaw();
            // initDragElement();
-            getElement.onmousemove = divMove;
-            getElement.onmouseup = mouseUp;
-            getElement.onmousedown = StartDrag;
-            initResizeElement();
+    
             ActiveList[component.elementName] = {
                 ElementName: component.elementName,
                 ComponentName: component.componentName,
@@ -135,9 +132,12 @@ function GenerateWidgetAt(component, cDraggable) {
             };
 
             if (component.base64 !== null && component.base64 !== "") {
-                var cElement = document.getElementById("#yes-drop_" + cDraggable);
-                cElement.LayoutElementAPI.SetContent(component.base64);
+                SetContent(component.base64);
             }
+
+            getElement.onmousemove = divMove;
+            getElement.onmousedown = StartDrag;
+            initResizeElement();
          }
     });
 }
@@ -164,16 +164,16 @@ function GenerateWidget(target, componentName) {
         url: "/Home/GetComponent?componentName=" + componentName,
         method: "GET",
         success: function (data) {
+            AddLayoutElement(null, data);
+           // getElement.onmouseup = ElementReleased;
+           // $("#yes-drop_" + draggedElement).html(data);
+           // getElement.setAttribute("drag-id", draggedElement);
 
-            getElement.onmouseup = ElementReleased;
-            $("#yes-drop_" + draggedElement).html(data);
-            getElement.setAttribute("drag-id", draggedElement);
-
-            getElement.setAttribute("data-info", componentName + "_" + draggedElement);
-           // initDragElement();
-            getElement.onmousemove = divMove;
-            getElement.onmousedown = StartDrag;
-            initResizeElement();
+           // getElement.setAttribute("data-info", componentName + "_" + draggedElement);
+           //// initDragElement();
+           // getElement.onmousemove = divMove;
+           // getElement.onmousedown = StartDrag;
+           // initResizeElement();
         }
     });
     $("#outer-dropzone").append(getElement);
@@ -215,7 +215,7 @@ function RemoveElement(id) {
                 method: "POST",
                 contentType: "application/json",
                 url: "/Home/RemoveItemFromLayout",
-                data: JSON.stringify(currentDto)
+                data: JSON.stringify(dto)
             }).done(function (msg) {
                 ShowInfo("Layout saved!");
             });
@@ -232,7 +232,7 @@ function ElementReleased(args) {
     var transform = args.currentTarget.style.getPropertyValue("transform");
     var name = args.currentTarget.getAttribute("data-info");
     var dragId = args.currentTarget.getAttribute("drag-id");
-    var cName = args.currentTarget.GetActiveFileName("data-value");
+    var cName = args.currentTarget.getAttribute("data-value");
 
     if (ActiveList[name] === undefined)
         ActiveList[name] = {
