@@ -132,7 +132,6 @@ function GenerateWidgetAt(component, cDraggable) {
             };
 
             if (component.base64 !== null && component.base64 !== "") {
-                var cElement = document.getElementById("#yes-drop_" + cDraggable);
                 SetContent(component.base64);
             }
 
@@ -216,7 +215,7 @@ function RemoveElement(id) {
                 method: "POST",
                 contentType: "application/json",
                 url: "/Home/RemoveItemFromLayout",
-                data: JSON.stringify(currentDto)
+                data: JSON.stringify(dto)
             }).done(function (msg) {
                 ShowInfo("Layout saved!");
             });

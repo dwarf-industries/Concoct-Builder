@@ -102,6 +102,7 @@ function FileSelected(dto) {
                 GenerateWidgetAt(args[element], draggableValue);
                 draggableValue++;
             }
+            draggableValue++;
 
             SetDraggableStartingIndex(draggableValue);
         });
