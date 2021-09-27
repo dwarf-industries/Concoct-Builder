@@ -164,16 +164,16 @@ function GenerateWidget(target, componentName) {
         url: "/Home/GetComponent?componentName=" + componentName,
         method: "GET",
         success: function (data) {
+            AddLayoutElement(null, data);
+           // getElement.onmouseup = ElementReleased;
+           // $("#yes-drop_" + draggedElement).html(data);
+           // getElement.setAttribute("drag-id", draggedElement);
 
-            getElement.onmouseup = ElementReleased;
-            $("#yes-drop_" + draggedElement).html(data);
-            getElement.setAttribute("drag-id", draggedElement);
-
-            getElement.setAttribute("data-info", componentName + "_" + draggedElement);
-           // initDragElement();
-            getElement.onmousemove = divMove;
-            getElement.onmousedown = StartDrag;
-            initResizeElement();
+           // getElement.setAttribute("data-info", componentName + "_" + draggedElement);
+           //// initDragElement();
+           // getElement.onmousemove = divMove;
+           // getElement.onmousedown = StartDrag;
+           // initResizeElement();
         }
     });
     $("#outer-dropzone").append(getElement);
