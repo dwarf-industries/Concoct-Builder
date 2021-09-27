@@ -83,7 +83,8 @@ namespace Concoct_Builder.Datalayer
                 {
                     existing.Translate = x.Translate;
                     existing.Base64 = x.Base64;
-                    existing.RefereenceScreen = existingEvent;
+                    if(existingEvent != 0)
+                        existing.RefereenceScreen = existingEvent;
                     context.Attach(existing);
                     context.Update(existing);
                     context.SaveChanges();

@@ -132,7 +132,7 @@ namespace Concoct_Builder.Controllers
         [HttpPost]
         public bool SaveFile([FromBody] SaveFileRequest request)
         {
-            handler.WriteFile($"{request.File.Path}{request.File.Name}", request.PageElements, request.LayoutDetail);
+            handler.WriteFile(request.File.Name, request.PageElements, request.LayoutDetail);
             return true;
         }
 

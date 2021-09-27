@@ -66,54 +66,23 @@ var mode = true;
 
 function SaveChanges() {
     mode = false;
-    FileSelect();
+    FileSelected({
+        Path: fileName,
+        Name: fileName
+    });
 }
 
 function LoadLayout() {
     
     mode = true;
-    var getElement;
-    getElement = document.getElementById("FileManager");
-    if (getElement === null) {
-        getElement = document.createElement("input");
-    }
-    getElement.setAttribute("id", "fileManage");
-    getElement.type = "file";
-    getElement.setAttribute("style", "display:none");
-    getElement.click();
-    getElement.onchange = FileSelect;
+
+    FileSelected({
+        Path: fileName,
+        Name: fileName
+    });
 }
 
-
-function FileSelect(event) {
-     
-    var dto;
-    if (mode) {
-
-        dto = {
-            Path: event.path[0].files[0].name,
-            Name: event.path[0].files[0].name
-        }
-    }
-    else {
-        var folders = event.path[0].files[0].path.split("\\");
-        var i = 0;
-        var path = "";
-        for (var item in folders) {
-            if (i < folders.length - 1) {
-                path += folders[item] + "\\";
-            }
-            i++;
-        }
-        dto = {
-            Path: path,
-            Name: fileName
-        }
-    }
-
-    FileSelected(dto);
-    
-}
+ 
 
 function FileSelected(dto) {
 
@@ -151,7 +120,7 @@ function FileSelected(dto) {
         }
         var container = document.getElementById("outer-dropzone");
         html2canvas(container).then(function (canvas) {
-            debugger
+             
             var base64 = canvas.toDataURL();
             currentDto.LayoutDetail = base64;
 
