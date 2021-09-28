@@ -172,7 +172,7 @@
 
 <script>
     var CurrentActiveEvent;
-    var ActiveLayouts = [];
+    var activeNodeCompoents = {};
     var LayoutCollection = {};
     var lastActiveLayout;
     var ActivePaths = {};
@@ -195,7 +195,7 @@
     DrawLayoutDiagramDiagram();
 
     function DrawLayoutDiagramDiagram() {
-  
+     
         $("#layoutDiagram").html("");
         //Initializes diagram control
         var diagram = new ej.diagrams.Diagram({
@@ -237,45 +237,91 @@
                     obj.style = { fill: '#357BD2', strokeColor: 'white' };
                 }
             },
-            drop: function (args) {
-               
+            collectionChange: function (args) {
+                 
+                //Only if we have a deleted item
+                if (args.type === "Removal") {
+                    var element = args.element.id; //Get the deleted item id handle
+
+                    if (element === undefined) 
+                        return;
+
+                    //Check if it still exists in the node array, this method is triggered twice from the syncfusion diagram, once the delete button is pressed
+                    // and once when the item is being removed from the screen.
+                    let index = nodes.findIndex(node => node !== undefined ? node.id === element : ""); 
+
+                    //In case index doesn't exist we return.
+                    if (index === -1)
+                        return;
+
+                    //Initialize two temporary collections to hold our new items
+                    var tpmNodes = [];
+                    var tpmactiveNodes = {};
+                    var i = 0;
+                    for (var node in nodes) {
+                        //In case item doesn't match our index we allow it to remain in the collection, othewrise we delete it.
+                        if (parseInt(node) !== index) {
+                            tpmNodes[i] = nodes[node];
+                            tpmactiveNodes[nodes[node].id] = activeNodeCompoents[nodes[node].id];
+                            i++;
+                        }
+                    }
+
+                    //Assign the two varibles to the global objects used by the collection next time an object is being added.
+                    nodes = tpmNodes;
+                    activeNodeCompoents = tpmactiveNodes;
+
+                }
             },
             sizeChange: function (args) {
-                var element = args.source.nodes[0].id;
+                try {
+                    var element = args.source.nodes[0].id;
+                    debugger
+                    //Check if the changed property has a valid ID
+                    if (element === undefined)
+                        return;
 
-                //Check if the changed property has a valid ID
-                if (element === undefined)
-                    return;
+                    //Get the co ordinates of the new position
+                    var width = args.newValue.width;
+                    var height = args.newValue.height;
 
-                //Get the co ordinates of the new position
-                var width = args.newValue.width;
-                var height = args.newValue.height;
+                    //Find the index of the element and assign it to the node object 
+                    let index = nodes.findIndex(node => node.id === element);
+                    nodes[index].width = width;
+                    nodes[index].height = height;
+                    var item = activeNodeCompoents[element].cloneNode(true);
+                    item.style.setProperty("width", "100%");
+                    item.style.setProperty("height", "100%");
+                    RedRaw();
 
-                //Find the index of the element and assign it to the node object 
-                let index = nodes.findIndex(node => node.id === element);
-                nodes[index].offsetX = width;
-                nodes[index].height = height;
-                RedRaw();
-            },
-            targetPointChange: function (args) {
-                debugger
+                    item.style.setProperty("display", "");
+                    nodes[index].shape.content = item
+                }
+                catch(e) {
+
+                }
             },
             propertyChange: function (args) {
-                debugger
-                var element = args.element.id;
 
-                //Check if the changed property has a valid ID
-                if (element === undefined)
-                    return;
+                try {
+                    var element = args.element.id;
 
-                //Get the co ordinates of the new position
-                var x = args.newValue.offsetX;
-                var y = args.newValue.offsetY;
+                    //Check if the changed property has a valid ID
+                    if (element === undefined)
+                        return;
 
-                //Find the index of the element and assign it to the node object 
-                let index = nodes.findIndex(node => node.id === element);
-                nodes[index].offsetX = x; 
-                nodes[index].offsetY = y;
+                    //Get the co ordinates of the new position
+                    var x = args.newValue.offsetX;
+                    var y = args.newValue.offsetY;
+
+                    //Find the index of the element and assign it to the node object 
+                    let index = nodes.findIndex(node => node.id === element);
+                    nodes[index].offsetX = x;
+                    nodes[index].offsetY = y;
+                }
+                catch (e) {
+
+                }
 
                 
             }
@@ -304,16 +350,30 @@
         }
     }
 
-    function AddLayoutElement(eventName,content) {
+    function AddLayoutElement(eventName, content) {
         $("#tpmTemplate").html(content);
         debugger
         var getClone = document.getElementById("tpmTemplate").cloneNode(true);
-        getClone.style.setProperty("width", "100%");
-        getClone.style.setProperty("height", "100%");
-
-        getClone.style.setProperty("display", "");
         var cNode = parseInt(nodes.length) + 1;
         var newId = 'node' + cNode;
+
+        // We don't trust that the node array will stay empty, that's why we check if we have a repeating element in the collection
+        // Using find closest available algorithm find the first free Id in the collection then exit.
+        var idIndex = 0;
+        while (nodes.findIndex(node => node !== undefined ? node.id === newId : "") !== -1) {
+            newId = 'node' + idIndex; //Generate a new Id
+            idIndex++; //Increment by 1 in case it fails
+        }
+
+        //Assign the ViewComponent in a shadow dom so it can be resized and applied to the graph on resize
+        activeNodeCompoents[newId] = getClone.cloneNode(true);
+
+        //Ensure panel can grow on all sides and set it visible
+        getClone.style.setProperty("width", "100%");
+        getClone.style.setProperty("height", "100%");
+        getClone.style.setProperty("display", "");
+
+        //Add the new view component to the node array.
         nodes.push({
             id: newId, width: 100, height: 100, offsetX: 200, offsetY: 200,
             shape:
@@ -323,9 +383,10 @@
             }
         });
 
-         
+        //Draw the layoutDiagram
         DrawLayoutDiagramDiagram();
         $("#tpmTemplate").html(""); //Dispose the template so widgets don't draw inside of it.
+        //Redraw can be disposed of ??
         RedRaw();
     }
 

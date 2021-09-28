@@ -144,40 +144,17 @@ function GenerateWidgetAt(component, cDraggable) {
 
 function GenerateWidget(target, componentName) {
     draggedElement++;
-
-    var getElement = document.createElement("div");
-    getElement.setAttribute("id", "yes-drop_" + draggedElement);
-    getElement.setAttribute("data-value", componentName);
-
-    getElement.classList.add("popup");
-
-  //  getElement.classList.add("resize-drag");
-
-    
-    getElement.style.setProperty("top", "20");
-    getElement.style.setProperty("left", "20");
-    getElement.style.setProperty("width", "200px");
-    getElement.style.setProperty("height", "200px");
-    getElement.style.setProperty("position", "absolute");
+ 
 
     $.ajax({
         url: "/Home/GetComponent?componentName=" + componentName,
         method: "GET",
         success: function (data) {
             AddLayoutElement(null, data);
-           // getElement.onmouseup = ElementReleased;
-           // $("#yes-drop_" + draggedElement).html(data);
-           // getElement.setAttribute("drag-id", draggedElement);
-
-           // getElement.setAttribute("data-info", componentName + "_" + draggedElement);
-           //// initDragElement();
-           // getElement.onmousemove = divMove;
-           // getElement.onmousedown = StartDrag;
-           // initResizeElement();
+ 
         }
     });
-    $("#outer-dropzone").append(getElement);
-}
+ }
 
 
 function UpdatePlaceholderContent(id, content) {
