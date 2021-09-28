@@ -349,6 +349,59 @@
             CloseFlowDiagram();
         }
     }
+    
+    function AddLayoutElementsAt(elements) {
+        debugger
+        nodes = [];
+        activeNodeCompoents = {};
+        elements.forEach(x => {
+            $.ajax({
+                url: "/Home/GetComponent?componentName=" + x.componentName,
+                method: "GET",
+                success: function (data) {
+                    
+                    $("#tpmTemplate").html(data);
+                     
+                    var getClone = document.getElementById("tpmTemplate").cloneNode(true);
+                    var cNode = parseInt(nodes.length) + 1;
+                    var newId = 'node' + cNode;
+
+                    // We don't trust that the node array will stay empty, that's why we check if we have a repeating element in the collection
+                    // Using find closest available algorithm find the first free Id in the collection then exit.
+                    var idIndex = 0;
+                    while (nodes.findIndex(node => node !== undefined ? node.id === newId : "") !== -1) {
+                        newId = 'node' + idIndex; //Generate a new Id
+                        idIndex++; //Increment by 1 in case it fails
+                    }
+
+                    //Assign the ViewComponent in a shadow dom so it can be resized and applied to the graph on resize
+                    activeNodeCompoents[newId] = getClone.cloneNode(true);
+
+                    //Ensure panel can grow on all sides and set it visible
+                    getClone.style.setProperty("width", "100%");
+                    getClone.style.setProperty("height", "100%");
+                    getClone.style.setProperty("display", "");
+
+                    //Add the new view component to the node array.
+                    nodes.push({
+                        id: newId, width: parseFloat(x.width), height: parseFloat(x.height), offsetX: parseFloat(x.offsetX), offsetY: parseFloat(x.offsetY),
+                        shape:
+                        {
+                            type: 'HTML',
+                            content: getClone
+                        },
+                        ComponentName: x.componentName
+                    });
+                    //Draw the layoutDiagram
+                    DrawLayoutDiagramDiagram();
+                    $("#tpmTemplate").html(""); //Dispose the template so widgets don't draw inside of it.
+                    //Redraw can be disposed of ??
+                }
+            });
+        });
+           
+    }
+
 
     function AddLayoutElement(componentName, content) {
         $("#tpmTemplate").html(content);
@@ -390,6 +443,5 @@
         //Redraw can be disposed of ??
         RedRaw();
     }
-
     
 </script>
