@@ -1,13 +1,13 @@
 ﻿const { get } = require("jquery");
 
 var isFullScreen = false;
-var fileName = "Untiteled.cf";
+var fileName = "Untiteled";
 var IsOpen = 0;
 
 var editObj = new ej.inplaceeditor.InPlaceEditor({
     mode: 'popup',
     type: 'Text',
-    value: 'Untiteled.cf',
+    value: 'Untiteled',
     change: FileNameChanged,
     submitOnEnter: true,
     model: {
@@ -109,9 +109,17 @@ function FileSelected(dto) {
     }
     else
     {
+        debugger
         var items = [];
-        for (var item in ActiveList) {
-            items.push(ActiveList[item]);
+        for (var item in nodes) {
+            items.push({
+                ElementName: nodes[item].id === undefined ? "" : nodes[item].id,
+                Width: nodes[item].width.toString(),
+                Height: nodes[item].height.toString(),
+                OffsetX: nodes[item].offsetX.toString(),
+                OffsetY: nodes[item].offsetY.toString(),
+                ComponentName: nodes[item].ComponentName === undefined ? "" : nodes[item].ComponentName
+            });
         }
 
         var currentDto = {

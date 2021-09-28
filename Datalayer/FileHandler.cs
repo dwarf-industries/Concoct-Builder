@@ -83,8 +83,14 @@ namespace Concoct_Builder.Datalayer
                 {
                     existing.Translate = x.Translate;
                     existing.Base64 = x.Base64;
+                    existing.Width = x.Width;
+                    existing.Height = x.Height;
+                    existing.OffsetY = x.OffsetY;
+                    existing.OffsetX = x.OffsetX;
+
                     if(existingEvent != 0)
                         existing.RefereenceScreen = existingEvent;
+
                     context.Attach(existing);
                     context.Update(existing);
                     context.SaveChanges();
@@ -98,7 +104,11 @@ namespace Concoct_Builder.Datalayer
                             Base64 = x.Base64,
                             Translate = x.Translate,
                             LayoutId = layout.Id,
-                            ComponentName =  x.ComponentName
+                            ComponentName =  x.ComponentName,
+                            OffsetX = x.OffsetX,
+                            OffsetY = x.OffsetY,
+                            Height = x.Height,
+                            Width = x.Width
                         });
                     else
                         context.LayoutData.Add(new LayoutData
@@ -108,7 +118,11 @@ namespace Concoct_Builder.Datalayer
                             Translate = x.Translate,
                             LayoutId = layout.Id,
                             ComponentName = x.ComponentName,
-                            RefereenceScreen = existingEvent
+                            RefereenceScreen = existingEvent,
+                            OffsetX = x.OffsetX,
+                            OffsetY = x.OffsetY,
+                            Height = x.Height,
+                            Width = x.Width
                         });
                     context.SaveChanges();
                 }    
