@@ -150,7 +150,7 @@ function GenerateWidget(target, componentName) {
         url: "/Home/GetComponent?componentName=" + componentName,
         method: "GET",
         success: function (data) {
-            AddLayoutElement(null, data);
+            AddLayoutElement(componentName, data);
  
         }
     });

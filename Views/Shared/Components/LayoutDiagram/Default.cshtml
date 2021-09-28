@@ -276,7 +276,7 @@
             sizeChange: function (args) {
                 try {
                     var element = args.source.nodes[0].id;
-                    debugger
+                    
                     //Check if the changed property has a valid ID
                     if (element === undefined)
                         return;
@@ -350,7 +350,7 @@
         }
     }
 
-    function AddLayoutElement(eventName, content) {
+    function AddLayoutElement(componentName, content) {
         $("#tpmTemplate").html(content);
         debugger
         var getClone = document.getElementById("tpmTemplate").cloneNode(true);
@@ -380,7 +380,8 @@
             {
                 type: 'HTML',
                 content: getClone
-            }
+            },
+            ComponentName: componentName
         });
 
         //Draw the layoutDiagram

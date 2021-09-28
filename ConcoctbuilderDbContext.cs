@@ -20,6 +20,7 @@ namespace Concoct_Builder
                 optionsBuilder.UseSqlite("Data Source=ConcoctBuilder.db");
             }
         }
+
         public ConcoctbuilderDbContext(DbContextOptions<ConcoctbuilderDbContext> options)
             : base(options)
         {

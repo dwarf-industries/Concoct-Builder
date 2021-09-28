@@ -15,6 +15,10 @@ namespace Concoct_Builder
         public string Translate { get; set; }
         public long? RefereenceScreen { get; set; }
         public string ComponentName { get; set; }
+        public string OffsetX { get; set; }
+        public string OffsetY { get; set; }
+        public string Height { get; set; }
+        public string Width { get; set; }
 
         public virtual Layouts Layout { get; set; }
         public virtual Layouts RefereenceScreenNavigation { get; set; }
