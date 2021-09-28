@@ -93,23 +93,11 @@ function FileSelected(dto) {
             contentType: "application/json",
             data: JSON.stringify(dto)
         }).done(function (args) {
-            var getArea = document.getElementById("outer-dropzone");
-            getArea.innerHTML = "";
-            var draggableValue = 0;
-            ClearActiveList();
-            for(var element in args)
-            {
-                GenerateWidgetAt(args[element], draggableValue);
-                draggableValue++;
-            }
-            draggableValue++;
-
-            SetDraggableStartingIndex(draggableValue);
+            AddLayoutElementsAt(args);
         });
     }
     else
     {
-        debugger
         var items = [];
         for (var item in nodes) {
             items.push({

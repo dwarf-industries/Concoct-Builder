@@ -22,7 +22,11 @@ namespace Concoct_Builder.Datalayer
                     Base64 = x.Base64,
                     ElementName = x.ElementName,
                     Translate = x.Translate,
-                    ComponentName = x.ComponentName
+                    ComponentName = x.ComponentName,
+                    Width = x.Width,
+                    Height = x.Height,
+                    OffsetX = x.OffsetX,
+                    OffsetY = x.OffsetY
                 }).ToList();
             
             return null;
