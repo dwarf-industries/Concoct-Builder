@@ -73,7 +73,6 @@
         target: '#contextmenutarget_@UniqueId',
         items: menuItems,
         beforeItemRender: function (args) {
-            debugger
             if (args.item.text === 'Link') {
                 args.element.classList.add('e-disabled');
             }

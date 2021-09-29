@@ -373,7 +373,7 @@
                     document.getElementById("ContentMenuTemplate").innerHTML = `<div id="element"></div>`;
 
 
-                    debugger
+                     
                     setTimeout(function (args) {
                         const divs = document.querySelectorAll('.e-list-item');
 
@@ -498,7 +498,8 @@
                 type: 'HTML',
                 content: getClone
             },
-            ComponentName: componentName
+            ComponentName: componentName,
+            Events: []
         });
 
         //Draw the layoutDiagram
@@ -516,7 +517,7 @@
             // map the groupBy field with category column
             fields: { groupBy: 'category', tooltip: 'text' },
             select: function (args) {
-                debugger
+                 
             },
       
         });
