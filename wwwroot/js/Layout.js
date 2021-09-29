@@ -93,54 +93,7 @@ function SetDraggableStartingIndex(index) {
 function ClearActiveList() {
     ActiveList = {};
 }
-
-function GenerateWidgetAt(component, cDraggable) {
-    var getElement = document.createElement("div");
-    getElement.setAttribute("id", "yes-drop_" + cDraggable);
-    getElement.setAttribute("data-value", component.componentName);
-    getElement.setAttribute("data-info", component.elementName);
-    getElement.classList.add("popup");
-
-
-    //getElement.classList.add("resize-drag");
-
-    $("#outer-dropzone").append(getElement);
-
-    $.ajax({
-        url: "/Home/GetComponent?componentName=" + component.componentName,
-        method: "GET",
-        success: function (data) {
-
-
-            getElement.onmouseup = ElementReleased;
-            $("#yes-drop_" + cDraggable).html(data);
-            getElement.setAttribute("drag-id", cDraggable);
-
-            getElement.style.cssText = component.translate;
-
-            //getElement.setAttribute("data-x", component.clientX);
-            draggedElement = cDraggable;
-            //getElement.setAttribute("data-y", component.clientY);
-            RedRaw();
-           // initDragElement();
-    
-            ActiveList[component.elementName] = {
-                ElementName: component.elementName,
-                ComponentName: component.componentName,
-                Translate: component.translate,
-                Base64: component.base64
-            };
-
-            if (component.base64 !== null && component.base64 !== "") {
-                SetContent(component.base64);
-            }
-
-            getElement.onmousemove = divMove;
-            getElement.onmousedown = StartDrag;
-            initResizeElement();
-         }
-    });
-}
+ 
 
 function GenerateWidget(target, componentName) {
     draggedElement++;
@@ -174,68 +127,10 @@ function UpdatePlaceholderContent(id, content) {
 
     ActiveList = newList;
 }
-
-function RemoveElement(id) {
-    var element = document.getElementById(id);
-    var parentId = element.offsetParent.getAttribute("data-info");
-    element.offsetParent.remove();
-    var newList = {};
-    for (var item in ActiveList) {
-        if (item !== parentId)
-            newList[item] = ActiveList[item];
-        else {
-            var dto = {
-                Layout: GetActiveFileName(),
-                File: ActiveList[item].ElementName
-            }
-            $.ajax({
-                method: "POST",
-                contentType: "application/json",
-                url: "/Home/RemoveItemFromLayout",
-                data: JSON.stringify(dto)
-            }).done(function (msg) {
-                ShowInfo("Layout saved!");
-            });
-        }
-    }
-
-    ActiveList = newList;
-}
-
-var resizing = false;
+ 
  
 
-function ElementReleased(args) {
-    var transform = args.currentTarget.style.getPropertyValue("transform");
-    var name = args.currentTarget.getAttribute("data-info");
-    var dragId = args.currentTarget.getAttribute("drag-id");
-    var cName = args.currentTarget.getAttribute("data-value");
-
-    if (ActiveList[name] === undefined)
-        ActiveList[name] = {
-            ElementName: name,
-            ComponentName: cName,
-            ClientY: "Depricated",
-            OffsetX: "Depricated",
-            OffsetY: "Depricated",
-            Width: "Depricated",
-            Height: "Depricated",
-            Translate: args.currentTarget.style.cssText,
-            Base64: ""
-        };
-    else
-        ActiveList[name] = {
-            ElementName: name,
-            ComponentName: cName,
-            ClientY: "Depricated",
-            OffsetX: "Depricated",
-            OffsetY: "Depricated",
-            Width: "Depricated",
-            Height: "Depricated",
-            Translate: args.currentTarget.style.cssText,
-            Base64: ActiveList[name].Base64
-        };
-}
+ 
 
 function ActivateEvent(id) {
     ToggleSetting();
@@ -252,46 +147,27 @@ function ActivateEvent(id) {
             }, 1000);
          }
     });
-    ActiveList = newList;
-}
+ }
 
 function AssociateTransitionEvent(key, screen) {
-    var newList = {};
-    
-    // ShowLoader();
-    for (var item in ActiveList)
-    {
-        if (item !== LastActiveElement)
-            newList[item] = ActiveList[item];
-        else
-        {
-            var data = ActiveList[item];
-            if (data.Events === undefined) {
-                data.Events = [
-                    { Type: 0, Relation: screen }
-                ];
-            }
-            else
-            {
-                var tpm = []; 
-                for (var event in data.Events)
-                {
-                    if (data.Events[event].Type === 0) {
-                        data.Events[event].Relation = screen;
-                        tpm.push(data.Events[event]);
-                    }
-                    else
-                    {
-                        tpm.push(data.Events[event]);
-                    }
+    for (var index in nodes) {
+        var node = nodes[index];
+        if (node.id === activeNode) {
+            if (node.Events !== undefined) {
+                node.Events[0] = {
+                    Type: 0,
+                    Relation: screen
                 }
-                data.Events = tpm;
             }
-           
-            newList[item] = data;
+            else {
+                node.Events = [{
+                    Type: 0,
+                    Relation: screen
+                }]
+            }
+
+            nodes[index] = node;
         }
     }
-    ActiveList = newList;
-
 }
 

@@ -106,7 +106,8 @@ function FileSelected(dto) {
                 Height: nodes[item].height.toString(),
                 OffsetX: nodes[item].offsetX.toString(),
                 OffsetY: nodes[item].offsetY.toString(),
-                ComponentName: nodes[item].ComponentName === undefined ? "" : nodes[item].ComponentName
+                ComponentName: nodes[item].ComponentName === undefined ? "" : nodes[item].ComponentName,
+                Events: nodes[item].Events
             });
         }
 
