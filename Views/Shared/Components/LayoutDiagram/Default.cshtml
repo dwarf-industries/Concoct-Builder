@@ -169,16 +169,69 @@
 <div style="display:flex; width:100%;height:100%;">
     <div id="layoutDiagram" style="width:100%;"></div>
 </div>
+ 
+
+<div id="dialog"></div>
+
+<div id="ContentMenuTemplate" style="display:none">
+    <div id="element"></div>
+</div>
 
 <script>
     var CurrentActiveEvent;
     var activeNodeCompoents = {};
     var LayoutCollection = {};
     var lastActiveLayout;
-    var ActivePaths = {};
-    var interval = [1, 9, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75];
-    var gridlines = { lineColor: '#e0e0e0', lineIntervals: interval };
+     var activeNode;
+    var interval1 = [1, 9, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75];
+    var gridlines1 = { lineColor: '#e0e0e0', lineIntervals: interval1 };
 
+    ej.base.enableRipple(true);
+
+    var bindingOptions = [
+        {
+            'text': 'On Element Clicked',
+            'id': 'Event1',
+            'enabled': true,
+            'category': 'Events',
+            'EventName': "ElementClicked"
+        },
+        {
+            'text': 'Delete',
+            'id': 'Option1',
+            'enabled': true,
+            'category': 'Element Specific',
+            'EventName': "RemoveElement"
+        },
+        {
+            'text': 'Close',
+            'id': 'Option2',
+            'enabled': true,
+            'category': 'Element Specific',
+            'EventName': "Cancel"
+        }
+    ];
+
+    // Initialize Dialog component
+    var dialog = new ej.popups.Dialog({
+        //Animation options
+        animationSettings: {
+            effect: 'Zoom',
+            duration: 400,
+            delay: 0
+        },
+        // Enables the header
+        header: 'Element Options',
+        // Dialog content
+        content: 'Dialog enabled with Zoom effect',
+    
+        // Dialog width
+        width: '250px'
+    });
+    // Render initialized Dialog
+    dialog.appendTo('#dialog');
+    
+    dialog.hide();
 
     let nodes = [
         {
@@ -190,17 +243,17 @@
             }
         }
     ];
-    let connectors = [];
+    let layoutConnectors = [];
 
     DrawLayoutDiagramDiagram();
 
     function DrawLayoutDiagramDiagram() {
-     
+
         $("#layoutDiagram").html("");
         //Initializes diagram control
         var diagram = new ej.diagrams.Diagram({
-            nodes: nodes, connectors: connectors,
-            snapSettings: { horizontalGridlines: gridlines, verticalGridlines: gridlines },
+            nodes: nodes, connectors: layoutConnectors,
+            snapSettings: { horizontalGridlines: gridlines1, verticalGridlines: gridlines1 },
             //Sets the default values of a node
             getNodeDefaults: function (node) {
                 var obj = {};
@@ -213,7 +266,7 @@
                 }
                 obj.style = { fill: '#357BD2', strokeColor: 'white' };
                 obj.annotations = [{ style: { color: 'white', fill: 'transparent' } }];
-             //   obj.ports = getNodePorts(node);
+                //   obj.ports = getNodePorts(node);
                 return obj;
             },
             //Sets the default values of a Connector.
@@ -238,45 +291,21 @@
                 }
             },
             collectionChange: function (args) {
-                 
+
                 //Only if we have a deleted item
                 if (args.type === "Removal") {
                     var element = args.element.id; //Get the deleted item id handle
 
-                    if (element === undefined) 
+                    if (element === undefined)
                         return;
 
-                    //Check if it still exists in the node array, this method is triggered twice from the syncfusion diagram, once the delete button is pressed
-                    // and once when the item is being removed from the screen.
-                    let index = nodes.findIndex(node => node !== undefined ? node.id === element : ""); 
-
-                    //In case index doesn't exist we return.
-                    if (index === -1)
-                        return;
-
-                    //Initialize two temporary collections to hold our new items
-                    var tpmNodes = [];
-                    var tpmactiveNodes = {};
-                    var i = 0;
-                    for (var node in nodes) {
-                        //In case item doesn't match our index we allow it to remain in the collection, othewrise we delete it.
-                        if (parseInt(node) !== index) {
-                            tpmNodes[i] = nodes[node];
-                            tpmactiveNodes[nodes[node].id] = activeNodeCompoents[nodes[node].id];
-                            i++;
-                        }
-                    }
-
-                    //Assign the two varibles to the global objects used by the collection next time an object is being added.
-                    nodes = tpmNodes;
-                    activeNodeCompoents = tpmactiveNodes;
-
+                    RemoveNode(element);
                 }
             },
             sizeChange: function (args) {
                 try {
                     var element = args.source.nodes[0].id;
-                    
+
                     //Check if the changed property has a valid ID
                     if (element === undefined)
                         return;
@@ -285,7 +314,7 @@
                     var width = args.newValue.width;
                     var height = args.newValue.height;
 
-                    //Find the index of the element and assign it to the node object 
+                    //Find the index of the element and assign it to the node object
                     let index = nodes.findIndex(node => node.id === element);
                     nodes[index].width = width;
                     nodes[index].height = height;
@@ -297,7 +326,7 @@
                     item.style.setProperty("display", "");
                     nodes[index].shape.content = item
                 }
-                catch(e) {
+                catch (e) {
 
                 }
             },
@@ -314,7 +343,7 @@
                     var x = args.newValue.offsetX;
                     var y = args.newValue.offsetY;
 
-                    //Find the index of the element and assign it to the node object 
+                    //Find the index of the element and assign it to the node object
                     let index = nodes.findIndex(node => node.id === element);
                     nodes[index].offsetX = x;
                     nodes[index].offsetY = y;
@@ -323,35 +352,70 @@
 
                 }
 
-                
+
+            },
+            doubleClick: function (args) {
+                 
+                var myDialog = document.getElementById("dialog");
+                myDialog.style.setProperty("top", args.position.y +"px");
+                myDialog.style.setProperty("left", args.position.x+ "px");
+                var element = args.source.id;
+                if (element === undefined)
+                    dialog.hide();
+                else
+                {
+                    activeNode = element;
+                    DrawBindingOptions();
+                    var bidnignList = document.getElementById("ContentMenuTemplate").cloneNode(true);
+                    bidnignList.style.setProperty("display", "");
+                    dialog.content = bidnignList;
+                    dialog.show();
+                    document.getElementById("ContentMenuTemplate").innerHTML = `<div id="element"></div>`;
+
+
+                    debugger
+                    setTimeout(function (args) {
+                        const divs = document.querySelectorAll('.e-list-item');
+
+                        divs.forEach(el => el.addEventListener('click', event => {
+                            var target = event.currentTarget;
+                            var id = target.getAttribute("id").split("_")[1];
+                            var element;
+                            bindingOptions.forEach(x => {
+                                if (x.id === id) {
+                                    element = x;
+                                }
+                            });
+                            switch (element.EventName) {
+                                case "ElementClicked":
+                                    dialog.hide();
+                                    ActivateEvent(activeNode);
+                                    break;
+                                case "RemoveElement":
+                                    dialog.hide();
+                                    RemoveNode(activeNode);
+                                    break;
+                                case "Cancel":
+                                    dialog.hide();
+                                    break;
+                                default:
+                                    dialog.hide();
+                                    break;
+                            }
+                            debugger
+                        }));
+                    }, 200)
+                  
+                }
             }
         });
         diagram.appendTo('#layoutDiagram');
         var getElement = document.getElementById("layoutDiagram_grid_rect");
         getElement.remove();
     }
-
-    function SetCurrentActiveEvent(element) {
-
-        CurrentActiveEvent = element;
-    }
-
-     
-
-    function SelectLayout(index) {
-
-        var selected = ActiveLayouts[index];
-
-        if (ActivePaths[selected.path] === undefined) {
-            AddShape(selected.name, "Layout", CurrentActiveEvent);
-            ActivePaths[selected.path] = 1;
-            lastActiveLayout = selected.path;
-            CloseFlowDiagram();
-        }
-    }
-    
+ 
     function AddLayoutElementsAt(elements) {
-        debugger
+         
         nodes = [];
         activeNodeCompoents = {};
         elements.forEach(x => {
@@ -359,9 +423,9 @@
                 url: "/Home/GetComponent?componentName=" + x.componentName,
                 method: "GET",
                 success: function (data) {
-                    
+
                     $("#tpmTemplate").html(data);
-                     
+
                     var getClone = document.getElementById("tpmTemplate").cloneNode(true);
                     var cNode = parseInt(nodes.length) + 1;
                     var newId = 'node' + cNode;
@@ -399,13 +463,13 @@
                 }
             });
         });
-           
+
     }
 
 
     function AddLayoutElement(componentName, content) {
         $("#tpmTemplate").html(content);
-        debugger
+         
         var getClone = document.getElementById("tpmTemplate").cloneNode(true);
         var cNode = parseInt(nodes.length) + 1;
         var newId = 'node' + cNode;
@@ -442,6 +506,52 @@
         $("#tpmTemplate").html(""); //Dispose the template so widgets don't draw inside of it.
         //Redraw can be disposed of ??
         RedRaw();
+    }
+
+    function DrawBindingOptions() {
+        //Initialize ListView component
+        var listviewInstance = new ej.lists.ListView({
+            //set the data to datasource property
+            dataSource: bindingOptions,
+            // map the groupBy field with category column
+            fields: { groupBy: 'category', tooltip: 'text' },
+            select: function (args) {
+                debugger
+            },
+      
+        });
+        //Render initialized ListView
+        listviewInstance.appendTo("#element");
+
+
+    }
+
+    function RemoveNode(element) {
+
+        //Check if it still exists in the node array, this method is triggered twice from the syncfusion diagram, once the delete button is pressed
+        // and once when the item is being removed from the screen.
+        let index = nodes.findIndex(node => node !== undefined ? node.id === element : "");
+
+        //In case index doesn't exist we return.
+        if (index === -1)
+            return;
+
+        //Initialize two temporary collections to hold our new items
+        var tpmNodes = [];
+        var tpmactiveNodes = {};
+        var i = 0;
+        for (var node in nodes) {
+            //In case item doesn't match our index we allow it to remain in the collection, othewrise we delete it.
+            if (parseInt(node) !== index) {
+                tpmNodes[i] = nodes[node];
+                tpmactiveNodes[nodes[node].id] = activeNodeCompoents[nodes[node].id];
+                i++;
+            }
+        }
+
+        //Assign the two varibles to the global objects used by the collection next time an object is being added.
+        nodes = tpmNodes;
+        activeNodeCompoents = tpmactiveNodes;
     }
     
 </script>
