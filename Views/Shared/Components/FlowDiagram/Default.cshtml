@@ -183,7 +183,7 @@
     var gridlines = { lineColor: '#e0e0e0', lineIntervals: interval };
 
 
-    let nodes = [
+    let flowNodes = [
         {
             id: 'node1', width: 60, height: 40, offsetX: 160, offsetY: 480,
             shape:
@@ -202,7 +202,7 @@
         $("#diagram").html("");
         //Initializes diagram control
         var diagram = new ej.diagrams.Diagram({
-            nodes: nodes, connectors: connectors,
+            nodes: flowNodes, connectors: connectors,
             snapSettings: { horizontalGridlines: gridlines, verticalGridlines: gridlines },
             //Sets the default values of a node
             getNodeDefaults: function (node) {
@@ -290,8 +290,8 @@
  
     function AddShape(eventName, type, relative) {
          
-        if (nodes.length === 0) {
-            nodes = [
+        if (flowNodes.length === 0) {
+            flowNodes = [
                 {
                     id: 'node1', width: 60, height: 40, offsetX: 160, offsetY: 480,
                     shape:
@@ -304,12 +304,12 @@
         }
         else
         {
-            var cNode = parseInt(nodes.length) + 1;
+            var cNode = parseInt(flowNodes.length) + 1;
             var newId = 'node' + cNode;
 
             if (type === "Event") {
-                nodes.push({
-                    id: newId, width: 60, height: 40, offsetX: 480, offsetY: 100 * parseInt(nodes.length),
+                flowNodes.push({
+                    id: newId, width: 60, height: 40, offsetX: 480, offsetY: 100 * parseInt(flowNodes.length),
                     shape:
                     {
                         type: 'HTML',
@@ -318,14 +318,14 @@
                 });
                 LayoutCollection[eventName] = {
                     x: 480,
-                    y: 100 * parseInt(nodes.length),
+                    y: 100 * parseInt(flowNodes.length),
                     ElementName: newId
                 };
             }
             else {
                 
                 var getElement = LayoutCollection[relative];
-                nodes.push({
+                flowNodes.push({
                     id: newId, width: 60, height: 40, offsetX: 620, offsetY: getElement.y,
                     shape:
                     {

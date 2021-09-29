@@ -238,33 +238,11 @@ function ElementReleased(args) {
 }
 
 function ActivateEvent(id) {
-    var element = document.getElementById(id);
-    var parentId = element.offsetParent.getAttribute("data-value");
-    var arrayId = element.offsetParent.getAttribute("data-info");
-    LastActiveElement = arrayId;
-    var newList = {};
-   // ShowLoader();
-    for (var item in ActiveList) {
-        if (item !== arrayId)
-            newList[item] = ActiveList[item];
-        else
-        {
-            var data = ActiveList[item];
-            data.Events = [
-                {Type: 0, Relation : "" }
-            ];
-            newList[item] = data;
-        }
-    }
     ToggleSetting();
-
-
     $.ajax({
         url: "/Home/GetComponentPanel?componentName=Element&&args=FlowDiagram",
         method: "GET",
         success: function (data) {
-       
-    
             $("#SlidingElement").html(data);
             setTimeout(function () {
                 DrawFlowDiagram();

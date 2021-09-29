@@ -26,7 +26,8 @@ namespace Concoct_Builder.Datalayer
                     Width = x.Width,
                     Height = x.Height,
                     OffsetX = x.OffsetX,
-                    OffsetY = x.OffsetY
+                    OffsetY = x.OffsetY,
+                    IsTrigger = (int)x.IsTrigger
                 }).ToList();
             
             return null;
@@ -91,6 +92,7 @@ namespace Concoct_Builder.Datalayer
                     existing.Height = x.Height;
                     existing.OffsetY = x.OffsetY;
                     existing.OffsetX = x.OffsetX;
+                    existing.IsTrigger = x.IsTrigger;
 
                     if(existingEvent != 0)
                         existing.RefereenceScreen = existingEvent;
@@ -112,7 +114,8 @@ namespace Concoct_Builder.Datalayer
                             OffsetX = x.OffsetX,
                             OffsetY = x.OffsetY,
                             Height = x.Height,
-                            Width = x.Width
+                            Width = x.Width,
+                            IsTrigger = x.IsTrigger
                         });
                     else
                         context.LayoutData.Add(new LayoutData
@@ -126,7 +129,8 @@ namespace Concoct_Builder.Datalayer
                             OffsetX = x.OffsetX,
                             OffsetY = x.OffsetY,
                             Height = x.Height,
-                            Width = x.Width
+                            Width = x.Width,
+                            IsTrigger = x.IsTrigger
                         });
                     context.SaveChanges();
                 }    

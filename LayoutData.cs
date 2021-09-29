@@ -19,6 +19,7 @@ namespace Concoct_Builder
         public string OffsetY { get; set; }
         public string Height { get; set; }
         public string Width { get; set; }
+        public long? IsTrigger { get; set; }
 
         public virtual Layouts Layout { get; set; }
         public virtual Layouts RefereenceScreenNavigation { get; set; }
