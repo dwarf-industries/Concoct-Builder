@@ -500,7 +500,7 @@
                         uuId: uuId,
                         elementOptions: elementOptions
                     };
-                    if (x.base64 !== undefined && x.base64 !== "") {
+                    if (x.base64 !== undefined && x.base64 !== "" && x.base64 !== null) {
                         SetContent(x.base64);
                     }
                     //Ensure panel can grow on all sides and set it visible
