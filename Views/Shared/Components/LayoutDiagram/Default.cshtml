@@ -169,7 +169,8 @@
 <div style="display:flex; width:100%;height:100%;">
     <div id="layoutDiagram" style="width:100%;"></div>
 </div>
- 
+
+<input type="file" onchange="PlaceHolderChanged" style="display:none" id="placeholder_file" />
 
 <div id="dialog"></div>
 
@@ -181,14 +182,15 @@
     var CurrentActiveEvent;
     var activeNodeCompoents = {};
     var LayoutCollection = {};
+    var activeNodeOptions = {};
     var lastActiveLayout;
-     var activeNode;
+    var activeNode;
     var interval1 = [1, 9, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75];
     var gridlines1 = { lineColor: '#e0e0e0', lineIntervals: interval1 };
 
     ej.base.enableRipple(true);
 
-    var bindingOptions = [
+    var elementOptions = [
         {
             'text': 'On Element Clicked',
             'id': 'Event1',
@@ -204,13 +206,57 @@
             'EventName': "RemoveElement"
         },
         {
+            'text': 'Enable Scaling',
+            'id': 'Option3',
+            'enabled': true,
+            'category': 'Element Specific',
+            'EventName': "Scale"
+        },
+        {
             'text': 'Close',
-            'id': 'Option2',
+            'id': 'Option5',
             'enabled': true,
             'category': 'Element Specific',
             'EventName': "Cancel"
         }
     ];
+
+
+
+    var defaultContextOptions = [
+        {
+            'text': 'On Element Clicked',
+            'id': 'Event1',
+            'enabled': true,
+            'category': 'Events',
+            'EventName': "ElementClicked"
+        },
+        {
+            'text': 'Delete',
+            'id': 'Option1',
+            'enabled': true,
+            'category': 'Element Specific',
+            'EventName': "RemoveElement"
+        },
+        {
+            'text': 'Enable Scaling',
+            'id': 'Option3',
+            'enabled': true,
+            'category': 'Element Specific',
+            'EventName': "Scale"
+        },
+        {
+            'text': 'Close',
+            'id': 'Option5',
+            'enabled': true,
+            'category': 'Element Specific',
+            'EventName': "Cancel"
+        }
+    ];
+
+    function GetDefaultMenu() {
+        return defaultContextOptions;
+    }
 
     // Initialize Dialog component
     var dialog = new ej.popups.Dialog({
@@ -224,13 +270,13 @@
         header: 'Element Options',
         // Dialog content
         content: 'Dialog enabled with Zoom effect',
-    
+
         // Dialog width
         width: '250px'
     });
     // Render initialized Dialog
     dialog.appendTo('#dialog');
-    
+
     dialog.hide();
 
     let nodes = [
@@ -355,7 +401,7 @@
 
             },
             doubleClick: function (args) {
-                 
+
                 var myDialog = document.getElementById("dialog");
                 myDialog.style.setProperty("top", args.position.y +"px");
                 myDialog.style.setProperty("left", args.position.x+ "px");
@@ -365,6 +411,7 @@
                 else
                 {
                     activeNode = element;
+                    bindingOptions = activeNodeOptions[activeNode].elementOptions;
                     DrawBindingOptions();
                     var bidnignList = document.getElementById("ContentMenuTemplate").cloneNode(true);
                     bidnignList.style.setProperty("display", "");
@@ -373,7 +420,7 @@
                     document.getElementById("ContentMenuTemplate").innerHTML = `<div id="element"></div>`;
 
 
-                     
+
                     setTimeout(function (args) {
                         const divs = document.querySelectorAll('.e-list-item');
 
@@ -398,14 +445,21 @@
                                 case "Cancel":
                                     dialog.hide();
                                     break;
+                                case "Upload":
+                                    dialog.hide();
+                                    UploadBackground();
+                                    break;
+                                case "SetBackground":
+
+                                    break;
                                 default:
                                     dialog.hide();
                                     break;
                             }
-                            debugger
+                             
                         }));
                     }, 200)
-                  
+
                 }
             }
         });
@@ -413,9 +467,9 @@
         var getElement = document.getElementById("layoutDiagram_grid_rect");
         getElement.remove();
     }
- 
+
     function AddLayoutElementsAt(elements) {
-         
+
         nodes = [];
         activeNodeCompoents = {};
         elements.forEach(x => {
@@ -429,6 +483,8 @@
                     var getClone = document.getElementById("tpmTemplate").cloneNode(true);
                     var cNode = parseInt(nodes.length) + 1;
                     var newId = 'node' + cNode;
+                    var elementOptions = GetBindingOptions();
+                    var uuId = GetElementUUID();
 
                     // We don't trust that the node array will stay empty, that's why we check if we have a repeating element in the collection
                     // Using find closest available algorithm find the first free Id in the collection then exit.
@@ -440,7 +496,13 @@
 
                     //Assign the ViewComponent in a shadow dom so it can be resized and applied to the graph on resize
                     activeNodeCompoents[newId] = getClone.cloneNode(true);
-
+                    activeNodeOptions[newId] = {
+                        uuId: uuId,
+                        elementOptions: elementOptions
+                    };
+                    if (x.base64 !== undefined && x.base64 !== "") {
+                        SetContent(x.base64);
+                    }
                     //Ensure panel can grow on all sides and set it visible
                     getClone.style.setProperty("width", "100%");
                     getClone.style.setProperty("height", "100%");
@@ -454,7 +516,9 @@
                             type: 'HTML',
                             content: getClone
                         },
-                        ComponentName: x.componentName
+                        ComponentName: x.componentName,
+                        Base64: x.Base64
+
                     });
                     //Draw the layoutDiagram
                     DrawLayoutDiagramDiagram();
@@ -469,8 +533,10 @@
 
     function AddLayoutElement(componentName, content) {
         $("#tpmTemplate").html(content);
-         
+        
         var getClone = document.getElementById("tpmTemplate").cloneNode(true);
+        var elementOptions = GetBindingOptions();
+        var uuId = GetElementUUID();
         var cNode = parseInt(nodes.length) + 1;
         var newId = 'node' + cNode;
 
@@ -484,6 +550,10 @@
 
         //Assign the ViewComponent in a shadow dom so it can be resized and applied to the graph on resize
         activeNodeCompoents[newId] = getClone.cloneNode(true);
+        activeNodeOptions[newId] = {
+            uuId:uuId,
+            elementOptions: elementOptions
+        };
 
         //Ensure panel can grow on all sides and set it visible
         getClone.style.setProperty("width", "100%");
@@ -499,7 +569,8 @@
                 content: getClone
             },
             ComponentName: componentName,
-            Events: []
+            Events: [],
+            Base64: ""
         });
 
         //Draw the layoutDiagram
@@ -517,9 +588,9 @@
             // map the groupBy field with category column
             fields: { groupBy: 'category', tooltip: 'text' },
             select: function (args) {
-                 
+
             },
-      
+
         });
         //Render initialized ListView
         listviewInstance.appendTo("#element");
@@ -554,5 +625,38 @@
         nodes = tpmNodes;
         activeNodeCompoents = tpmactiveNodes;
     }
-    
+
+
+    function UploadBackground() {
+         var getElement;
+        getElement = document.getElementById("placeholder_file");
+        getElement.type = "file";
+        getElement.click();
+        getElement.onchange = ImageSelected;
+    }
+
+
+    function ImageSelected(event) {
+
+
+        var dto = {
+            Path: event.path[0].files[0].path,
+            Name: event.path[0].files[0].name
+        }
+
+        $.ajax({
+            method: "POST",
+            url: "/Home/ConvertTobase",
+            contentType: "application/json",
+            data: JSON.stringify(dto)
+        }).done(function (args) {
+             
+            var activeId = activeNodeOptions[activeNode].uuId;
+            var imageElement = document.getElementById("placeholder_"+ activeId);
+            imageElement.setAttribute("src", "data:image/jpeg;base64, " + args);
+            imageElement.style.setProperty("display", "");
+            UpdatePlaceholderContent(activeNode, args);
+         });
+
+    }
 </script>

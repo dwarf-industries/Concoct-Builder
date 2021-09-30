@@ -111,21 +111,13 @@ function GenerateWidget(target, componentName) {
 
 
 function UpdatePlaceholderContent(id, content) {
-    var element = document.getElementById(id);
-    var parentId = element.offsetParent.getAttribute("data-info");
-    var newList = {};
-    for (var item in ActiveList) {
-        if (item !== parentId)
-            newList[item] = ActiveList[item];
-        else
-        {
-            var currentItem = ActiveList[item];
-            currentItem.Base64 = content;
-            newList[item] = currentItem;
+    for (var index in nodes) {
+        var node = nodes[index];
+        if (node.id === id) {
+            node.Base64 = content
+            nodes[index] = node;
         }
     }
-
-    ActiveList = newList;
 }
  
  

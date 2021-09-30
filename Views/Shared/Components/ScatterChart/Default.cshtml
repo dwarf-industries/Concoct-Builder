@@ -21,7 +21,15 @@
 </style>
 
 <script>
+    var elementOptions = GetDefaultMenu();
 
+    function GetElementUUID() {
+        return "@UniqueId";
+    }
+
+    function GetBindingOptions() {
+        return elementOptions;
+    }
 
     var uniqueId = "scatter-container_@UniqueId";
     var uuid = "@UniqueId";

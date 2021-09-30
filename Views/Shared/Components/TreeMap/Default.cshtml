@@ -20,6 +20,17 @@
  
 <script src="~/js/TreeMapData.js"></script>
 <script>
+
+    var elementOptions = GetDefaultMenu();
+
+    function GetElementUUID() {
+        return "@UniqueId";
+    }
+
+    function GetBindingOptions() {
+        return elementOptions;
+    }
+
     var uniqueId = "default-container_@UniqueId";
     var uuid = "@UniqueId";
     function RedRaw() {
