@@ -1,5 +1,10 @@
 ﻿@{ var UniqueId = Program.GetUniqueId(); }
 
+<style>
+    .e-listview:not(.e-list-template) .e-list-item:hover {
+        background-color: #f1f1f1;
+    }
+</style>
 
 <div class="control-section" style="width:100%;height:100%;" id="@UniqueId">
     <div class="contextmenu-control" style="width:100%;height:100%;">
@@ -18,8 +23,59 @@
 <script>
     SetImage();
     var activeId;
+    
+    var elementOptions = [
+        {
+            'text': 'On Element Clicked',
+            'id': 'Event1',
+            'enabled': true,
+            'category': 'Events',
+            'EventName': "ElementClicked"
+        },
+        {
+            'text': 'Delete',
+            'id': 'Option1',
+            'enabled': true,
+            'category': 'Element Specific',
+            'EventName': "RemoveElement"
+        },
+        {
+            'text': 'Upload Image',
+            'id': 'Option2',
+            'enabled': true,
+            'category': 'Element Specific',
+            'EventName': "Upload"
+        },
+        {
+            'text': 'Set Background',
+            'id': 'Option3',
+            'enabled': true,
+            'category': 'Element Specific',
+            'EventName': "SetBackground"
+        },
+        {
+            'text': 'Enable Scaling',
+            'id': 'Option4',
+            'enabled': true,
+            'category': 'Element Specific',
+            'EventName': "Scale"
+        },
+        {
+            'text': 'Close',
+            'id': 'Option5',
+            'enabled': true,
+            'category': 'Element Specific',
+            'EventName': "Cancel"
+        }
+    ];
 
+    function GetElementUUID() {
+        return "@UniqueId";
+    }
 
+    function GetBindingOptions() {
+        return elementOptions;
+    }
 
         function RedRaw() {
 

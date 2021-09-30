@@ -74,10 +74,20 @@
 
 <script>
 
+    var elementOptions = GetDefaultMenu();
+
+    function GetElementUUID() {
+        return "@UniqueId";
+    }
+
+    function GetBindingOptions() {
+        return elementOptions;
+    }
+
     var uniqueId = "chip-avatar_@UniqueId";
     var uuid = "@UniqueId";
     function RedRaw() {
-         
+
         $("container_@UniqueId").html("<div id='chip-avatar_" + uniqueId + "' ></div>");
         DrawChips();
     }
