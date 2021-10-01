@@ -1,8 +1,176 @@
-﻿@{ ViewData["Title"] = "Home Page"; }
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var Settings = ViewData["Organizations"] as List<UserSettings>;
+}
+
+<style>
+    .RowDistance {
+        margin-top: 30px;
+    }
+
+    .organizationContiner{
+        width:100%;
+        background:white;
+    }
+    .orgTextElement {
+        height: 100px;
+        text-align: center;
+        position: relative;
+        padding-top: 25px;
+        font-family: "Roboto", "Segoe UI", "GeezaPro", "DejaVu Serif", "sans-serif", "-apple-system", "BlinkMacSystemFont" !important;
+        color: #909090;
+        font-size: 1vw !important;
+    }
+
+    .orgRow {
+        height: 100%;
+        background: #eaeaea80;
+        color: #909090;
+        font-size: 1vw !important;
+        cursor:pointer;
+    }
+        .orgRow:hover {
+            height: 100%;
+            background: #cacaca80;
+            color: #909090;
+            font-size: 1vw !important;
+            cursor: pointer;
+        }
+
+   
+</style>
+
+ <div class="container-fluid">
+     <div class="col-md-2">
+
+     </div>
+     <div class="col-md-8">
+         <div class="row">
+             <div id="default" style='padding-top:75px;'>
+                 <select id="authenicationTypes">
+                     <option value="true">Basic Authenication</option>
+                     <option value="false">Access Token</option>
+                 </select>
+             </div>
+         </div>
+         <div class="row RowDistance">
+             <input id="Instance" />
+         </div>
+         <div class="row RowDistance" style="display:none" id="TokenType">
+             <input id="Token" />
+         </div>
+         <div class="row RowDistance" id="BasicAuth">
+              <div class="col-md-4">
+                 <input id="Username" />
+             </div>
+             <div class="col-md-3"></div>
+             <div class="col-md-4">
+                 <input id="Password" />
+             </div>
+          </div>
+         <div class="row RowDistance" style="min-height:400px; max-height:400px;">
+             <div class="organizationContiner">
+                @foreach(var item in Settings)
+                {
+                    <div class="row orgRow" >
+                        <div class="col-sm-3" style="text-align:center">
+                            <img src="https://media.istockphoto.com/vectors/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-vector-id1128826884?b=1&k=20&m=1128826884&s=170667a&w=0&h=7tmZDF3-85_rT_7luTYWkXydcRF4ZQ0UWIbW4IwX32E="  style=" height: 100px;"/>
+                        </div>
+                        <div class="col-sm-4 orgTextElement">
+                            @item.OrganizationName
+                        </div>
+                        <div class="col-sm-5 orgTextElement">
+                            @item.InstanceAddress
+                        </div>
+                    </div>
+                }
+             </div>
+         </div>
+
+         <div class="row RowDistance">
+             <div class="col-md-5">
+                 <button id="LoadLayuouts" style=" width: 100%;">Load Layout</button>
+             </div>
+             <div class="col-md-2">
+
+             </div>
+             <div class="col-md-5">
+                 <button id="NewLayout" onclick="InitNewLayout()" style=" width: 100%;">New Layout</button>
+             </div>
+         </div>
+     </div>
+     <div class="col-md-2">
+
+     </div>
+ </div>
 
 
+<script>
+    var mode = true;
+    // Initialize DropDownList component
+    var authenicationTypes = new ej.dropdowns.DropDownList({
+        // set the index value to select an item based on index at initial rendering
+        index: 0,
+        // set the placeholder to DropDownList input element
+        placeholder: 'Authenication Type',
+        // set the height of the popup element
+        popupHeight: '200px',
+        // bind the change event
+        change: function () { valueChange(); }
+    });
+    authenicationTypes.appendTo('#authenicationTypes');
+    // call the change event's function after initialized the component.
+    function valueChange() {
+        debugger
+        if (authenicationTypes.value === "true") {
+            $("#TokenType").hide();
+            $("#BasicAuth").show();
+            mode = true;
+        }
+        else {
+            $("#TokenType").show();
+            $("#BasicAuth").hide();
+            mode = false;
+        }
+    }
 
-@*@await Component.InvokeAsync("AreaChart")*@
 
+    var Instance = new ej.inputs.TextBox({
+        placeholder: 'Instance Address',
+        cssClass: 'e-outline',
+        floatLabelType: 'Auto'
+    });
+    Instance.appendTo('#Instance');
 
-@await Component.InvokeAsync("LayoutDiagram")
+    var Token = new ej.inputs.TextBox({
+        placeholder: 'Access Token',
+        cssClass: 'e-outline',
+        floatLabelType: 'Auto'
+    });
+    Token.appendTo('#Token');
+
+    var Username = new ej.inputs.TextBox({
+        placeholder: 'Username',
+        cssClass: 'e-outline',
+        floatLabelType: 'Auto'
+    });
+    Username.appendTo('#Username');
+
+    var Password = new ej.inputs.TextBox({
+        placeholder: 'Password',
+        cssClass: 'e-outline',
+        floatLabelType: 'Auto'
+    });
+    Password.appendTo('#Password');
+
+    var LoadLayuouts = new ej.buttons.Button({ isPrimary: true });
+    LoadLayuouts.appendTo('#LoadLayuouts');
+
+    var NewLayout = new ej.buttons.Button({ isPrimary: true });
+    NewLayout.appendTo('#NewLayout');
+
+    
+    function InitNewLayout() {
+        window.location.href = "/Dashboard";
+    }
+</script>

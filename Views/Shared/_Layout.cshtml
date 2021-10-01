@@ -26,68 +26,35 @@
                 <!--header-section  declaration -->
                 <div class="main-header" id="header-section">
                     <ul class="header-list">
-                        <li class="float-left header-style icon-menu" id="hamburger"></li>
-                        <li class="float-left header-style" style="width: 15%;padding: 0;">
-                            <div id='inplace_editor'></div>
-                        </li>
+                       
                         <span class="menuDrag">
 
                         </span>
 
-                        <li class="header-style float-right support border-left" onclick="InitScreen()"><b>Run</b></li>
-                        <li class="header-style float-right support border-left" onclick="SaveChanges()"><b>Save</b></li>
-                        <li class="header-style float-right support border-left" onclick="LoadLayout()"><b>Load Layout</b></li>
+
                         <li class="header-style float-right support border-left MenuIcon" onclick="Minimize()"><b><i class="fa fa-window-minimize MenuIcon" aria-hidden="true"></i></b></li>
                         <li class="header-style float-right support border-left MenuIcon" onclick="KillWindow()"><b><i class="fa fa-window-close-o MenuIcon" aria-hidden="true"></i></b></li>
                     </ul>
                 </div>
-                <!-- end of header-section -->
-                <div id="PlatformElement">
-                    <!-- sidebar element declaration -->
-                    <aside id="sidebar-treeview" style="overflow-x:hidden;">
-                        <div class="main-menu">
-                            <div class="table-content" style="padding:0;">
-                                @*//   class="IconContainer drag-drop" id="yes-drop"*@
-                                @foreach (var widget in Widgets)
-                                {
-                    <div class="IconContainer">
-                        <i class="fa @widget.Icon icon" aria-hidden="true" onclick="GenerateWidget('fa @widget.Icon icon','@widget.ComponentName')"></i>
+                @RenderBody()
 
-                        <p class="widgetText">
-                            @widget.DisplayName
-                        </p>
-                    </div>}
-
-
-                            </div>
-                        </div>
-                    </aside>
-
-                    <div class="main-content" id="main-text" style="min-height: 94vh; width: 99.9%;">
-                        <div class="sidebar-content dropzone scroll-container" id="outer-dropzone">
-                            @RenderBody()
-                        </div>
-                    </div>
-
-                    @*Declare Notification Pop Up, used for error handling and message subscriptions*@
-                    <div class="col-lg-12 control-section toast-type-section">
-                        <div class="e-sample-resize-container">
-                            <div id="toast_type">
-                            </div>
-                            <div id="toast_types">
-                                <div>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    @*End INotify declaration*@
-                </div>
                 <div id="SlidingElement">
 
                 </div>
+                @*Declare Notification Pop Up, used for error handling and message subscriptions*@
+                <div class="col-lg-12 control-section toast-type-section">
+                    <div class="e-sample-resize-container">
+                        <div id="toast_type">
+                        </div>
+                        <div id="toast_types">
+                            <div>
 
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                @*End INotify declaration*@
             </div>
 
 
@@ -97,11 +64,7 @@
  
 
     <script src="~/js/MenuApi.js"></script>
-    <script src="~/js/Layout.js"></script>
     <script src="~/js/INotify.js"></script>
-    <script src="~/js/DragDrop.js"></script>
-    <script src="~/js/RuntimeCompiler.js"></script>
-    <script src="~/js/htmltocanvas.js"></script>
 </body>
 </html>
 
