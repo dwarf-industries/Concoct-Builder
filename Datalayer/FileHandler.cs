@@ -33,6 +33,12 @@ namespace Concoct_Builder.Datalayer
             return null;
         }
 
+        internal List<UserSettings> GetAllOrganizations()
+        {
+            var context = new ConcoctbuilderDbContext();
+            return context.UserSettings.ToList();
+        }
+
         public string ReadFileRaw(string filePath)
         {
             if(!System.IO.File.Exists(filePath))

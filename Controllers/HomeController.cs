@@ -24,7 +24,7 @@ namespace Concoct_Builder.Controllers
 
         public IActionResult Index()
         {
-
+            ViewData["Organizations"] = handler.GetAllOrganizations(); 
             ViewData["Components"] = GetWorkItemComponents();
             return View();
         }
