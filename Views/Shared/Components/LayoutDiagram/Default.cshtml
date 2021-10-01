@@ -650,13 +650,20 @@
             contentType: "application/json",
             data: JSON.stringify(dto)
         }).done(function (args) {
-             
+            debugger
             var activeId = activeNodeOptions[activeNode].uuId;
-            var imageElement = document.getElementById("placeholder_"+ activeId);
+            var imageElement = document.getElementById("placeholder_" + activeId);
             imageElement.setAttribute("src", "data:image/jpeg;base64, " + args);
             imageElement.style.setProperty("display", "");
+
             UpdatePlaceholderContent(activeNode, args);
-         });
+            var tempalte = imageElement.parentElement.parentElement;
+            let index = nodes.findIndex(node => node.id === activeNode);
+            nodes[index].shape.content = tempalte;
+           
+          });
 
     }
+
+   
 </script>
