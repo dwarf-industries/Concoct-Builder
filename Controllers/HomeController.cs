@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Concoct_Builder.Controllers
@@ -119,6 +121,35 @@ namespace Concoct_Builder.Controllers
         public string ConvertTobase([FromBody] IncomingFileRequest file)
         {
             return handler.ConvertTobase64(file.Path);
+        }
+
+        [HttpPost]
+        public string CCAuthenicationRequest([FromBody] AuthenicationRequest request)
+        {
+            var operationStatus = "failed";
+            if (request.AuthType)
+            {
+                operationStatus = "Success";
+            }
+            else
+            {
+                var result = Get($"{request.Instance}?key={request.Token}");
+                operationStatus = "Success";
+            }
+            return operationStatus;
+        }
+
+        public string Get(string uri)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         [HttpPost]
