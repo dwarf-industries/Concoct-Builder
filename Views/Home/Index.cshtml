@@ -35,7 +35,7 @@
              </div>
           </div>
          <div class="row RowDistance">
-             <button id="AuthenicateBtn" style=" width: 100%;"  class="e-control e-btn e-lib e-primary">Authenicate</button>
+             <button id="AuthenicateBtn" style=" width: 100%;" onclick="Authenicate()" class="e-control e-btn e-lib e-primary">Authenicate</button>
          </div>
          <div class="row RowDistance" style="min-height:400px; max-height:400px;">
              <div class="organizationContiner">
@@ -159,5 +159,36 @@
 
     function LoadLayouts() {
         window.location.href = "/Home/Layouts/" + selectedItem;
+    }
+
+    function Authenicate() {
+        var token = $("#Token").val();
+        var username = $("#Username").val();
+        var password = $("#password").val();
+        var serverInstance = $("#Instance").val();
+
+        var dto = {
+            Token: token,
+            Username: username,
+            Password: password,
+            Instance: serverInstance,
+            AuthType:mode
+        }
+        if (!mode) {
+            ShowInfo("Attempting to authenicate with a token!");
+            $.ajax({
+                method: "POST",
+                contentType: "application/json",
+                url: "/Home/CCAuthenicationRequest",
+                data: JSON.stringify(dto)
+            }).done(function (msg) {
+                ShowInfo(msg);
+            });
+             
+        }
+        else {
+            ShowAlert("Not yet implemented!");
+        }
+       
     }
 </script>
