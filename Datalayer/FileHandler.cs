@@ -33,6 +33,12 @@ namespace Concoct_Builder.Datalayer
             return null;
         }
 
+        internal List<Layouts> GetAllLayoutsByOrganization(int id)
+        {
+            var context = new ConcoctbuilderDbContext();
+            return context.Layouts.Where(x => x.UserSetting == 0 && x.UserSetting == id).ToList();
+        }
+
         internal List<UserSettings> GetAllOrganizations()
         {
             var context = new ConcoctbuilderDbContext();

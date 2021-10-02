@@ -27,7 +27,7 @@
                 <div class="main-header" id="header-section">
                     <ul class="header-list">
                         <li class="float-left header-style icon-menu" id="hamburger"></li>
-                        <li class="float-left header-style" style="width: 15%;padding: 0;">
+                        <li class="float-left header-style" style="width: 15%;padding: 0;" id="fileNameHolder">
                             <div id='inplace_editor'></div>
                         </li>
                         <span class="menuDrag">
@@ -36,7 +36,7 @@
 
                         <li class="header-style float-right support border-left" onclick="InitScreen()"><b>Run</b></li>
                         <li class="header-style float-right support border-left" onclick="SaveChanges()"><b>Save</b></li>
-                        <li class="header-style float-right support border-left" onclick="LoadLayout()"><b>Load Layout</b></li>
+                        <li class="header-style float-right support border-left" onclick="RetunToMenu()"><b>Menu</b></li>
                         <li class="header-style float-right support border-left MenuIcon" onclick="Minimize()"><b><i class="fa fa-window-minimize MenuIcon" aria-hidden="true"></i></b></li>
                         <li class="header-style float-right support border-left MenuIcon" onclick="KillWindow()"><b><i class="fa fa-window-close-o MenuIcon" aria-hidden="true"></i></b></li>
                     </ul>
@@ -95,7 +95,11 @@
 
     </div>
  
-
+    <script>
+        function RetunToMenu() {
+            window.location.href = "/Home";
+        }
+    </script>
     <script src="~/js/MenuApi.js"></script>
     <script src="~/js/Layout.js"></script>
     <script src="~/js/INotify.js"></script>

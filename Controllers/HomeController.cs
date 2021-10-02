@@ -29,6 +29,12 @@ namespace Concoct_Builder.Controllers
             return View();
         }
 
+        public IActionResult Layouts(int id)
+        {
+            ViewData["Layouts"] = handler.GetAllLayoutsByOrganization(id);
+            return View();
+        }
+
         private List<Widget> GetWorkItemComponents()
         {
             return handler.GetAllWidgets();

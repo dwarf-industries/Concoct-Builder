@@ -1,7 +1,25 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+    var selectedLayout = ViewData["SelectedLayout"] as string;
 }
 
 
 @await Component.InvokeAsync("LayoutDiagram")
+
+<script>
+    var selected = "@selectedLayout";
+
+    if (selected !== "") {
+        setTimeout(function () {
+            InitSelectedName(selected);
+            mode = true;
+
+            FileSelected({
+                Path: selected,
+                Name: selected
+            });
+        }, 300);
+       
+    }
+</script>
