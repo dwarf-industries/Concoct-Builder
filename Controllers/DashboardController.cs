@@ -19,8 +19,9 @@ namespace Concoct_Builder.Controllers
             _logger = logger;
             handler = (FileHandler)fileHandler;
         }
-        public IActionResult Index()
+        public IActionResult Index(string id)
         {
+            ViewData["SelectedLayout"] = id;
             ViewData["Organizations"] = handler.GetAllOrganizations();
             ViewData["Components"] = GetWorkItemComponents();
             return View();

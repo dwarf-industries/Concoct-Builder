@@ -1,0 +1,106 @@
+﻿@{ 
+    ViewData["Title"] = "Load Layout";
+    var Layouts = ViewData["Layouts"] as List<Layouts>;
+}
+
+<style>
+    .layoutElement{
+
+    }
+    .layoutElement:hover {
+        opacity: 0.8;
+    }
+</style>
+<div class="container-fluid" style="margin-left:10%; margin-right:10%;">
+    <div class="row RowDistance">
+        <div class="col-md-4">
+            <input id="nameFilter" onkeyup="SearchChanged()" />
+        </div>
+        <div class="col-md-4">
+            <div id="default"  >
+                <select id="solutions">
+                    <option value="true">Not Implemented</option>
+                 </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div id="contextmenutarget_b89cf4d5w2y" style="width:100%;height:100%;">
+                <div class="sample-padding" id="container_b89cf4d5w2y">
+                    <div id="chip-avatar_b89cf4d5w2y" class="e-lib e-chip-list e-control e-chip-set" role="listbox" aria-multiselectable="false" data-ripple="true">
+                        <div class="e-chip e-chip-icon-wrap" tabindex="0" role="option" aria-label="Anne" aria-selected="false">
+                            <span class="e-chip-icon anne"></span><span class="e-chip-text">Anne</span>
+                            <span class="e-chip-delete e-dlt-btn"></span>
+                        </div>
+                        <div class="e-chip e-chip-icon-wrap" tabindex="0" role="option" aria-label="Janet" aria-selected="false">
+                            <span class="e-chip-icon janet"></span>
+                            <span class="e-chip-text">Janet</span>
+                            <span class="e-chip-delete e-dlt-btn"></span>
+                        </div>
+                        <div class="e-chip e-chip-icon-wrap" tabindex="0" role="option" aria-label="Laura" aria-selected="false">
+                            <span class="e-chip-icon laura"></span>
+                            <span class="e-chip-text">Laura</span>
+                            <span class="e-chip-delete e-dlt-btn"></span>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row RowDistance" id="LayoutCollection">
+        @foreach(var item in Layouts)
+        {
+            <div class="col-md-3 layoutElement" style="margin:10px" data-info="@item.Name">
+                <div class="row">
+                    <img src="@item.LayoutThumbnail"  style="width:100%; height:auto;"/>
+                </div>
+                <div class="row">
+                    <button id="LoadLayuouts"  style=" width: 100%;" onclick="SwitchLayout('@item.Name')" class="e-control e-btn e-lib e-primary">@item.Name</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    var solutions = new ej.dropdowns.DropDownList({
+        // set the index value to select an item based on index at initial rendering
+        index: 0,
+        // set the placeholder to DropDownList input element
+        placeholder: 'Solution Name',
+        // set the height of the popup element
+        popupHeight: '200px',
+        // bind the change event
+        change: function () { valueChange(); }
+    });
+    solutions.appendTo('#solutions');
+
+    function valueChange() {
+        
+    }
+
+    var nameFilter = new ej.inputs.TextBox({
+        placeholder: 'Search By Name',
+        cssClass: 'e-outline',
+        floatLabelType: 'Auto'
+    });
+    nameFilter.appendTo('#nameFilter');
+
+    function SearchChanged() {
+        var elements = document.getElementById("LayoutCollection");
+        var searchData = $("#nameFilter").val();
+        for (var child in elements.children) {
+            var element = elements.children[child];
+            var content = element.getAttribute("data-info");
+            if (!content.toUpperCase().includes(searchData.toUpperCase())) {
+                element.style.setProperty("display", "none");
+            }
+            else {
+                element.style.setProperty("display", "");
+            }
+        }
+    }
+
+    function SwitchLayout(layoutName) {
+        window.location.href = "/Dashboard/Index/" + layoutName;
+    }
+</script>

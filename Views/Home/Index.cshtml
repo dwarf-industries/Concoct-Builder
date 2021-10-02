@@ -1,44 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
     var Settings = ViewData["Organizations"] as List<UserSettings>;
+    
 }
 
-<style>
-    .RowDistance {
-        margin-top: 30px;
-    }
 
-    .organizationContiner{
-        width:100%;
-        background:white;
-    }
-    .orgTextElement {
-        height: 100px;
-        text-align: center;
-        position: relative;
-        padding-top: 25px;
-        font-family: "Roboto", "Segoe UI", "GeezaPro", "DejaVu Serif", "sans-serif", "-apple-system", "BlinkMacSystemFont" !important;
-        color: #909090;
-        font-size: 1vw !important;
-    }
-
-    .orgRow {
-        height: 100%;
-        background: #eaeaea80;
-        color: #909090;
-        font-size: 1vw !important;
-        cursor:pointer;
-    }
-        .orgRow:hover {
-            height: 100%;
-            background: #cacaca80;
-            color: #909090;
-            font-size: 1vw !important;
-            cursor: pointer;
-        }
-
-   
-</style>
 
  <div class="container-fluid">
      <div class="col-md-2">
@@ -68,11 +34,14 @@
                  <input id="Password" />
              </div>
           </div>
+         <div class="row RowDistance">
+             <button id="AuthenicateBtn" style=" width: 100%;"  class="e-control e-btn e-lib e-primary">Authenicate</button>
+         </div>
          <div class="row RowDistance" style="min-height:400px; max-height:400px;">
              <div class="organizationContiner">
                 @foreach(var item in Settings)
                 {
-                    <div class="row orgRow" >
+                    <div class="row orgRow" id="Id_@item.Id" onclick="SelectRow(@item.Id)" >
                         <div class="col-sm-3" style="text-align:center">
                             <img src="https://media.istockphoto.com/vectors/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-vector-id1128826884?b=1&k=20&m=1128826884&s=170667a&w=0&h=7tmZDF3-85_rT_7luTYWkXydcRF4ZQ0UWIbW4IwX32E="  style=" height: 100px;"/>
                         </div>
@@ -89,7 +58,7 @@
 
          <div class="row RowDistance">
              <div class="col-md-5">
-                 <button id="LoadLayuouts" style=" width: 100%;">Load Layout</button>
+                 <button id="LoadLayuouts" style=" width: 100%;" onclick="LoadLayouts()">Load Layout</button>
              </div>
              <div class="col-md-2">
 
@@ -107,6 +76,8 @@
 
 <script>
     var mode = true;
+    var selectedItem = 0;
+    var prevItem;
     // Initialize DropDownList component
     var authenicationTypes = new ej.dropdowns.DropDownList({
         // set the index value to select an item based on index at initial rendering
@@ -121,7 +92,7 @@
     authenicationTypes.appendTo('#authenicationTypes');
     // call the change event's function after initialized the component.
     function valueChange() {
-        debugger
+         
         if (authenicationTypes.value === "true") {
             $("#TokenType").hide();
             $("#BasicAuth").show();
@@ -172,5 +143,21 @@
     
     function InitNewLayout() {
         window.location.href = "/Dashboard";
+    }
+
+    function SelectRow(id) {
+
+        if (prevItem !== undefined) {
+            prevItem.setAttribute("class", "row orgRow");
+        }
+
+        var prevItem = document.getElementById("Id_" + id);
+        prevItem.setAttribute("class", "row orgRowActive");
+
+        selectedItem = id;
+    }
+
+    function LoadLayouts() {
+        window.location.href = "/Home/Layouts/" + selectedItem;
     }
 </script>

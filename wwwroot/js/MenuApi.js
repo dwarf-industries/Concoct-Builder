@@ -4,20 +4,25 @@ var isFullScreen = false;
 var fileName = "Untiteled";
 var IsOpen = 0;
 
-var editObj = new ej.inplaceeditor.InPlaceEditor({
-    mode: 'popup',
-    type: 'Text',
-    value: 'Untiteled',
-    change: FileNameChanged,
-    submitOnEnter: true,
-    model: {
-        placeholder: 'Enter Layout Name'
-    },
-    popupSettings: {
-        title: 'Enter Layout Name'
-    }
-});
-editObj.appendTo('#inplace_editor');
+InitSelectedName("Untiteled");
+
+function InitSelectedName(name) {
+    $("#fileNameHolder").html(`<div id='inplace_editor'></div>`);
+    var editObj = new ej.inplaceeditor.InPlaceEditor({
+        mode: 'popup',
+        type: 'Text',
+        value: name,
+        change: FileNameChanged,
+        submitOnEnter: true,
+        model: {
+            placeholder: 'Enter Layout Name'
+        },
+        popupSettings: {
+            title: 'Enter Layout Name'
+        }
+    });
+    editObj.appendTo('#inplace_editor');
+} 
 
 function FileNameChanged(args) {
     fileName = args.value;
@@ -25,6 +30,10 @@ function FileNameChanged(args) {
 
 function GetActiveFileName() {
     return fileName;
+}
+
+function SetSelectedFile(args) {
+    fileName = args;
 }
 
 function ToggleSetting(val) {
