@@ -1,9 +1,9 @@
 {
   "lockfileVersion": 1,
-  "devDependencies": {
-    "@types/node": "^16.10.2"
-  },
   "dependencies": {
+    "@types/node": "^16.10.2",
     "jquery": "^3.6.0"
+
   }
+   
 }
