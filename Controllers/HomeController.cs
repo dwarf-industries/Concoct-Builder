@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Concoct_Builder.Controllers
@@ -126,17 +127,10 @@ namespace Concoct_Builder.Controllers
         [HttpPost]
         public string CCAuthenicationRequest([FromBody] AuthenicationRequest request)
         {
-            var operationStatus = "failed";
-            if (request.AuthType)
-            {
-                operationStatus = "Success";
-            }
-            else
-            {
-                var result = Get($"{request.Instance}?key={request.Token}");
-                operationStatus = "Success";
-            }
-            return operationStatus;
+            var result = Get($"{request.Instance}?key={request.Token}&&username={request.Username}&&password={request.Password}");
+            var parseToObject = JsonSerializer.Deserialize<IncomingServerResponse>(result);
+            
+            return parseToObject.item1 ? "Success" : "failed";
         }
 
         public string Get(string uri)
