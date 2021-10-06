@@ -149,7 +149,94 @@ namespace Concoct_Builder.Datalayer
             });
         }
 
+        internal bool SetLayoutActive(int id)
+        {
+            var context = new ConcoctbuilderDbContext();
+            var oldActive = context.UserSettings.FirstOrDefault(x => x.IsActive == 1);
+            var layout = context.UserSettings.FirstOrDefault(x => x.Id == id);
+            if (layout == null)
+                return false;
 
+            oldActive.IsActive = 0;
+            context.Attach(oldActive);
+            context.Update(oldActive);
+            context.SaveChanges();
+
+            layout.IsActive = 1;
+            context.Attach(layout);
+            context.Update(layout);
+            context.SaveChanges();
+
+            return true;
+        }
+
+        internal void SyncContentDownStream(IncomingServerResponse parseToObject, AuthenicationRequest request)
+        {
+            var context = new ConcoctbuilderDbContext();
+            parseToObject.item3.ForEach(x =>
+            {
+                var getOrganizationByName = context.UserSettings.FirstOrDefault(y => y.OrganizationName.ToLower() == x.ToLower());
+                if(getOrganizationByName == null)
+                {
+                    var lastElement = context.UserSettings.ToList().LastOrDefault();
+                    context.UserSettings.Add(new UserSettings
+                    {
+                        Id = lastElement.Id + 1,
+                        ConnectionType = request.AuthType ? 1 : 0,
+                        Endpoint = request.Instance,
+                        InstanceAddress = $"{request.Instance}/OutboundDetails/AuthenicateCB",
+                        Key = request.Token,
+                        Username = request.Username,
+                        Password = request.Password,
+                        OrganizationName = x.ToLower()
+                    });
+                    context.SaveChanges();
+                }
+            });
+            parseToObject.item2.ForEach(x =>
+            {
+                var getOrganizationByName = context.UserSettings.FirstOrDefault(x => x.OrganizationName.ToLower() == x.OrganizationName.ToLower());
+                if (getOrganizationByName != null)
+                {
+                    var project = context.Projects.FirstOrDefault(y => y.InternalId == x.ProjectId);
+                    if (project == null)
+                    {
+
+                        project = context.Projects.Add(new Projects
+                        {
+                            InternalId = x.ProjectId,
+                            Organization = x.OrganizationName.ToLower(),
+                            ProjectName = x.ProjectName
+                        }).Entity;
+                        context.SaveChanges();
+                    }
+
+                    x.WorkItems.ForEach(y =>
+                    {
+                        var workItem = context.WorkItems.FirstOrDefault(z => z.InternalId == y.id);
+                        if(workItem == null)
+                        {
+                            workItem = context.WorkItems.Add(new WorkItems
+                            {
+                                InternalId = y.id,
+                                ProjectId = project.Id,
+                                Title = y.title,
+                                SprintId = y.iteration,
+                                WorkItemType = y.workItemType
+                            }).Entity;
+                            context.SaveChanges();
+                        }
+                        else
+                        {
+                            workItem.Title = y.title;
+                            context.Attach(workItem);
+                            context.Update(workItem);
+                            context.SaveChanges();
+                        }
+                    });
+                }
+            });
+        }
 
         public string ConvertTobase64(string path)
         {

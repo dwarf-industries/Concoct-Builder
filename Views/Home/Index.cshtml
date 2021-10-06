@@ -39,20 +39,38 @@
          </div>
          <div class="row RowDistance" style="min-height:400px; max-height:400px;">
              <div class="organizationContiner">
-                @foreach(var item in Settings)
-                {
-                    <div class="row orgRow" id="Id_@item.Id" onclick="SelectRow(@item.Id)" >
-                        <div class="col-sm-3" style="text-align:center">
-                            <img src="https://media.istockphoto.com/vectors/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-vector-id1128826884?b=1&k=20&m=1128826884&s=170667a&w=0&h=7tmZDF3-85_rT_7luTYWkXydcRF4ZQ0UWIbW4IwX32E="  style=" height: 100px;"/>
+                 @foreach (var item in Settings)
+                 {
+                     if (item.IsActive == 1)
+                     {
+                         <div class="row orgRowActive" id="Id_@item.Id" onclick="SelectRow(@item.Id)">
+                             <div class="col-sm-3" style="text-align:center">
+                                 <img src="https://media.istockphoto.com/vectors/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-vector-id1128826884?b=1&k=20&m=1128826884&s=170667a&w=0&h=7tmZDF3-85_rT_7luTYWkXydcRF4ZQ0UWIbW4IwX32E=" style=" height: 100px;" />
+                             </div>
+                             <div class="col-sm-4 orgTextElement">
+                                 @item.OrganizationName
+                             </div>
+                             <div class="col-sm-5 orgTextElement">
+                                 @item.InstanceAddress
+                             </div>
+                         </div>
+                     }
+                     else
+                     {
+                        <div class="row orgRow" id="Id_@item.Id" onclick="SelectRow(@item.Id)">
+                             <div class="col-sm-3" style="text-align:center">
+                                 <img src="https://media.istockphoto.com/vectors/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-vector-id1128826884?b=1&k=20&m=1128826884&s=170667a&w=0&h=7tmZDF3-85_rT_7luTYWkXydcRF4ZQ0UWIbW4IwX32E=" style=" height: 100px;" />
+                             </div>
+                             <div class="col-sm-4 orgTextElement">
+                                 @item.OrganizationName
+                             </div>
+                             <div class="col-sm-5 orgTextElement">
+                                 @item.InstanceAddress
+                             </div>
                         </div>
-                        <div class="col-sm-4 orgTextElement">
-                            @item.OrganizationName
-                        </div>
-                        <div class="col-sm-5 orgTextElement">
-                            @item.InstanceAddress
-                        </div>
-                    </div>
-                }
+                     }
+                    
+                 }
              </div>
          </div>
 
@@ -78,6 +96,11 @@
     var mode = true;
     var selectedItem = 0;
     var prevItem;
+
+    var elId = "@Settings.FirstOrDefault(x=>x.IsActive == 1).Id";
+
+    prevItem = document.getElementById("Id_" + elId);
+
     // Initialize DropDownList component
     var authenicationTypes = new ej.dropdowns.DropDownList({
         // set the index value to select an item based on index at initial rendering
@@ -146,15 +169,26 @@
     }
 
     function SelectRow(id) {
+        selectedItem = id;
 
-        if (prevItem !== undefined) {
-            prevItem.setAttribute("class", "row orgRow");
+        var dto = {
+            Id: selectedItem,
         }
 
-        var prevItem = document.getElementById("Id_" + id);
-        prevItem.setAttribute("class", "row orgRowActive");
+        $.ajax({
+            method: "POST",
+            contentType: "application/json",
+            url: "/Home/SetLayoutActive",
+            data: JSON.stringify(dto)
+        }).done(function (msg) {
+            debugger
+            if (prevItem !== undefined) {
+                prevItem.setAttribute("class", "row orgRow");
+            }
 
-        selectedItem = id;
+            prevItem = document.getElementById("Id_" + id);
+            prevItem.setAttribute("class", "row orgRowActive");
+        });
     }
 
     function LoadLayouts() {
@@ -174,21 +208,22 @@
             Instance: serverInstance,
             AuthType:mode
         }
-        if (!mode) {
-            ShowInfo("Attempting to authenicate with a token!");
-            $.ajax({
-                method: "POST",
-                contentType: "application/json",
-                url: "/Home/CCAuthenicationRequest",
-                data: JSON.stringify(dto)
-            }).done(function (msg) {
-                ShowInfo(msg);
-            });
-             
-        }
-        else {
-            ShowAlert("Not yet implemented!");
-        }
-       
+
+        ShowInfo("Attempting to authenicate!");
+
+        $.ajax({
+            method: "POST",
+            contentType: "application/json",
+            url: "/Home/CCAuthenicationRequest",
+            data: JSON.stringify(dto)
+        }).done(function (msg) {
+            if (msg === "Success") {
+                window.location.reload();
+            }
+            else {
+                ShowAlert(msg);
+            }
+        });
+
     }
 </script>

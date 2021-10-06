@@ -24,6 +24,14 @@
       {
          "Name": "LayoutData",
          "ObjectType": 0
+      },
+      {
+         "Name": "Projects",
+         "ObjectType": 0
+      },
+      {
+         "Name": "WorkItems",
+         "ObjectType": 0
       }
    ],
    "UiHint": "ConcoctBuilder",

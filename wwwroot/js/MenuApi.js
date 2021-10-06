@@ -1,5 +1,4 @@
-﻿const { get } = require("jquery");
-
+﻿
 var isFullScreen = false;
 var fileName = "Untiteled";
 var IsOpen = 0;
