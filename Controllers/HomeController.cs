@@ -127,10 +127,18 @@ namespace Concoct_Builder.Controllers
         [HttpPost]
         public string CCAuthenicationRequest([FromBody] AuthenicationRequest request)
         {
-            var result = Get($"{request.Instance}?key={request.Token}&&username={request.Username}&&password={request.Password}");
+            var result = Get($"{request.Instance}/OutboundDetails/AuthenicateCB?key={request.Token}&&username={request.Username}&&password={request.Password}");
             var parseToObject = JsonSerializer.Deserialize<IncomingServerResponse>(result);
-            
+            handler.SyncContentDownStream(parseToObject, request);
             return parseToObject.item1 ? "Success" : "failed";
+        }
+
+        [HttpPost]
+        public bool SetLayoutActive([FromBody] IncomingIdRequest request)
+        {
+            
+            var result = handler.SetLayoutActive(request.Id);
+            return result;
         }
 
         public string Get(string uri)

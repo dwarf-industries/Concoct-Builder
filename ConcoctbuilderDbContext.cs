@@ -21,6 +21,7 @@ namespace Concoct_Builder
             }
         }
 
+
         public ConcoctbuilderDbContext(DbContextOptions<ConcoctbuilderDbContext> options)
             : base(options)
         {
@@ -28,7 +29,9 @@ namespace Concoct_Builder
 
         public virtual DbSet<LayoutData> LayoutData { get; set; }
         public virtual DbSet<Layouts> Layouts { get; set; }
+        public virtual DbSet<Projects> Projects { get; set; }
         public virtual DbSet<UserSettings> UserSettings { get; set; }
+        public virtual DbSet<WorkItems> WorkItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -53,6 +56,8 @@ namespace Concoct_Builder
             modelBuilder.Entity<UserSettings>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.OrganizationName).IsRequired();
             });
 
             OnModelCreatingPartial(modelBuilder);

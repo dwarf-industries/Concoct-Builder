@@ -18,6 +18,7 @@ namespace Concoct_Builder.Models
         public int ProjectId { get; set; }
         public string ProjectName { get; set; }
         public List<InternalWorkItem> WorkItems { get; set; }
+        public string OrganizationName { get; set; }
     }
 
     public class InternalWorkItem
