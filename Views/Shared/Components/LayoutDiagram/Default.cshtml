@@ -350,27 +350,20 @@
             },
             sizeChange: function (args) {
                 try {
-                    var element = args.source.nodes[0].id;
 
-                    //Check if the changed property has a valid ID
-                    if (element === undefined)
-                        return;
+                    var eventType = args.source.nodes.length;
 
-                    //Get the co ordinates of the new position
-                    var width = args.newValue.width;
-                    var height = args.newValue.height;
+                    if (eventType === 1) {
+                        UpdateNodeSize(args.source.nodes[0].id, args.newValue.width, args.newValue.height);
+                    }
+                    else {
+                        args.source.nodes.forEach(x => {
+                            UpdateNodeSize(x.id, x.width, x.height);
 
-                    //Find the index of the element and assign it to the node object
-                    let index = nodes.findIndex(node => node.id === element);
-                    nodes[index].width = width;
-                    nodes[index].height = height;
-                    var item = activeNodeCompoents[element].cloneNode(true);
-                    item.style.setProperty("width", "100%");
-                    item.style.setProperty("height", "100%");
-                    RedRaw();
-
-                    item.style.setProperty("display", "");
-                    nodes[index].shape.content = item
+                        });
+                    }
+                 
+               
                 }
                 catch (e) {
 
@@ -479,7 +472,7 @@
                 success: function (data) {
 
                     $("#tpmTemplate").html(data);
-
+                    var isCustom = false;
                     var getClone = document.getElementById("tpmTemplate").cloneNode(true);
                     var cNode = parseInt(nodes.length) + 1;
                     var newId = 'node' + cNode;
@@ -502,6 +495,7 @@
                     };
                     if (x.base64 !== undefined && x.base64 !== "" && x.base64 !== null) {
                         SetContent(x.base64);
+                        isCustom = true;
                     }
                     //Ensure panel can grow on all sides and set it visible
                     getClone.style.setProperty("width", "100%");
@@ -517,7 +511,8 @@
                             content: getClone
                         },
                         ComponentName: x.componentName,
-                        Base64: x.Base64
+                        Base64: x.Base64,
+                        IsCustom: isCustom
 
                     });
                     //Draw the layoutDiagram
@@ -570,7 +565,8 @@
             },
             ComponentName: componentName,
             Events: [],
-            Base64: ""
+            Base64: "",
+            isCustom: false
         });
 
         //Draw the layoutDiagram
@@ -660,10 +656,34 @@
             var tempalte = imageElement.parentElement.parentElement;
             let index = nodes.findIndex(node => node.id === activeNode);
             nodes[index].shape.content = tempalte;
-           
+            nodes[index].IsCustom = true;
           });
 
     }
 
+
+    function UpdateNodeSize(id, width, height) {
+        var element = id;
+
+        //Check if the changed property has a valid ID
+        if (element === undefined)
+            return;
+
+        
+
+        //Find the index of the element and assign it to the node object
+        let index = nodes.findIndex(node => node.id === element);
+        nodes[index].width = width;
+        nodes[index].height = height;
+        if (nodes[index].IsCustom !== undefined && !nodes[index].IsCustom) {
+            var item = activeNodeCompoents[element].cloneNode(true);
+            item.style.setProperty("width", "100%");
+            item.style.setProperty("height", "100%");
+            RedRaw();
+
+            item.style.setProperty("display", "");
+            nodes[index].shape.content = item
+        }
+    }
    
 </script>
