@@ -1,6 +1,7 @@
 ﻿@{ 
     ViewData["Title"] = "Load Layout";
     var Layouts = ViewData["Layouts"] as List<Layouts>;
+    var Projects = ViewData["GetAllProjectsForOrganization"] as List<Projects>;
 }
 
 <style>
@@ -19,8 +20,11 @@
         <div class="col-md-4">
             <div id="default"  >
                 <select id="solutions">
-                    <option value="true">Not Implemented</option>
-                 </select>
+                    @foreach (var project in Projects)
+                    {
+                        <option value="@project.Id">@project.ProjectName</option>
+                    }
+                </select>
             </div>
         </div>
         <div class="col-md-4">
@@ -49,7 +53,7 @@
     <div class="row RowDistance" id="LayoutCollection">
         @foreach(var item in Layouts)
         {
-            <div class="col-md-3 layoutElement" style="margin:10px" data-info="@item.Name">
+            <div class="col-md-3 layoutElement" style="margin:10px" data-info="@item.Name" data-project="@item.ProjectId" data-workitem="@item.WorkItemId">
                 <div class="row">
                     <img src="@item.LayoutThumbnail"  style="width:100%; height:auto;"/>
                 </div>
@@ -70,12 +74,25 @@
         // set the height of the popup element
         popupHeight: '200px',
         // bind the change event
-        change: function () { valueChange(); }
+        change: valueChange
     });
     solutions.appendTo('#solutions');
 
-    function valueChange() {
-        
+    function valueChange(args) {
+        debugger
+        var selected = args.itemData.value;
+
+        var elements = document.getElementById("LayoutCollection");
+        for (var child in elements.children) {
+            var element = elements.children[child];
+            var content = element.getAttribute("data-project");
+            if (content !== selected) {
+                element.style.setProperty("display", "none");
+            }
+            else {
+                element.style.setProperty("display", "");
+            }
+        }
     }
 
     var nameFilter = new ej.inputs.TextBox({

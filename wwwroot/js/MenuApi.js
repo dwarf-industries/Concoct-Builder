@@ -21,6 +21,7 @@ function InitSelectedName(name) {
         }
     });
     editObj.appendTo('#inplace_editor');
+    fileName = name;
 } 
 
 function FileNameChanged(args) {

@@ -459,6 +459,12 @@
         nodes = [];
         activeNodeCompoents = {};
         elements.forEach(x => {
+            try {
+
+            }
+            catch (e) {
+
+            }
             $.ajax({
                 url: "/Home/GetComponent?componentName=" + x.componentName,
                 method: "GET",
@@ -505,16 +511,26 @@
                         },
                         ComponentName: x.componentName,
                         Base64: x.Base64,
-                        IsCustom: isCustom
+                        IsCustom: isCustom,
+                        Loaded:true
 
                     });
                     //Draw the layoutDiagram
                     DrawLayoutDiagramDiagram();
                     $("#tpmTemplate").html(""); //Dispose the template so widgets don't draw inside of it.
                     //Redraw can be disposed of ??
+                },
+                error: function (Exception) {
+                    //Recursive but electron.net sometimes fails ot inialize viewcomponents.
+                    AddLayoutElementsAt(elements);
                 }
             });
         });
+
+        setTimeout(function () {
+            RedRaw();
+        },300)
+       
 
     }
 
@@ -559,7 +575,8 @@
             ComponentName: componentName,
             Events: [],
             Base64: "",
-            isCustom: false
+            isCustom: false,
+            Loaded: false
         });
 
         //Draw the layoutDiagram
@@ -608,11 +625,30 @@
                 tpmactiveNodes[nodes[node].id] = activeNodeCompoents[nodes[node].id];
                 i++;
             }
+            else {
+                if (nodes[node].Loaded) {
+                    var dto = {
+                        Layout: GetActiveFileName(),
+                        File: nodes[node].id
+                    }
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/Home/RemoveItemFromLayout",
+                        contentType: "application/json",
+                        data: JSON.stringify(dto)
+                    }).done(function (args) {
+
+
+                    });
+                }
+            }
         }
 
         //Assign the two varibles to the global objects used by the collection next time an object is being added.
         nodes = tpmNodes;
         activeNodeCompoents = tpmactiveNodes;
+        DrawLayoutDiagramDiagram();
     }
 
 

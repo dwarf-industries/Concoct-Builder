@@ -35,6 +35,7 @@ namespace Concoct_Builder.Controllers
         public IActionResult Layouts(int id)
         {
             ViewData["Layouts"] = handler.GetAllLayoutsByOrganization(id);
+            ViewData["GetAllProjectsForOrganization"] = handler.GetAllProjetsForOrganization(id);
             return View();
         }
 

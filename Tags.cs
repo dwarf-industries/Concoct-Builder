@@ -6,20 +6,16 @@ using System.Collections.Generic;
 
 namespace Concoct_Builder
 {
-    public partial class Projects
+    public partial class Tags
     {
-        public Projects()
+        public Tags()
         {
             AssociatedTags = new HashSet<AssociatedTags>();
-            Layouts = new HashSet<Layouts>();
         }
 
         public long Id { get; set; }
-        public string Organization { get; set; }
-        public string ProjectName { get; set; }
-        public long InternalId { get; set; }
+        public string Name { get; set; }
 
         public virtual ICollection<AssociatedTags> AssociatedTags { get; set; }
-        public virtual ICollection<Layouts> Layouts { get; set; }
     }
 }

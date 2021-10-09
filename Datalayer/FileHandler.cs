@@ -36,7 +36,17 @@ namespace Concoct_Builder.Datalayer
         internal List<Layouts> GetAllLayoutsByOrganization(int id)
         {
             var context = new ConcoctbuilderDbContext();
-            return context.Layouts.Where(x => x.UserSetting == 0 && x.UserSetting == id).ToList();
+            return context.Layouts.Where(x => x.UserSetting == 0 || x.UserSetting == id).ToList();
+        }
+
+        internal List<Projects> GetAllProjetsForOrganization(int id)
+        {
+            var context = new ConcoctbuilderDbContext();
+            var organizationName = context.UserSettings.FirstOrDefault(x => x.Id == id);
+            if (organizationName == null)
+                return null;
+
+            return context.Projects.Where(x => x.Organization == organizationName.OrganizationName).ToList();
         }
 
         internal List<UserSettings> GetAllOrganizations()
