@@ -2,6 +2,7 @@
     ViewData["Title"] = "Load Layout";
     var Layouts = ViewData["Layouts"] as List<Layouts>;
     var Projects = ViewData["GetAllProjectsForOrganization"] as List<Projects>;
+    var Tags = ViewData["OrganizationTags"] as List<Tags>;
 }
 
 <style>
@@ -18,7 +19,7 @@
             <input id="nameFilter" onkeyup="SearchChanged()" />
         </div>
         <div class="col-md-4">
-            <div id="default"  >
+            <div id="default">
                 <select id="solutions">
                     @foreach (var project in Projects)
                     {
@@ -31,93 +32,130 @@
             <div id="contextmenutarget_b89cf4d5w2y" style="width:100%;height:100%;">
                 <div class="sample-padding" id="container_b89cf4d5w2y">
                     <div id="chip-avatar_b89cf4d5w2y" class="e-lib e-chip-list e-control e-chip-set" role="listbox" aria-multiselectable="false" data-ripple="true">
-                        <div class="e-chip e-chip-icon-wrap" tabindex="0" role="option" aria-label="Anne" aria-selected="false">
-                            <span class="e-chip-icon anne"></span><span class="e-chip-text">Anne</span>
-                            <span class="e-chip-delete e-dlt-btn"></span>
-                        </div>
-                        <div class="e-chip e-chip-icon-wrap" tabindex="0" role="option" aria-label="Janet" aria-selected="false">
-                            <span class="e-chip-icon janet"></span>
-                            <span class="e-chip-text">Janet</span>
-                            <span class="e-chip-delete e-dlt-btn"></span>
-                        </div>
-                        <div class="e-chip e-chip-icon-wrap" tabindex="0" role="option" aria-label="Laura" aria-selected="false">
-                            <span class="e-chip-icon laura"></span>
-                            <span class="e-chip-text">Laura</span>
-                            <span class="e-chip-delete e-dlt-btn"></span>
-                        </div>
-                     </div>
+                        @foreach (var tag in Tags)
+                        {
+                            <div class="e-chip e-chip-icon-wrap" tabindex="0" role="option" aria-label="@tag.Name" aria-selected="false" onclick="SelectTag('@tag.Name')">
+                                <span class="e-chip-text">@tag.Name</span>
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row RowDistance">
+        <button id="ClearFilters" style=" width: 100%;" onclick="ClearFilters()" class="e-control e-btn e-lib e-primary">Clear Filters</button>
+    </div>
     <div class="row RowDistance" id="LayoutCollection">
-        @foreach(var item in Layouts)
+        @foreach (var item in Layouts)
         {
-            <div class="col-md-3 layoutElement" style="margin:10px" data-info="@item.Name" data-project="@item.ProjectId" data-workitem="@item.WorkItemId">
+            var tagsData = string.Empty;
+            foreach (var tag in @item.AssociatedTags.Select(y => y.Tag.Name).ToList())
+            {
+                tagsData += $"{tag},";
+            }
+            <div class="col-md-3 layoutElement" style="margin:10px" data-info="@item.Name" data-project="@item.ProjectId" data-workitem="@item.WorkItemId" data-tags="@tagsData">
                 <div class="row">
-                    <img src="@item.LayoutThumbnail"  style="width:100%; height:auto;"/>
+                    <img src="@item.LayoutThumbnail" style="width:100%; height:auto;" />
                 </div>
                 <div class="row">
-                    <button id="LoadLayuouts"  style=" width: 100%;" onclick="SwitchLayout('@item.Name')" class="e-control e-btn e-lib e-primary">@item.Name</button>
+                    <button id="LoadLayuouts" style=" width: 100%;" onclick="SwitchLayout('@item.Name')" class="e-control e-btn e-lib e-primary">@item.Name</button>
                 </div>
             </div>
         }
     </div>
 </div>
 
-<script>
-    var solutions = new ej.dropdowns.DropDownList({
-        // set the index value to select an item based on index at initial rendering
-        index: 0,
-        // set the placeholder to DropDownList input element
-        placeholder: 'Solution Name',
-        // set the height of the popup element
-        popupHeight: '200px',
-        // bind the change event
-        change: valueChange
-    });
-    solutions.appendTo('#solutions');
+    <script>
+        var activeTags = [];
+        var selected = "";
+        var solutions = new ej.dropdowns.DropDownList({
+            // set the index value to select an item based on index at initial rendering
+            index: 0,
+            // set the placeholder to DropDownList input element
+            placeholder: 'Solution Name',
+            // set the height of the popup element
+            popupHeight: '200px',
+            // bind the change event
+            change: valueChange
+        });
+        solutions.appendTo('#solutions');
 
-    function valueChange(args) {
-        debugger
-        var selected = args.itemData.value;
+        function valueChange(args) {
+             
+            selected = args.itemData.value;
 
-        var elements = document.getElementById("LayoutCollection");
-        for (var child in elements.children) {
-            var element = elements.children[child];
-            var content = element.getAttribute("data-project");
-            if (content !== selected) {
-                element.style.setProperty("display", "none");
+             
+            SearchChanged();
+        }
+
+        function SelectTag(tag) {
+            var tpmTags = [];
+            tpmTags.push(tag);
+
+            for (var cTag in activeTags) {
+                if (cTag !== tag) {
+                    tpmTags.push(cTag);
+                }
             }
-            else {
-                element.style.setProperty("display", "");
+            
+            activeTags = tpmTags;
+            SearchChanged();
+        }
+
+        var nameFilter = new ej.inputs.TextBox({
+            placeholder: 'Search By Name',
+            cssClass: 'e-outline',
+            floatLabelType: 'Auto'
+        });
+        nameFilter.appendTo('#nameFilter');
+
+        function SearchChanged() {
+            var elements = document.getElementById("LayoutCollection");
+            var searchData = $("#nameFilter").val();
+            for (var child in elements.children) {
+                try {
+                    var element = elements.children[child];
+                    var content = element.getAttribute("data-info");
+                    var project = element.getAttribute("data-project");
+                    var tags = element.getAttribute("data-tags");
+
+                    if (!content.toUpperCase().includes(searchData.toUpperCase()) || project !== selected) {
+                        element.style.setProperty("display", "none");
+                    }
+                    else {
+                        if (activeTags.length > 0) {
+                            for (var tag in activeTags) {
+                                if (!tags.includes(activeTags[tag])) {
+                                    element.style.setProperty("display", "none");
+                                }
+                                else {
+                                    element.style.setProperty("display", "");
+                                }
+                            }
+                        }
+                        else {
+                            element.style.setProperty("display", "");
+                        }
+                    
+                    }
+                }
+                catch (e) {
+
+                }
+             
             }
         }
-    }
 
-    var nameFilter = new ej.inputs.TextBox({
-        placeholder: 'Search By Name',
-        cssClass: 'e-outline',
-        floatLabelType: 'Auto'
-    });
-    nameFilter.appendTo('#nameFilter');
-
-    function SearchChanged() {
-        var elements = document.getElementById("LayoutCollection");
-        var searchData = $("#nameFilter").val();
-        for (var child in elements.children) {
-            var element = elements.children[child];
-            var content = element.getAttribute("data-info");
-            if (!content.toUpperCase().includes(searchData.toUpperCase())) {
-                element.style.setProperty("display", "none");
-            }
-            else {
-                element.style.setProperty("display", "");
-            }
+        function ClearFilters() {
+            activeTags = [];
+            $("#nameFilter").val("");
+            $("#solutions").val("");
+            selected = "";
+            SearchChanged();
         }
-    }
 
-    function SwitchLayout(layoutName) {
-        window.location.href = "/Dashboard/Index/" + layoutName;
-    }
-</script>
+        function SwitchLayout(layoutName) {
+            window.location.href = "/Dashboard/Index/" + layoutName;
+        }
+    </script>

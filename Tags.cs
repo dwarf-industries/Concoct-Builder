@@ -15,6 +15,7 @@ namespace Concoct_Builder
 
         public long Id { get; set; }
         public string Name { get; set; }
+        public long? IsNew { get; set; }
 
         public virtual ICollection<AssociatedTags> AssociatedTags { get; set; }
     }

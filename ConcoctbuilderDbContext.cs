@@ -21,6 +21,7 @@ namespace Concoct_Builder
             }
         }
 
+
         public ConcoctbuilderDbContext(DbContextOptions<ConcoctbuilderDbContext> options)
             : base(options)
         {
@@ -75,6 +76,11 @@ namespace Concoct_Builder
                 entity.HasOne(d => d.WorkItem)
                     .WithMany(p => p.Layouts)
                     .HasForeignKey(d => d.WorkItemId);
+            });
+
+            modelBuilder.Entity<Tags>(entity =>
+            {
+                entity.Property(e => e.IsNew).HasDefaultValueSql("0");
             });
 
             modelBuilder.Entity<UserSettings>(entity =>

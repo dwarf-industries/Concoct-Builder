@@ -12,6 +12,7 @@ namespace Concoct_Builder
         public long? TagId { get; set; }
         public long? LayoutId { get; set; }
         public long? ProjectId { get; set; }
+        public string Organization { get; set; }
 
         public virtual Layouts Layout { get; set; }
         public virtual Projects Project { get; set; }
