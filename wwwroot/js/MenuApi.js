@@ -1,4 +1,5 @@
-﻿
+﻿const { notDeepStrictEqual } = require("assert");
+
 var isFullScreen = false;
 var fileName = "Untiteled";
 var IsOpen = 0;
@@ -116,6 +117,7 @@ function FileSelected(dto) {
                 OffsetX: nodes[item].offsetX.toString(),
                 OffsetY: nodes[item].offsetY.toString(),
                 ComponentName: nodes[item].ComponentName === undefined ? "" : nodes[item].ComponentName,
+                Base64: nodes[item].base64,
                 Events: nodes[item].Events
             });
         }
