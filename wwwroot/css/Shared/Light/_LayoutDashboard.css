@@ -4,27 +4,23 @@
 /* header-section styles */
 #header-section.main-header {
     border-bottom: 1px solid #d2d6de;
-    height: 55px;
-    min-height: 55px;
-    max-height: 55px;
+    height: 36px;
+    min-height: 36px;
+    max-height: 36px;
     background: #1c86c8;
     color: #fff;
 }
 
 #header-section .header-style {
-    line-height: 40px;
-    height: 55px;
     padding: 8px;
     list-style: none;
     cursor: pointer;
     text-align: center;
-    font-size: 18px;
-}
+ }
 
 #header-section .border-left {
     border-left: 1px solid #d2d6de;
-    width: 10em;
-}
+ }
 
 #header-section .float-left {
     float: left;
