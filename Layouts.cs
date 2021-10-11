@@ -10,6 +10,7 @@ namespace Concoct_Builder
     {
         public Layouts()
         {
+            AssociatedTags = new HashSet<AssociatedTags>();
             LayoutDataLayout = new HashSet<LayoutData>();
             LayoutDataRefereenceScreenNavigation = new HashSet<LayoutData>();
         }
@@ -21,8 +22,13 @@ namespace Concoct_Builder
         public string Owner { get; set; }
         public long? UserSetting { get; set; }
         public string LayoutThumbnail { get; set; }
+        public long? ProjectId { get; set; }
+        public long? WorkItemId { get; set; }
 
+        public virtual Projects Project { get; set; }
         public virtual UserSettings UserSettingNavigation { get; set; }
+        public virtual WorkItems WorkItem { get; set; }
+        public virtual ICollection<AssociatedTags> AssociatedTags { get; set; }
         public virtual ICollection<LayoutData> LayoutDataLayout { get; set; }
         public virtual ICollection<LayoutData> LayoutDataRefereenceScreenNavigation { get; set; }
     }

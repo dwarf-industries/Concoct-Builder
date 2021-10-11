@@ -10,7 +10,7 @@ namespace Concoct_Builder.Models
         public bool item1 { get; set; }
         public List<InternalProject> item2 { get; set; }
         public List<string> item3 { get; set; }
-
+        public List<ConcoctTagList> item4 { get; set; }
     }
 
     public class InternalProject
@@ -28,4 +28,12 @@ namespace Concoct_Builder.Models
         public string title { get; set; }
         public int iteration { get; set; }
     }
+
+    public class ConcoctTagList
+    {
+        public string Organization { get; set; }
+        public List<string> Tags { get; set; }
+    }
+
+   
 }

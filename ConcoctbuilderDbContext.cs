@@ -27,14 +27,31 @@ namespace Concoct_Builder
         {
         }
 
+        public virtual DbSet<AssociatedTags> AssociatedTags { get; set; }
         public virtual DbSet<LayoutData> LayoutData { get; set; }
         public virtual DbSet<Layouts> Layouts { get; set; }
         public virtual DbSet<Projects> Projects { get; set; }
+        public virtual DbSet<Tags> Tags { get; set; }
         public virtual DbSet<UserSettings> UserSettings { get; set; }
         public virtual DbSet<WorkItems> WorkItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AssociatedTags>(entity =>
+            {
+                entity.HasOne(d => d.Layout)
+                    .WithMany(p => p.AssociatedTags)
+                    .HasForeignKey(d => d.LayoutId);
+
+                entity.HasOne(d => d.Project)
+                    .WithMany(p => p.AssociatedTags)
+                    .HasForeignKey(d => d.ProjectId);
+
+                entity.HasOne(d => d.Tag)
+                    .WithMany(p => p.AssociatedTags)
+                    .HasForeignKey(d => d.TagId);
+            });
+
             modelBuilder.Entity<LayoutData>(entity =>
             {
                 entity.HasOne(d => d.Layout)
@@ -48,9 +65,22 @@ namespace Concoct_Builder
 
             modelBuilder.Entity<Layouts>(entity =>
             {
+                entity.HasOne(d => d.Project)
+                    .WithMany(p => p.Layouts)
+                    .HasForeignKey(d => d.ProjectId);
+
                 entity.HasOne(d => d.UserSettingNavigation)
                     .WithMany(p => p.Layouts)
                     .HasForeignKey(d => d.UserSetting);
+
+                entity.HasOne(d => d.WorkItem)
+                    .WithMany(p => p.Layouts)
+                    .HasForeignKey(d => d.WorkItemId);
+            });
+
+            modelBuilder.Entity<Tags>(entity =>
+            {
+                entity.Property(e => e.IsNew).HasDefaultValueSql("0");
             });
 
             modelBuilder.Entity<UserSettings>(entity =>

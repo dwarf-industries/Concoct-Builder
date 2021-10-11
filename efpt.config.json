@@ -18,10 +18,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "Layouts",
-         "ObjectType": 0
-      },
-      {
          "Name": "LayoutData",
          "ObjectType": 0
       },
@@ -31,6 +27,18 @@
       },
       {
          "Name": "WorkItems",
+         "ObjectType": 0
+      },
+      {
+         "Name": "Layouts",
+         "ObjectType": 0
+      },
+      {
+         "Name": "Tags",
+         "ObjectType": 0
+      },
+      {
+         "Name": "AssociatedTags",
          "ObjectType": 0
       }
    ],

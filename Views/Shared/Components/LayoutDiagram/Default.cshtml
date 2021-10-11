@@ -280,14 +280,7 @@
     dialog.hide();
 
     let nodes = [
-        {
-            id: 'node1', width: 60, height: 40, offsetX: 160, offsetY: 480,
-            shape:
-            {
-                type: 'HTML',
-                content: `<div style="display:block"><div class="e-avatar e-avatar-xlarge e-avatar-circle Screen"><div class="fa fa-desktop" ></div></div><p> Untiteled.cf</p></div>`
-            }
-        }
+        
     ];
     let layoutConnectors = [];
 
@@ -462,10 +455,20 @@
     }
 
     function AddLayoutElementsAt(elements) {
-
+        if (elements === undefined) {
+            ShowAlert("Initialization Failed, please contact the support with the following code: Error 22");
+            return;
+        }
+            
         nodes = [];
         activeNodeCompoents = {};
         elements.forEach(x => {
+            try {
+
+            }
+            catch (e) {
+
+            }
             $.ajax({
                 url: "/Home/GetComponent?componentName=" + x.componentName,
                 method: "GET",
@@ -487,20 +490,36 @@
                         idIndex++; //Increment by 1 in case it fails
                     }
 
+                    if (x.base64 !== undefined && x.base64 !== "" && x.base64 !== null) {
+
+                        var activeId = uuId;
+                        var imageElement = document.getElementById("placeholder_" + activeId);
+                        imageElement.setAttribute("src", "data:image/jpeg;base64, " + x.base64);
+                        imageElement.style.setProperty("display", "");
+
+                        imageElement.style.setProperty("width", "100%");
+                        imageElement.style.setProperty("height", "100%");
+                        imageElement.style.setProperty("display", "");
+                        getClone = imageElement;
+                        activeNodeCompoents[newId] = getClone;
+                        isCustom = true;
+                    }
+                    else {
+                        activeNodeCompoents[newId] = getClone.cloneNode(true);
+                        //Ensure panel can grow on all sides and set it visible
+                        getClone.style.setProperty("width", "100%");
+                        getClone.style.setProperty("height", "100%");
+                        getClone.style.setProperty("display", "");
+
+                    }
                     //Assign the ViewComponent in a shadow dom so it can be resized and applied to the graph on resize
-                    activeNodeCompoents[newId] = getClone.cloneNode(true);
                     activeNodeOptions[newId] = {
                         uuId: uuId,
                         elementOptions: elementOptions
                     };
-                    if (x.base64 !== undefined && x.base64 !== "" && x.base64 !== null) {
-                        SetContent(x.base64);
-                        isCustom = true;
-                    }
-                    //Ensure panel can grow on all sides and set it visible
-                    getClone.style.setProperty("width", "100%");
-                    getClone.style.setProperty("height", "100%");
-                    getClone.style.setProperty("display", "");
+                    debugger
+                  
+                   
 
                     //Add the new view component to the node array.
                     nodes.push({
@@ -511,17 +530,27 @@
                             content: getClone
                         },
                         ComponentName: x.componentName,
-                        Base64: x.Base64,
-                        IsCustom: isCustom
+                        base64: x.base64,
+                        IsCustom: isCustom,
+                        Loaded:true
 
                     });
                     //Draw the layoutDiagram
                     DrawLayoutDiagramDiagram();
                     $("#tpmTemplate").html(""); //Dispose the template so widgets don't draw inside of it.
                     //Redraw can be disposed of ??
+                },
+                error: function (Exception) {
+                    //Recursive but electron.net sometimes fails ot inialize viewcomponents.
+                    AddLayoutElementsAt(elements);
                 }
             });
         });
+
+        setTimeout(function () {
+            RedRaw();
+        },300)
+       
 
     }
 
@@ -566,7 +595,8 @@
             ComponentName: componentName,
             Events: [],
             Base64: "",
-            isCustom: false
+            isCustom: false,
+            Loaded: false
         });
 
         //Draw the layoutDiagram
@@ -615,11 +645,30 @@
                 tpmactiveNodes[nodes[node].id] = activeNodeCompoents[nodes[node].id];
                 i++;
             }
+            else {
+                if (nodes[node].Loaded) {
+                    var dto = {
+                        Layout: GetActiveFileName(),
+                        File: nodes[node].id
+                    }
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/Home/RemoveItemFromLayout",
+                        contentType: "application/json",
+                        data: JSON.stringify(dto)
+                    }).done(function (args) {
+
+
+                    });
+                }
+            }
         }
 
         //Assign the two varibles to the global objects used by the collection next time an object is being added.
         nodes = tpmNodes;
         activeNodeCompoents = tpmactiveNodes;
+        DrawLayoutDiagramDiagram();
     }
 
 
@@ -652,9 +701,10 @@
             imageElement.setAttribute("src", "data:image/jpeg;base64, " + args);
             imageElement.style.setProperty("display", "");
 
-            UpdatePlaceholderContent(activeNode, args);
+           // UpdatePlaceholderContent(activeNode, args);
             var tempalte = imageElement.parentElement.parentElement;
             let index = nodes.findIndex(node => node.id === activeNode);
+            nodes[index].base64 = args;
             nodes[index].shape.content = tempalte;
             nodes[index].IsCustom = true;
           });

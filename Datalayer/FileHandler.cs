@@ -1,4 +1,5 @@
 ﻿using Concoct_Builder.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,27 @@ namespace Concoct_Builder.Datalayer
         internal List<Layouts> GetAllLayoutsByOrganization(int id)
         {
             var context = new ConcoctbuilderDbContext();
-            return context.Layouts.Where(x => x.UserSetting == 0 && x.UserSetting == id).ToList();
+            return context.Layouts.Include(x=>x.AssociatedTags).ThenInclude(AssociatedTags=> AssociatedTags.Tag).Where(x => x.UserSetting == 0 || x.UserSetting == id).ToList();
+        }
+
+        internal List<Tags> GetAllOrganizationTags(int id)
+        {
+            var context = new ConcoctbuilderDbContext();
+            var organization = context.UserSettings.FirstOrDefault(x => x.Id == id);
+            return context.AssociatedTags.Include(x => x.Tag)
+                                         .Where(x => x.Organization == organization.OrganizationName)
+                                         .Select(x => x.Tag)
+                                         .ToList();
+        }
+
+        internal List<Projects> GetAllProjetsForOrganization(int id)
+        {
+            var context = new ConcoctbuilderDbContext();
+            var organizationName = context.UserSettings.FirstOrDefault(x => x.Id == id);
+            if (organizationName == null)
+                return null;
+
+            return context.Projects.Where(x => x.Organization == organizationName.OrganizationName).ToList();
         }
 
         internal List<UserSettings> GetAllOrganizations()
@@ -176,7 +197,7 @@ namespace Concoct_Builder.Datalayer
             parseToObject.item3.ForEach(x =>
             {
                 var getOrganizationByName = context.UserSettings.FirstOrDefault(y => y.OrganizationName.ToLower() == x.ToLower());
-                if(getOrganizationByName == null)
+                if (getOrganizationByName == null)
                 {
                     var lastElement = context.UserSettings.ToList().LastOrDefault();
                     context.UserSettings.Add(new UserSettings
@@ -214,7 +235,7 @@ namespace Concoct_Builder.Datalayer
                     x.WorkItems.ForEach(y =>
                     {
                         var workItem = context.WorkItems.FirstOrDefault(z => z.InternalId == y.id);
-                        if(workItem == null)
+                        if (workItem == null)
                         {
                             workItem = context.WorkItems.Add(new WorkItems
                             {
@@ -235,6 +256,27 @@ namespace Concoct_Builder.Datalayer
                         }
                     });
                 }
+            });
+            parseToObject.item4.ForEach(x =>
+            {
+                x.Tags.ForEach(y =>
+                {
+                    var tag = context.Tags.FirstOrDefault(z => z.Name == y);
+                    if (tag == null)
+                    {
+                        var tagId =context.Tags.Add(new Tags
+                        {
+                            Name = y
+                        }).Entity;
+                        context.SaveChanges();
+                        context.AssociatedTags.Add(new AssociatedTags
+                        {
+                            Organization = x.Organization,
+                            TagId = tagId.Id
+                        });
+                        context.SaveChanges();
+                    }
+                });
             });
         }
 

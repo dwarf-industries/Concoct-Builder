@@ -35,6 +35,8 @@ namespace Concoct_Builder.Controllers
         public IActionResult Layouts(int id)
         {
             ViewData["Layouts"] = handler.GetAllLayoutsByOrganization(id);
+            ViewData["GetAllProjectsForOrganization"] = handler.GetAllProjetsForOrganization(id);
+            ViewData["OrganizationTags"] = handler.GetAllOrganizationTags(id);
             return View();
         }
 
@@ -128,6 +130,9 @@ namespace Concoct_Builder.Controllers
         public string CCAuthenicationRequest([FromBody] AuthenicationRequest request)
         {
             var result = Get($"{request.Instance}/OutboundDetails/AuthenicateCB?key={request.Token}&&username={request.Username}&&password={request.Password}");
+            if (result == "failed")
+                return result;
+
             var parseToObject = JsonSerializer.Deserialize<IncomingServerResponse>(result);
             handler.SyncContentDownStream(parseToObject, request);
             return parseToObject.item1 ? "Success" : "failed";
@@ -143,15 +148,23 @@ namespace Concoct_Builder.Controllers
 
         public string Get(string uri)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            using (Stream stream = response.GetResponseStream())
-            using (StreamReader reader = new StreamReader(stream))
+            try
             {
-                return reader.ReadToEnd();
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+                request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (Stream stream = response.GetResponseStream())
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
             }
+            catch (System.Exception)
+            {
+                return "failed";
+            }
+           
         }
 
         [HttpPost]
