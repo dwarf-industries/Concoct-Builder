@@ -25,16 +25,16 @@
 
                 <!--header-section  declaration -->
                 <div class="main-header" id="header-section">
-                    <ul class="header-list">
-                        <li class="float-left header-style icon-menu" id="hamburger"></li>
+                    <ul class="header-list" style="height: 36px;">
+                        <li class="float-left header-style icon-menu" id="hamburger" style=" padding: 0; margin-left: 12px;"></li>
                         <li class="float-left header-style">
                             <div id='inplace_editor'></div>
                         </li>
 
 
-                        <li class="header-style float-right support border-left MenuIcon" onclick="KillWindow()"><b><i class="fa fa-window-close-o MenuIcon" aria-hidden="true"></i></b></li>
-
-                        <li class="header-style float-right support border-left MenuIcon" onclick="Minimize()"><b><i class="fa fa-window-minimize MenuIcon" aria-hidden="true"></i></b></li>
+                        <li class="header-style float-right support border-left MenuIcon MenuItem" onclick="KillWindow()"><b><i class="fa fa-times MenuIcon" aria-hidden="true"></i></b></li>
+                        <li class="header-style float-right support border-left MenuIcon MenuItem" onclick="FullScreen()"><b><i class="fa fa-window-maximize MenuIcon" aria-hidden="true"></i></b></li>
+                        <li class="header-style float-right support border-left MenuIcon MenuItem" onclick="Minimize()"><b><i class="fa fa-window-minimize MenuIcon" aria-hidden="true"></i></b></li>
 
                         <li class="header-style float-right support border-left" onclick="LoadLayout()"><b>Load Layout</b></li>
                         <li class="header-style float-right support border-left" onclick="SaveChanges()"><b>Save</b></li>

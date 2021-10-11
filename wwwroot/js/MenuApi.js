@@ -61,6 +61,18 @@ function KillWindow() {
         });
 }
 
+function FullScreen() {
+    $.ajax({
+        url: "/Home/FullScreen?condition=",
+        method: "GET",
+        success: function (data) {
+
+
+        }
+    });
+}
+
+
 function Minimize() {
     $.ajax({
         url: "/Home/MinimizeApp",

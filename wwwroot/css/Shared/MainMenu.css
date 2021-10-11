@@ -75,7 +75,7 @@
 }
 
 .MenuIcon {
-    padding:0 !important;
+    padding:3px !important;
  }
 
 .MenuIcon:hover {
@@ -212,11 +212,10 @@ color: #ff7979 !important;
 }
 #header-section .border-left {
     border-left: 1px solid #d2d6de;
-    width: 20%;
-}
+ }
 
-#header-section .header-style{
-    font-size:1vw !important;
+#header-section .header-style {
+    font-size: 1.1em !important;
 }
 .menuDrag {
     -webkit-app-region: drag;
@@ -227,7 +226,12 @@ color: #ff7979 !important;
 
 #header-section.main-header {
     border-bottom: 1px solid rgb(210, 214, 222);
-    height: 49px;
+    height: 36px;
     background: rgb(28, 134, 200);
     color: rgb(255, 255, 255);
+}
+
+.MenuItem {
+    width: 46px !important;
+    height:36px !important;
 }

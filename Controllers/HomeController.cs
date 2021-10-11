@@ -93,10 +93,17 @@ namespace Concoct_Builder.Controllers
         public IActionResult FullScreen(bool condition)
         {
             var windows = Electron.WindowManager.BrowserWindows;
-            foreach (var window in windows)
+
+            var window = windows.FirstOrDefault();
+            var checkState = window.IsMaximizedAsync().Result;
+            if (!checkState)
+                window.Maximize();
+            else
             {
-                window.SetFullScreen(condition);
+                window.SetSize(900, 900, true);
+                window.Unmaximize();
             }
+
             return View();
         }
 
