@@ -30,9 +30,7 @@ namespace Concoct_Builder.Controllers
 
         public List<PageElement> GetContent(string contentLayoutPath)
         {
-            if(!System.IO.File.Exists(contentLayoutPath))
-                return null;
-
+           
             return handler.ReadFile(contentLayoutPath);
          }
     }

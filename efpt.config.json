@@ -18,10 +18,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "LayoutData",
-         "ObjectType": 0
-      },
-      {
          "Name": "Projects",
          "ObjectType": 0
       },
@@ -39,6 +35,10 @@
       },
       {
          "Name": "AssociatedTags",
+         "ObjectType": 0
+      },
+      {
+         "Name": "LayoutData",
          "ObjectType": 0
       }
    ],

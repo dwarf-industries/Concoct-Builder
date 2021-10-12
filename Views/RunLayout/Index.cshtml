@@ -1,71 +1,67 @@
-﻿@{ 
+﻿@{
     var selected = ViewData["SelectedFile"] as string;
     Layout = "~/Views/Shared/_LayoutCompiler.cshtml";
 }
 
 
-<div>
-    @*Menu*@
-    <div>
+<div id="ContentPane" >
 
-    </div>
-    @*Content*@
-    <div id="ContentPane">
-
-    </div>
 </div>
-
-
 <script>
     var currentDragable = 0;
-    GetLayoutByName("@selected");
+    var layoutName = "@selected";
+    GetLayoutByName(layoutName);
 
     function GetLayoutByName(layout) {
         var contentHolder = document.getElementById("ContentPane");
         contentHolder.innerHTML = "";
         $.ajax({
-            url: "/RunLayout/GetContent/"+layout,
+            url: "/RunLayout/GetContent?contentLayoutPath="+layout,
             method: "GET",
             success: function (data) {
+                debugger
 
-                var getArea = document.getElementById("outer-dropzone");
-                getArea.innerHTML = "";
-                var draggableValue = 0;
-                ClearActiveList();
-                for (var element in args) {
-                     GenerateWidgetOn(args[element], draggableValue);
+                 var draggableValue = 0;
+                for (var element in data) {
+                    GenerateWidgetOn(data[element], draggableValue);
                     draggableValue++;
                 }
 
-                SetDraggableStartingIndex(draggableValue);
-                
+             //   SetDraggableStartingIndex(draggableValue);
+
             }
         });
     }
 
 
-    
-function GenerateWidgetOn(component, cDraggable) {
+
+    function GenerateWidgetOn(component, currentDragable) {
     var getElement = document.createElement("div");
-    getElement.setAttribute("id", "yes-drop_" + currentDragable);
-   
+    getElement.setAttribute("id", "element" + currentDragable);
+
 
     //getElement.classList.add("resize-drag");
 
-    $("#outer-dropzone").append(getElement);
+    $("#ContentPane").append(getElement);
 
     $.ajax({
-        url: "/Home/GetComponent?componentName=" + component.elementName,
+        url: "/Home/GetComponent?componentName=" + component.componentName,
         method: "GET",
         success: function (data) {
-            getElement.onmouseup = ElementReleased;
-            $("#yes-drop_" + currentDragable).html(data);
-            getElement.setAttribute("drag-id", currentDragable);
+           // getElement.onmouseup = ElementReleased;
+            $("#element" + currentDragable).html(data);
+            getElement.style.setProperty("position", "absolute");
+            getElement.style.setProperty("width", component.wPercent+"%");
+            getElement.style.setProperty("height", component.hPercent + "%");
+            getElement.style.setProperty("top", component.hoPercent + "%" );
+            getElement.style.setProperty("left", component.woPercent +"%");
+
+ 
 
             if (component.base64 !== "" && component.base64 !== undefined && component.base64 !== null) {
                 SetContent(component.base64);
             }
-            getElement.style.cssText = component.translate;
+            //getElement.style.cssText = component.translate;
             RedRaw();
             if (component.events[0] !== undefined) {
                 getElement.setAttribute("onclick", RenderLayout(component.events[0].path));
@@ -79,5 +75,13 @@ function GenerateWidgetOn(component, cDraggable) {
 
     }
 
+     
+  
 
+    $(window).resize(function () {
+        GetLayoutByName(layoutName);
+
+     });
+     
+ 
 </script>

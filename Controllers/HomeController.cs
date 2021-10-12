@@ -178,12 +178,12 @@ namespace Concoct_Builder.Controllers
         public IActionResult InitScreen([FromBody]IncomingFileRequest request)
         {
             var options = new BrowserWindowOptions();
-            options.AutoHideMenuBar = true;
+            options.AutoHideMenuBar = false;
             options.DarkTheme = true;
-            options.Fullscreen = true;
-            options.Title = "Concoct Builder V 0.1";
-            options.TitleBarStyle = TitleBarStyle.hidden;
- 
+            options.Fullscreen = false;
+            options.Title = $"Concoct Builder Compiled {request.Path}";
+            options.TitleBarStyle = TitleBarStyle.defaultStyle;
+            
             Task.Run(async () => await Electron.WindowManager.CreateWindowAsync(options, $"http://localhost:8001/RunLayout?Id={request.Path}"));
             return Ok();
         }

@@ -20,6 +20,10 @@ namespace Concoct_Builder
         public string Height { get; set; }
         public string Width { get; set; }
         public long? IsTrigger { get; set; }
+        public string HPercent { get; set; }
+        public string WPercent { get; set; }
+        public string HoPercent { get; set; }
+        public string WoPercent { get; set; }
 
         public virtual Layouts Layout { get; set; }
         public virtual Layouts RefereenceScreenNavigation { get; set; }

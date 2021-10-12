@@ -130,7 +130,11 @@ function FileSelected(dto) {
                 OffsetY: nodes[item].offsetY.toString(),
                 ComponentName: nodes[item].ComponentName === undefined ? "" : nodes[item].ComponentName,
                 Base64: nodes[item].base64,
-                Events: nodes[item].Events
+                Events: nodes[item].Events,
+                hoPercent: nodes[item].hoPercent.toString(),
+                woPercent: nodes[item].woPercent.toString(),
+                hPercent: nodes[item].hPercent.toString(),
+                wPercent: nodes[item].wPercent.toString()
             });
         }
 
