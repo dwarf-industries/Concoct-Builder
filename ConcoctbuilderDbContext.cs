@@ -54,6 +54,14 @@ namespace Concoct_Builder
 
             modelBuilder.Entity<LayoutData>(entity =>
             {
+                entity.Property(e => e.HPercent).HasColumnName("hPercent");
+
+                entity.Property(e => e.HoPercent).HasColumnName("hoPercent");
+
+                entity.Property(e => e.WPercent).HasColumnName("wPercent");
+
+                entity.Property(e => e.WoPercent).HasColumnName("woPercent");
+
                 entity.HasOne(d => d.Layout)
                     .WithMany(p => p.LayoutDataLayout)
                     .HasForeignKey(d => d.LayoutId);

@@ -19,6 +19,10 @@ namespace Concoct_Builder.Models
         public List<Event> Events{ get; set; }
         public string ComponentName { get; set; }
         public int IsTrigger { get; set; }
+        public string hoPercent { get; set; }
+        public string woPercent { get; set; }
+        public string wPercent { get; set; }
 
+        public string hPercent { get; set; }
     }
 }

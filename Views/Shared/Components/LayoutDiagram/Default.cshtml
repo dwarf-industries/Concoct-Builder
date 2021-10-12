@@ -379,6 +379,11 @@
                     let index = nodes.findIndex(node => node.id === element);
                     nodes[index].offsetX = x;
                     nodes[index].offsetY = y;
+
+                    var outer = document.getElementById("outer-dropzone");
+
+                    nodes[index].woPercent = (x / outer.clientWidth) * 100;
+                    nodes[index].hoPercent = (y / outer.clientHeight) * 100;
                 }
                 catch (e) {
 
@@ -532,7 +537,11 @@
                         ComponentName: x.componentName,
                         base64: x.base64,
                         IsCustom: isCustom,
-                        Loaded:true
+                        Loaded: true,
+                        wPercent: x.wPercent,
+                        hPercent: x.hPercent,
+                        woPercent: x.woPercent,
+                        hoPercent: x.hoPercent
 
                     });
                     //Draw the layoutDiagram
@@ -583,7 +592,8 @@
         getClone.style.setProperty("width", "100%");
         getClone.style.setProperty("height", "100%");
         getClone.style.setProperty("display", "");
-
+        var outer = document.getElementById("outer-dropzone");
+ 
         //Add the new view component to the node array.
         nodes.push({
             id: newId, width: 100, height: 100, offsetX: 200, offsetY: 200,
@@ -596,7 +606,11 @@
             Events: [],
             Base64: "",
             isCustom: false,
-            Loaded: false
+            Loaded: false,
+            wPercent: (100 / outer.clientWidth) * 100,
+            hPercent: (100 / outer.clientHeight) * 100,
+            woPercent: (200 / outer.clientWidth) * 100,
+            hoPercent: (200 / outer.clientHeight) * 100
         });
 
         //Draw the layoutDiagram
@@ -725,6 +739,10 @@
         let index = nodes.findIndex(node => node.id === element);
         nodes[index].width = width;
         nodes[index].height = height;
+        var outer = document.getElementById("outer-dropzone");
+
+        nodes[index].wPercent = (width / outer.clientWidth) * 100;
+        nodes[index].hPercent = (height / outer.clientHeight) * 100;
         if (nodes[index].IsCustom !== undefined && !nodes[index].IsCustom) {
             var item = activeNodeCompoents[element].cloneNode(true);
             item.style.setProperty("width", "100%");

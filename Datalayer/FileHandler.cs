@@ -28,7 +28,11 @@ namespace Concoct_Builder.Datalayer
                     Height = x.Height,
                     OffsetX = x.OffsetX,
                     OffsetY = x.OffsetY,
-                    IsTrigger = (int)x.IsTrigger
+                    IsTrigger = (int)x.IsTrigger,
+                    hoPercent = x.HoPercent,
+                    hPercent = x.HPercent,
+                    woPercent = x.WoPercent,
+                    wPercent = x.WPercent
                 }).ToList();
             
             return null;
@@ -126,6 +130,10 @@ namespace Concoct_Builder.Datalayer
                     existing.OffsetY = x.OffsetY;
                     existing.OffsetX = x.OffsetX;
                     existing.IsTrigger = x.IsTrigger;
+                    existing.HoPercent = x.hoPercent;
+                    existing.WoPercent = x.woPercent;
+                    existing.HPercent = x.hPercent;
+                    existing.WoPercent = x.wPercent;
 
                     if(existingEvent != 0)
                         existing.RefereenceScreen = existingEvent;
@@ -148,7 +156,11 @@ namespace Concoct_Builder.Datalayer
                             OffsetY = x.OffsetY,
                             Height = x.Height,
                             Width = x.Width,
-                            IsTrigger = x.IsTrigger
+                            IsTrigger = x.IsTrigger,
+                            WoPercent = x.woPercent,
+                            HoPercent = x.hoPercent,
+                            WPercent = x.wPercent,
+                            HPercent = x.hPercent
                         });
                     else
                         context.LayoutData.Add(new LayoutData
@@ -163,7 +175,11 @@ namespace Concoct_Builder.Datalayer
                             OffsetY = x.OffsetY,
                             Height = x.Height,
                             Width = x.Width,
-                            IsTrigger = x.IsTrigger
+                            IsTrigger = x.IsTrigger,
+                            WoPercent = x.woPercent,
+                            HoPercent = x.hoPercent,
+                            WPercent = x.wPercent,
+                            HPercent = x.hPercent
                         });
                     context.SaveChanges();
                 }    
