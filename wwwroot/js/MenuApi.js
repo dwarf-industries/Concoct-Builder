@@ -134,7 +134,8 @@ function FileSelected(dto) {
                 hoPercent: nodes[item].hoPercent.toString(),
                 woPercent: nodes[item].woPercent.toString(),
                 hPercent: nodes[item].hPercent.toString(),
-                wPercent: nodes[item].wPercent.toString()
+                wPercent: nodes[item].wPercent.toString(),
+                IsTrigger: nodes[item].isTrigger
             });
         }
 
