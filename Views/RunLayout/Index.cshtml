@@ -56,7 +56,12 @@
             getElement.style.setProperty("top", component.hoPercent + "%" );
             getElement.style.setProperty("left", component.woPercent +"%");
 
- 
+            if (component.isTrigger) {
+                var uuId = GetElementUUID();
+                var cElement = document.getElementById(uuId);
+                cElement.style.setProperty("background", "#1c86c800");
+                getElement.style.setProperty("cursor", "pointer");
+             }
 
             if (component.base64 !== "" && component.base64 !== undefined && component.base64 !== null) {
                 SetContent(component.base64);
@@ -64,7 +69,7 @@
             //getElement.style.cssText = component.translate;
             RedRaw();
             if (component.events[0] !== undefined) {
-                getElement.setAttribute("onclick", RenderLayout(component.events[0].path));
+                getElement.setAttribute("onclick", "RenderLayout('"+component.events[0].relation+"')");
 
             }
          }
@@ -72,11 +77,17 @@
     }
 
     function RenderLayout(path) {
+        if (path !== "null") {
+            layoutName = path;
+            GetLayoutByName(layoutName);
+        }
 
     }
 
      
-  
+    function GetDefaultMenu() {
+        return [];
+    }
 
     $(window).resize(function () {
         GetLayoutByName(layoutName);

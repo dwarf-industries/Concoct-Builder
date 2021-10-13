@@ -381,9 +381,9 @@
                     nodes[index].offsetY = y;
 
                     var outer = document.getElementById("outer-dropzone");
-
-                    nodes[index].woPercent = (x / outer.clientWidth) * 100;
-                    nodes[index].hoPercent = (y / outer.clientHeight) * 100;
+                    debugger
+                    nodes[index].woPercent = (args.element.wrapper.bounds.x / outer.clientWidth) * 100;
+                    nodes[index].hoPercent = (args.element.wrapper.bounds.y / outer.clientHeight) * 100;
                 }
                 catch (e) {
 
@@ -538,10 +538,10 @@
                         base64: x.base64,
                         IsCustom: isCustom,
                         Loaded: true,
-                        wPercent: x.wPercent,
-                        hPercent: x.hPercent,
-                        woPercent: x.woPercent,
-                        hoPercent: x.hoPercent
+                        wPercent: parseFloat(x.wPercent),
+                        hPercent: parseFloat(x.hPercent),
+                        woPercent: parseFloat(x.woPercent),
+                        hoPercent: parseFloat(x.hoPercent)
 
                     });
                     //Draw the layoutDiagram
@@ -593,7 +593,7 @@
         getClone.style.setProperty("height", "100%");
         getClone.style.setProperty("display", "");
         var outer = document.getElementById("outer-dropzone");
- 
+        
         //Add the new view component to the node array.
         nodes.push({
             id: newId, width: 100, height: 100, offsetX: 200, offsetY: 200,
@@ -605,7 +605,8 @@
             ComponentName: componentName,
             Events: [],
             Base64: "",
-            isCustom: false,
+            isCustom: componentName === "Placeholder" ? true : false,
+            isTrigger: componentName === "Placeholder" ? true : false,
             Loaded: false,
             wPercent: (100 / outer.clientWidth) * 100,
             hPercent: (100 / outer.clientHeight) * 100,
@@ -721,6 +722,8 @@
             nodes[index].base64 = args;
             nodes[index].shape.content = tempalte;
             nodes[index].IsCustom = true;
+            nodes[index].isTrigger = false;
+
           });
 
     }
@@ -740,7 +743,7 @@
         nodes[index].width = width;
         nodes[index].height = height;
         var outer = document.getElementById("outer-dropzone");
-
+        
         nodes[index].wPercent = (width / outer.clientWidth) * 100;
         nodes[index].hPercent = (height / outer.clientHeight) * 100;
         if (nodes[index].IsCustom !== undefined && !nodes[index].IsCustom) {

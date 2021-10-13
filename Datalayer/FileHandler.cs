@@ -18,7 +18,7 @@ namespace Concoct_Builder.Datalayer
             var context = new ConcoctbuilderDbContext();
             var layout = context.Layouts.FirstOrDefault(x => x.Name == path);
             if (layout != null)
-                return context.LayoutData.Where(x => x.LayoutId == layout.Id).Select(x => new PageElement
+                return context.LayoutData.Include(x=>x.RefereenceScreenNavigation).Where(x => x.LayoutId == layout.Id).Select(x => new PageElement
                 {
                     Base64 = x.Base64,
                     ElementName = x.ElementName,
@@ -28,11 +28,17 @@ namespace Concoct_Builder.Datalayer
                     Height = x.Height,
                     OffsetX = x.OffsetX,
                     OffsetY = x.OffsetY,
-                    IsTrigger = (int)x.IsTrigger,
+                    IsTrigger = (int)x.IsTrigger == 0 ? false:true,
                     hoPercent = x.HoPercent,
                     hPercent = x.HPercent,
                     woPercent = x.WoPercent,
-                    wPercent = x.WPercent
+                    wPercent = x.WPercent,
+                    Events = new List<Event>{
+                        new   Event{
+                            Relation = x.RefereenceScreenNavigation.Name,
+                            Type = 0
+                        }
+                    }
                 }).ToList();
             
             return null;
@@ -129,12 +135,12 @@ namespace Concoct_Builder.Datalayer
                     existing.Height = x.Height;
                     existing.OffsetY = x.OffsetY;
                     existing.OffsetX = x.OffsetX;
-                    existing.IsTrigger = x.IsTrigger;
+                    existing.IsTrigger = x.IsTrigger ? 1:0;
                     existing.HoPercent = x.hoPercent;
                     existing.WoPercent = x.woPercent;
                     existing.HPercent = x.hPercent;
-                    existing.WoPercent = x.wPercent;
-
+                    existing.WPercent = x.wPercent;
+ 
                     if(existingEvent != 0)
                         existing.RefereenceScreen = existingEvent;
 
@@ -156,7 +162,7 @@ namespace Concoct_Builder.Datalayer
                             OffsetY = x.OffsetY,
                             Height = x.Height,
                             Width = x.Width,
-                            IsTrigger = x.IsTrigger,
+                            IsTrigger = x.IsTrigger?1:0,
                             WoPercent = x.woPercent,
                             HoPercent = x.hoPercent,
                             WPercent = x.wPercent,
@@ -175,7 +181,7 @@ namespace Concoct_Builder.Datalayer
                             OffsetY = x.OffsetY,
                             Height = x.Height,
                             Width = x.Width,
-                            IsTrigger = x.IsTrigger,
+                            IsTrigger = x.IsTrigger?1:0,
                             WoPercent = x.woPercent,
                             HoPercent = x.hoPercent,
                             WPercent = x.wPercent,
