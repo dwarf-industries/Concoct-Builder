@@ -24,7 +24,24 @@ namespace Concoct_Builder.Controllers
             ViewData["SelectedLayout"] = id;
             ViewData["Organizations"] = handler.GetAllOrganizations();
             ViewData["Components"] = GetWorkItemComponents();
+            ViewData["HideComponents"] = "";
+            var projects = handler.GetAllProjetsForOrganization(Program.ActiveUserSetting);
+            ViewData["GetProjects"] = projects;
+            if (projects != null)
+            {
+                ViewData["GetAllWorkItemsForProjects"] = handler.GetAllWorkItemsInProjects(projects.Select(x => x.Id).ToList());
+            }
+            else
+            {
+                ViewData["GetAllWorkItemsForProjects"] = null;
+            }
             return View();
+        }
+
+        [HttpPost]
+        public List<WorkItems> GetWorkItemsForProject([FromBody] IncomingIdRequest request)
+        {
+            return handler.GetAllWorkItemsInProjects(request.Id);
         }
 
         private List<Widget> GetWorkItemComponents()

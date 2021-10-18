@@ -4,11 +4,13 @@ using ElectronNET.API;
 using ElectronNET.API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -27,6 +29,7 @@ namespace Concoct_Builder.Controllers
 
         public IActionResult Index()
         {
+            Program.ActiveUserSetting = handler.GetActiveOrganization();
             ViewData["Organizations"] = handler.GetAllOrganizations(); 
             ViewData["Components"] = GetWorkItemComponents();
             return View();
@@ -34,9 +37,11 @@ namespace Concoct_Builder.Controllers
 
         public IActionResult Layouts(int id)
         {
+            Program.ActiveUserSetting = id;
             ViewData["Layouts"] = handler.GetAllLayoutsByOrganization(id);
             ViewData["GetAllProjectsForOrganization"] = handler.GetAllProjetsForOrganization(id);
             ViewData["OrganizationTags"] = handler.GetAllOrganizationTags(id);
+            ViewData["HideComponents"] = "none";
             return View();
         }
 
@@ -148,7 +153,6 @@ namespace Concoct_Builder.Controllers
         [HttpPost]
         public bool SetLayoutActive([FromBody] IncomingIdRequest request)
         {
-            
             var result = handler.SetLayoutActive(request.Id);
             return result;
         }
@@ -183,15 +187,49 @@ namespace Concoct_Builder.Controllers
             options.Fullscreen = false;
             options.Title = $"Concoct Builder Compiled {request.Path}";
             options.TitleBarStyle = TitleBarStyle.defaultStyle;
-            
-            Task.Run(async () => await Electron.WindowManager.CreateWindowAsync(options, $"http://localhost:8001/RunLayout?Id={request.Path}"));
+            options.Closable = true;
+            options.Modal = true;
+            //options.Frame = false;
+            Startup.CreateBrowserWindow($"http://localhost:8001/RunLayout?Id={request.Path}", options);
             return Ok();
+        }
+
+
+        [HttpPost]
+        public bool UpdateCompiledView([FromBody] SaveFileRequest request)
+        {
+            handler.UpdateCompiled(request.File.Name, request.LayoutDetail);
+            var setting = handler.GetSettingByLayout(request.File.Name);
+            var data = handler.PushUpStream((int)setting.Id);
+            SyncData(data, setting.Endpoint);
+            return true;
+        }
+
+        internal void SyncData(string currentData, string endpoint)
+        {
+            var request = (HttpWebRequest)WebRequest.Create($"{endpoint}/OutboundDetails/ConcoctBuilderSync");
+
+      
+            var data = Encoding.ASCII.GetBytes(currentData);
+
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.ContentLength = data.Length;
+
+            using (var stream = request.GetRequestStream())
+            {
+                stream.Write(data, 0, data.Length);
+            }
+
+            var response = (HttpWebResponse)request.GetResponse();
+
+            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
         }
 
         [HttpPost]
         public bool SaveFile([FromBody] SaveFileRequest request)
         {
-            handler.WriteFile(request.File.Name, request.PageElements, request.LayoutDetail);
+            handler.WriteFile(request.File.Name, request.PageElements, request.LayoutDetail, int.Parse(request.ProjectId), int.Parse(request.WorkItemId));
             return true;
         }
 

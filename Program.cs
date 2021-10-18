@@ -11,10 +11,13 @@ namespace Concoct_Builder
     public class Program
     {
         private static List<string> ActiveUniqueIds { get; set; }
+        public static List<(string, int)> ActiveWindwos { get; set; }
+        public static int ActiveUserSetting { get; internal set; }
 
         public static void Main(string[] args)
         {
             ActiveUniqueIds = new List<string>();
+            ActiveWindwos = new List<(string, int)>();
             CreateHostBuilder(args).Build().Run();
         }
 

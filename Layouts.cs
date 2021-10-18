@@ -24,6 +24,7 @@ namespace Concoct_Builder
         public string LayoutThumbnail { get; set; }
         public long? ProjectId { get; set; }
         public long? WorkItemId { get; set; }
+        public string WorkItemResult { get; set; }
 
         public virtual Projects Project { get; set; }
         public virtual UserSettings UserSettingNavigation { get; set; }
