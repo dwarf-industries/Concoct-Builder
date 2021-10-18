@@ -235,3 +235,11 @@ color: #ff7979 !important;
     width: 46px !important;
     height:36px !important;
 }
+
+.e-input-group-icon .e-ddl-icon .e-search-icon{
+    color:white
+}
+
+.e-clear-icon .e-clear-icon-hide{
+    color:white;
+}

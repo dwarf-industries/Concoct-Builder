@@ -120,9 +120,46 @@ namespace Concoct_Builder
             options.FullscreenWindowTitle = true;
             options.Closable = true;
             options.Fullscreenable = true;
+         
+            Electron.App.On("uncaughtException", ThisIsATest);
  
             Task.Run(async () => await Electron.WindowManager.CreateWindowAsync(options));
 
+
+        }
+
+        private void ThisIsATest()
+        {
+
+        }
+
+        public async static void CreateBrowserWindow(string url, BrowserWindowOptions options)
+        {
+
+            var first = Electron.WindowManager.BrowserWindows.FirstOrDefault();
+
+            options.TabbingIdentifier = "123";
+            var window = await Electron.WindowManager.CreateWindowAsync(options, url);
+          //  window.SetParentWindow(first);
+            window.OnClosed += Result_OnClose;
+            
+            Program.ActiveWindwos.Add(new("Compiled", window.Id));
+            
+        }
+
+        private static void Result_OnClose()
+        {
+            var window = Electron.WindowManager.BrowserWindows.FirstOrDefault(x => x.Id == Program.ActiveWindwos.FirstOrDefault(y => y.Item1 == "Compiled").Item2);
+            if(window == null)
+            {
+                Program.ActiveWindwos.Remove(Program.ActiveWindwos.FirstOrDefault(y => y.Item1 == "Compiled"));
+                return;
+            }
+            else
+            {
+                window.Destroy();
+                Program.ActiveWindwos.Remove(Program.ActiveWindwos.FirstOrDefault(y => y.Item1 == "Compiled"));
+            }
         }
     }                       
 }

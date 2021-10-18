@@ -4,7 +4,7 @@
 }
 
 
-<div id="ContentPane" >
+<div id="ContentPane" style="height:100vh">
 
 </div>
 <script>
@@ -26,7 +26,27 @@
                     GenerateWidgetOn(data[element], draggableValue);
                     draggableValue++;
                 }
+ 
+                setTimeout(function () {
+                    html2canvas(contentHolder).then(function (canvas) {
+                        debugger
+                        var base64 = canvas.toDataURL();
+                        var currentDto = {};
+                        currentDto.LayoutDetail = base64;
+                        currentDto.File = { Name: layoutName };
 
+                        $.ajax({
+                            method: "POST",
+                            contentType: "application/json",
+                            url: "/Home/UpdateCompiledView",
+                            data: JSON.stringify(currentDto)
+                        }).done(function (msg) {
+                            ShowInfo("Layout saved!");
+                        });
+                    });
+
+                }, 300);
+               
              //   SetDraggableStartingIndex(draggableValue);
 
             }
@@ -72,7 +92,11 @@
                 getElement.setAttribute("onclick", "RenderLayout('"+component.events[0].relation+"')");
 
             }
-         }
+
+
+        }
+
+
     });
     }
 

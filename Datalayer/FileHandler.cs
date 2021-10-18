@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 
 namespace Concoct_Builder.Datalayer
 {
@@ -42,6 +43,32 @@ namespace Concoct_Builder.Datalayer
                 }).ToList();
             
             return null;
+        }
+
+        internal List<WorkItems> GetAllWorkItemsInProjects(int id)
+        {
+            var context = new ConcoctbuilderDbContext();
+            if(id != 0)
+                return context.WorkItems.Where(x => x.ProjectId == id).ToList();
+
+            return context.WorkItems.ToList();
+        }
+
+        internal int GetActiveOrganization()
+        {
+            var context = new ConcoctbuilderDbContext();
+            return (int)context.UserSettings.FirstOrDefault(x => x.IsActive == 1).Id;
+        }
+
+        internal List<WorkItems> GetAllWorkItemsInProjects(List<long> list)
+        {
+            var context = new ConcoctbuilderDbContext();
+            var workItemResult = new List<WorkItems>();
+            list.ForEach(x =>
+            {
+                workItemResult.AddRange(context.WorkItems.Where(y=>y.ProjectId == (int)x));
+            });
+            return workItemResult;
         }
 
         internal List<Layouts> GetAllLayoutsByOrganization(int id)
@@ -89,29 +116,47 @@ namespace Concoct_Builder.Datalayer
             return System.IO.File.ReadAllText(filePath);
         }
 
-        public void WriteFile(string path, List<PageElement> content, string layoutDetails)
+        public void WriteFile(string path, List<PageElement> content, string layoutDetails, int projectId, int workItemId)
         {
             var context = new ConcoctbuilderDbContext();
             var layout = context.Layouts.FirstOrDefault(x => x.Name == path);
             var activeSetting = context.UserSettings.FirstOrDefault(x => x.IsActive == 1);
             if (layout == null)
             {
-                layout = context.Layouts.Add(new Layouts
-                {
-                    Name = path,
-                    CreatedAt = DateTime.Now.ToFileTimeUtc().ToString(),
-                    Owner = activeSetting.OrganizationName,
-                    UpdatedAt = "",
-                    UserSetting = activeSetting.Id,
-                    LayoutThumbnail = layoutDetails,
-                    
+                if(projectId != 0 && workItemId != 0)
+                    layout = context.Layouts.Add(new Layouts
+                    {
+                        Name = path,
+                        CreatedAt = DateTime.Now.ToFileTimeUtc().ToString(),
+                        Owner = activeSetting.OrganizationName,
+                        UpdatedAt = "",
+                        UserSetting = activeSetting.Id,
+                        LayoutThumbnail = layoutDetails,
+                        ProjectId = projectId,
+                        WorkItemId = workItemId
 
-                }).Entity;
+                    }).Entity;
+                else
+                    layout = context.Layouts.Add(new Layouts
+                    {
+                        Name = path,
+                        CreatedAt = DateTime.Now.ToFileTimeUtc().ToString(),
+                        Owner = activeSetting.OrganizationName,
+                        UpdatedAt = "",
+                        UserSetting = activeSetting.Id,
+                        LayoutThumbnail = layoutDetails,
+
+
+                    }).Entity;
                 context.SaveChanges();
             }
             else
             {
                 layout.LayoutThumbnail = layoutDetails;
+                if (projectId != 0 && workItemId != 0)
+                    layout.ProjectId = projectId;
+                if (workItemId != 0 && projectId != 0)
+                    layout.WorkItemId = workItemId;
                 context.Attach(layout);
                 context.Update(layout);
                 context.SaveChanges();
@@ -192,6 +237,44 @@ namespace Concoct_Builder.Datalayer
             });
         }
 
+        internal string PushUpStream(int settingId)
+        {
+            var context = new ConcoctbuilderDbContext();
+            var layouts = context.Layouts.Where(x => x.UserSetting == settingId).ToList();
+            var tags = context.Tags.Where(x => x.IsNew == 1).ToList();
+            dynamic cResult = new System.Dynamic.ExpandoObject();
+            cResult.Layouts = layouts;
+            cResult.Take = tags;
+            var pack = System.Text.Json.JsonSerializer.Serialize(cResult);
+
+            return pack;
+        }
+
+
+
+        internal UserSettings GetSettingByLayout(string name)
+        {
+            var context = new ConcoctbuilderDbContext();
+            var userSetting = context.Layouts.Include(x => x.UserSettingNavigation).FirstOrDefault(x => x.Name == name);
+            if (userSetting == null)
+                return null;
+
+            return userSetting.UserSettingNavigation;
+        }
+
+        internal void UpdateCompiled(string name, string layoutDetail)
+        {
+            var context = new ConcoctbuilderDbContext();
+            var layout = context.Layouts.FirstOrDefault(x => x.Name == name);
+            if (layout == null)
+                return;
+
+            layout.WorkItemResult = layoutDetail;
+            context.Attach(layout);
+            context.Update(layout);
+            context.SaveChanges();
+        }
+
         internal bool SetLayoutActive(int id)
         {
             var context = new ConcoctbuilderDbContext();
@@ -209,6 +292,7 @@ namespace Concoct_Builder.Datalayer
             context.Attach(layout);
             context.Update(layout);
             context.SaveChanges();
+            Program.ActiveUserSetting = (int)layout.Id;
 
             return true;
         }

@@ -1,5 +1,4 @@
-﻿const { notDeepStrictEqual } = require("assert");
-
+﻿ 
 var isFullScreen = false;
 var fileName = "Untiteled";
 var IsOpen = 0;
@@ -135,14 +134,17 @@ function FileSelected(dto) {
                 woPercent: nodes[item].woPercent.toString(),
                 hPercent: nodes[item].hPercent.toString(),
                 wPercent: nodes[item].wPercent.toString(),
-                IsTrigger: nodes[item].isTrigger
+                IsTrigger: nodes[item].isTrigger,
+
             });
         }
 
         var currentDto = {
             File: dto,
             PageElements: items,
-            LayoutDetail : ""
+            LayoutDetail: "",
+            WorkItemId: GetWorkItemId(),
+            ProjectId: GetProjectId()
         }
         var container = document.getElementById("outer-dropzone");
         html2canvas(container).then(function (canvas) {

@@ -6,7 +6,7 @@ namespace Concoct_Builder.Datalayer
     public interface IFileHandler
     {
         public List<PageElement> ReadFile(string path);
-        public void WriteFile(string path, List<PageElement> content, string layoutDetails);
+        public void WriteFile(string path, List<PageElement> content, string layoutDetails, int projectId, int workItemId);
         public void DeleteFile(string path);
          public string ReadFileRaw(string filePath);
         public string ConvertTobase64(string path);
