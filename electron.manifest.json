@@ -1,7 +1,7 @@
 {
   "executable": "Concoct-Builder",
   "splashscreen": {
-    "imageFile": ""
+    "imageFile": "rokonocontrol.png"
   },
   "name": "Concoct-Builder",
   "author": "",
@@ -30,7 +30,8 @@
         "filter": [ "**/*" ]
       },
       "ConcoctBuilder.db",
-      "**/*"
+      "**/*",
+      "rokonocontrol.png"
     ]
   }
 }

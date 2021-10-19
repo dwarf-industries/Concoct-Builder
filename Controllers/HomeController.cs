@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -207,23 +208,22 @@ namespace Concoct_Builder.Controllers
 
         internal void SyncData(string currentData, string endpoint)
         {
-            var request = (HttpWebRequest)WebRequest.Create($"{endpoint}/OutboundDetails/ConcoctBuilderSync");
-
-      
-            var data = Encoding.ASCII.GetBytes(currentData);
-
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.ContentLength = data.Length;
-
-            using (var stream = request.GetRequestStream())
+            using (var client = new HttpClient())
             {
-                stream.Write(data, 0, data.Length);
+                var res = client.PostAsync($"{endpoint}/OutboundDetails/ConcoctBuilderSync",
+                  new StringContent(currentData,
+                    Encoding.UTF8, "application/json")
+                );
+
+                try
+                {
+                    res.Result.EnsureSuccessStatusCode();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
             }
-
-            var response = (HttpWebResponse)request.GetResponse();
-
-            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
         }
 
         [HttpPost]

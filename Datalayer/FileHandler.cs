@@ -245,7 +245,9 @@ namespace Concoct_Builder.Datalayer
             dynamic cResult = new System.Dynamic.ExpandoObject();
             cResult.Layouts = layouts;
             cResult.Take = tags;
-            var pack = System.Text.Json.JsonSerializer.Serialize(cResult);
+            dynamic eResult = new System.Dynamic.ExpandoObject();
+            eResult.Phase = System.Text.Json.JsonSerializer.Serialize(layouts);
+            var pack = System.Text.Json.JsonSerializer.Serialize(eResult);
 
             return pack;
         }
