@@ -7,11 +7,17 @@
     <Content Update="electron.manifest.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ElectronNET.API" Version="99.0.0" />
+    <PackageReference Include="ElectronNET.API" Version="13.5.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.10" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="rokonocontrol.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
  
   <Target Name="CopyDataFiles" AfterTargets="AfterBuild">
