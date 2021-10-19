@@ -425,6 +425,12 @@ namespace Concoct_Builder.Datalayer
             return new List<Widget>{
                 new Widget
                 {
+                   ComponentName = "Placeholder",
+                   DisplayName = "Placeholder (Image/Custom)",
+                   Icon = "fa-calendar-o"
+                },
+                new Widget
+                {
                     ComponentName = "AreaChart",
                     DisplayName = "Area Chart",
                     Icon = "fa-area-chart"
@@ -573,12 +579,7 @@ namespace Concoct_Builder.Datalayer
                    DisplayName ="Tree Map",
                    Icon = "fa-map-marker"
                 },
-                new Widget
-                {
-                   ComponentName = "Placeholder",
-                   DisplayName = "Placeholder (Image/Custom)",
-                   Icon = "fa-calendar-o"
-                },
+             
                 new Widget
                 {
                    ComponentName = "InPlaceEditor",

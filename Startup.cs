@@ -113,7 +113,7 @@ namespace Concoct_Builder
             var options = new BrowserWindowOptions();
             options.AutoHideMenuBar = true;
             options.DarkTheme = true;
-            options.Fullscreen = false;
+            options.Fullscreen = true;
             options.Title = "Concoct Builder V 0.1";
             options.TitleBarStyle = TitleBarStyle.hidden;
             options.Frame = false;
