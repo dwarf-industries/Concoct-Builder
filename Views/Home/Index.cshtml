@@ -7,10 +7,7 @@
 
 
  <div class="container-fluid">
-     <div class="col-md-2">
-
-     </div>
-     <div class="col-md-8">
+     <div class="col-md-4" style="padding-left:50px;padding-right:50px;">
          <div class="row">
              <div id="default" style='padding-top:75px;'>
                  <select id="authenicationTypes">
@@ -26,18 +23,45 @@
              <input id="Token" />
          </div>
          <div class="row RowDistance" id="BasicAuth">
-              <div class="col-md-4">
+             <div>
                  <input id="Username" />
              </div>
-             <div class="col-md-3"></div>
-             <div class="col-md-4">
+             <div style="margin-top:10px;">
                  <input id="Password" />
              </div>
-          </div>
+
+         </div>
          <div class="row RowDistance">
              <button id="AuthenicateBtn" style=" width: 100%;" onclick="Authenicate()" class="e-control e-btn e-lib e-primary">Authenicate</button>
          </div>
-         <div class="row RowDistance" style="min-height:400px; max-height:400px;">
+
+         <div class="row RowDistance">
+             <h3 style="text-align:center">
+                 How to authenicate?
+             </h3>
+         </div>
+
+         <div class="row RowDistance">
+             First you need to setup the endpoint of the instnace that you want to connect to. If you're using our online services please use <span style="font-weight:bold">https://portal.concoctcloud.com</span>, if you're using a licensed server for your organization your can use the default endpoint that the server is running at.
+         </div>
+
+
+         <div class="row RowDistance">
+             <p>There are two options to authenicate, using the basic authenication mode and acess token mode. Basic which is disabled by default in most projects unless your system administrator has enabled the option. If you're trying to enabled the mode please go into <span style="font-weight:bold">API Key Integration -> Concoct Integration -> Enabled Basic Auth</span></p>
+         </div>
+
+         <div class="row RowDistance">
+             <p>There is no need to set up multiple users when authenicating with the cloud, once the account has been authorized it will sync all active organizations that it participates under and all projects/work items that are under those organizations.</p>
+         </div>
+         <div class="row RowDistance">
+             The application will sync on a regular basis when there is a stable connection to keep up to date but you can force it to connect to the cloud instance and clone new work either by clicking load layouts with a selected organization or starting a new layout
+         </div>
+
+
+     </div>
+     <div class="col-md-8" style="padding-right: 50px; border-left: 3px solid #ff6767; padding-left: 31px; height: 100vh;">
+        
+         <div class="row " style="min-height: 90vh; max-height: 90vh; ">
              <div class="organizationContiner">
                  @foreach (var item in Settings)
                  {
@@ -64,7 +88,7 @@
                              <div class="col-sm-4 orgTextElement">
                                  @item.OrganizationName
                              </div>
-                             <div class="col-sm-5 orgTextElement">
+                             <div class="col-sm-5 orgTextElement" style="word-break:break-all">
                                  @item.InstanceAddress
                              </div>
                         </div>
@@ -86,9 +110,7 @@
              </div>
          </div>
      </div>
-     <div class="col-md-2">
-
-     </div>
+     
  </div>
 
 

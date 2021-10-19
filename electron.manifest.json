@@ -1,16 +1,18 @@
 {
   "executable": "Concoct-Builder",
   "splashscreen": {
-    "imageFile": "rokonocontrol.png"
+    "imageFile": "rokonocontrol.png",
+    "width": 500,
+    "height": 500
   },
   "name": "Concoct-Builder",
-  "author": "",
+  "author": "Collaborativesoft",
   "singleInstance": false,
   "environment": "Production",
   "build": {
     "appId": "com.Concoct-Builder.app",
     "productName": "Concoct-Builder",
-    "copyright": "Copyright © 2020",
+    "copyright": "Copyright © 2021",
     "buildVersion": "1.0.0",
     "compression": "maximum",
     "directories": {
